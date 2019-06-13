@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this template, choose Tools | Templates
+and open the template in the editor.
+-->
+<web-app version="3.0" xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd">
+    <display-name>Masonry CMS</display-name>
+    <session-config>
+        <session-timeout>60</session-timeout>
+    </session-config>
+    <filter>
+        <filter-name>struts2</filter-name>
+        <filter-class>org.apache.struts2.dispatcher.filter.StrutsPrepareAndExecuteFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>struts2</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+    <listener>
+        <listener-class>web.sesion.ORMCargar</listener-class>
+    </listener>
+    <!--<listener>
+        <listener-class>web.ciclos.ListaDeCiclos</listener-class>
+    </listener>
+    <listener>
+        <listener-class>web.sesion.SAP</listener-class>
+    </listener>-->
+  
+    <welcome-file-list>
+        <welcome-file>intro.jsp</welcome-file>
+    </welcome-file-list>
+</web-app>

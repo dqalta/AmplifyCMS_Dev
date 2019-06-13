@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this template, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.3//EN" "http://struts.apache.org/dtds/struts-2.3.dtd">
+<struts>
+    <package name="sesion" extends="struts-default">
+        <global-results>
+            <result name="error">/error.jsp</result>
+        </global-results>
+        
+        <global-exception-mappings>
+            <exception-mapping exception="java.lang.Exception" result="error" />
+        </global-exception-mappings>
+        
+        <action name="iniciar" class="web.sesion.Iniciar">
+            <result name="input">/intro.jsp</result>
+            <result name="success" type="redirect">/home/home.mdk</result>
+            <result name="error">/intro.jsp</result>
+        </action>
+        
+        <action name="home" class="web.home.Home">
+            <result>/home/home.jsp</result>
+        </action>
+        <!--<action name="finalizar" class="web.sesion.Finalizar">
+            <result>/intro.jsp</result>
+        </action>-->
+    </package>
+</struts>

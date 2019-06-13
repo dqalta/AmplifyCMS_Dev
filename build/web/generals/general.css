@@ -1,0 +1,378 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : 27/10/2014, 10:13:13 AM
+    Author     : CR104978
+*/
+
+
+.glyphicon.fast-right-spinner {
+    -webkit-animation: glyphicon-spin-r 1s infinite linear;
+    animation: glyphicon-spin-r 1s infinite linear;
+}
+
+.lcs_wrap{
+    display:block !important;
+}
+
+@-webkit-keyframes glyphicon-spin-r {
+    0% {
+        -webkit-transform: rotate(0deg);
+        transform: rotate(0deg);
+    }
+
+    100% {
+        -webkit-transform: rotate(359deg);
+        transform: rotate(359deg);
+    }
+}
+
+@keyframes glyphicon-spin-r {
+    0% {
+        -webkit-transform: rotate(0deg);
+        transform: rotate(0deg);
+    }
+
+    100% {
+        -webkit-transform: rotate(359deg);
+        transform: rotate(359deg);
+    }
+}
+
+
+.nav-tabs>li.active>a, .nav-tabs>li.active>a:hover, .nav-tabs>li.active>a:focus{
+    color: #fff !important;
+    font-size:15px;
+    border: 1px solid #FF6600 !important;
+    border-bottom-color: transparent !important; 
+    background-color: #FF6600;
+}
+
+.nav-tabs {
+    border-bottom: 1px solid #FF6600 !important;
+}
+
+.tableDesign2 td {
+    border-bottom: 1px solid #ddd !important;
+}    
+
+.tableDesign2 table {
+    border-collapse: collapse !important;
+    width: 100%;
+}
+
+.tableDesign tr:hover td
+{
+    cursor: pointer;
+    background-color: #FFAAAA !important;
+}
+th
+{
+    border-bottom: 1px solid #ff4136 !important;
+}
+
+.image-preview-input {
+    position: relative;
+    overflow: hidden;
+    margin: 0px;  
+}
+
+.image-preview-input input[type=file] {
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin: 0;
+    padding: 0;
+    font-size: 20px;
+    cursor: pointer;
+    opacity: 0;
+    filter: alpha(opacity=0);
+}
+.file {
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin: 0;
+    padding: 0;
+    font-size: 0px;
+    cursor: pointer;
+    opacity: 0;
+    filter: alpha(opacity=0);
+}
+
+.clickable{
+    cursor: pointer;   
+}
+
+hr {
+    display: block;
+    height: 1px; 
+    border: 0;
+    border-top: 1px solid #d8d8d8 !important;
+    margin: 1em 0;
+    padding: 0; 
+}
+
+.panel-default{
+    border-bottom-color: #FF6600 !important;
+}
+
+.ir-arriba {
+    display:none;
+    padding:10px;
+    color:#d00f10;
+    background:#d8d8d8;
+    font-size:20px;
+    cursor:pointer;
+    position: fixed;
+    bottom:15px;
+    right:15px;
+    opacity: 0.7;
+    border: 1px solid #FF6600;
+}
+
+.btn-meco{
+    border: 1px solid #FF6600;
+    color: #3077B4;
+}
+
+.btn-meco i{
+    color: #E10717;
+}
+
+img
+{
+    vertical-align: middle !important;
+}
+
+table
+{
+    width: 100%;
+    margin: 0px auto;
+}
+/*
+th
+{
+    background-color: lightgrey !important;
+    color: black;
+    padding:4px !important;
+}
+tr td
+{
+    background-color: white !important;
+    border-bottom: 1px solid #cccccc !important;
+    padding:4px !important;
+}
+*/
+textarea
+{
+    font-family: "Helvetica Neue", Arial, Helvetica, sans-serif;
+    font-size: 12px;
+}
+
+.invisible
+{
+    display: none;
+}
+
+.izquierda
+{
+    text-align: left;
+}
+
+.derecha
+{
+    text-align: right;
+}
+
+.centro
+{
+    text-align: center;
+}
+
+.italic
+{
+    font-style: italic;
+}
+
+.negrita
+{
+    font-weight: bold;
+}
+
+.subrayado
+{
+    text-decoration: underline;
+}
+.minusculas
+{
+    text-transform: lowercase;
+}
+.mayusculas
+{
+    text-transform: uppercase;
+}
+.textfield_error
+{
+    background-color: red !important;
+    color: white !important;
+    border: 2px solid lightgrey !important;
+}    
+.textfield_pequeno
+{
+    width: 60px;
+}
+.textfield_full
+{
+    width: 98%;
+}
+.textfield_fechas
+{
+    width: 80px;
+    color: black;
+}
+.textfield_tiempo
+{
+    width: 35px;
+    font-size: 11px !important;
+}
+.textfield_lectura
+{
+    background-color: lightgray !important;
+}
+.tabla
+{
+    width: 100%;
+    margin: 0px auto;
+}
+.mensaje_error
+{
+    font-size: 14px !important;
+    font-weight: bold;
+    font-style: italic;
+    color: red;
+    list-style: square !important;
+    border-bottom: 1px dashed red;
+}
+.mensaje_prevencion
+{
+    font-size: 14px !important;
+    font-weight: bold;
+    font-style: italic;
+    color: red;
+    list-style: square !important;
+    border: 1px solid gray;
+    background-color:lightgray;
+}
+.mensaje_ok
+{
+    font-size: 14px !important;
+    font-weight: bold;
+    font-style: italic;
+    color: blue;
+    list-style: circle !important;
+}
+.titulo_app
+{
+    /*margin: 10px 3px 3px 3px;*/
+    font-size: 28px;
+    color: #535353;
+    float: left;
+    font-family:Impact,Haettenschweiler,'Franklin Gothic Bold',Charcoal,'Helvetica Inserat','Bitstream Vera Sans Bold','Arial Black',sans serif;
+}
+
+.titulo_app:hover
+{
+    font-size: 30px;
+    color: #d00f10;
+    float: left;
+    font-family:Impact,Haettenschweiler,'Franklin Gothic Bold',Charcoal,'Helvetica Inserat','Bitstream Vera Sans Bold','Arial Black',sans serif;
+}
+.logo_app
+{
+    margin: 10px 3px 3px 3px;
+    float: right;
+}
+.titulo
+{
+    text-align: center;
+    font-style: italic;
+    font-weight: bold;
+    font-size: 16px;
+    color: #514721;
+}
+.subtitulo
+{
+    text-align: center;
+    font-style: italic;
+    font-weight: bold;
+    font-size: 14px;
+    color: #535353;
+}
+
+a:active,a:visited,a:link
+{
+    color: black;    
+}
+
+.resaltar_link a:hover
+{
+    color: blueviolet;
+}
+.no-close .ui-dialog-titlebar-close
+{
+    display: none
+}
+.texto_pequeno
+{
+    font-size: 9px;
+}
+
+.fondo
+{
+    background-repeat: no-repeat;
+    background-size: auto; 
+    background-position: center;
+    background-attachment: fixed;
+    background-origin: content-box;
+    /*
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    */
+}
+
+.fondo2
+{
+    background-repeat: no-repeat;
+    background-size: cover; 
+    background-position: center;
+    background-attachment: fixed;
+    background-origin: content-box;
+    height: 100%;
+}
+
+#snackbar {
+    visibility: hidden;
+    min-width: 250px;
+    margin-left: -125px;
+    background-color: #333;
+    color: #fff;
+    text-align: center;
+    border-radius: 2px;
+    padding: 16px;
+    position: fixed;
+    z-index: 1;
+    left: 50%;
+    bottom: 30px;
+    font-size: 17px;
+}
+
+#snackbar.show {
+    visibility: visible;
+    -webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
+    animation: fadein 0.5s, fadeout 0.5s 2.5s;
+}

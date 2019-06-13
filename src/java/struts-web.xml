@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this template, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.3//EN" "http://struts.apache.org/dtds/struts-2.3.dtd">
+<struts>
+    <!-- Ruta Ejemplo -> MasonryCMS/namespace/action.extension-->
+    <!-- Ruta Ejemplo -> MasonryCMS/masonryAdmin/maintenance/manufacturer.mdk-->
+    <package name="masonryMaintenance" namespace="/masonryAdmin/maintenance" extends="struts-default">
+        <global-results>
+            <result name="error">/error.jsp</result>
+        </global-results>
+        <global-exception-mappings>
+            <exception-mapping exception="java.lang.Exception" result="error" />
+        </global-exception-mappings>      
+       <action name="manufacturer" class="web.masonryAdmin.maintenance.Manufacturer">
+            <result name="input">/home/masonryAdmin/maintenance/manufacturer/intro.jsp</result>
+            <result name="success">/home/masonryAdmin/maintenance/manufacturer/intro.jsp</result>
+        </action>      
+       <action name="collection" class="web.masonryAdmin.maintenance.Collection">
+            <result name="input">/home/masonryAdmin/maintenance/collection/intro.jsp</result>
+            <result name="success">/home/masonryAdmin/maintenance/collection/intro.jsp</result>
+        </action> 
+        <action name="packageType" class="web.masonryAdmin.maintenance.PackageType">
+            <result name="input">/home/masonryAdmin/maintenance/packageType/intro.jsp</result>
+            <result name="success">/home/masonryAdmin/maintenance/packageType/intro.jsp</result>
+        </action>    
+         <action name="style" class="web.masonryAdmin.maintenance.Style">
+            <result name="input">/home/masonryAdmin/maintenance/style/intro.jsp</result>
+            <result name="success">/home/masonryAdmin/maintenance/style/intro.jsp</result>
+        </action>  
+         <action name="texture" class="web.masonryAdmin.maintenance.Texture">
+            <result name="input">/home/masonryAdmin/maintenance/texture/intro.jsp</result>
+            <result name="success">/home/masonryAdmin/maintenance/texture/intro.jsp</result>
+        </action>    
+         <action name="color" class="web.masonryAdmin.maintenance.Color">
+            <result name="input">/home/masonryAdmin/maintenance/color/intro.jsp</result>
+            <result name="success">/home/masonryAdmin/maintenance/color/intro.jsp</result>
+        </action>  
+         <action name="material" class="web.masonryAdmin.maintenance.Material">
+            <result name="input">/home/masonryAdmin/maintenance/material/intro.jsp</result>
+            <result name="success">/home/masonryAdmin/maintenance/material/intro.jsp</result>
+        </action> 
+          <action name="subMaterial" class="web.masonryAdmin.maintenance.SubMaterial">
+            <result name="input">/home/masonryAdmin/maintenance/subMaterial/intro.jsp</result>
+            <result name="success">/home/masonryAdmin/maintenance/subMaterial/intro.jsp</result>
+          </action>   
+          <action name="metricsSystem" class="web.masonryAdmin.maintenance.MetricsSystem">
+            <result name="input">/home/masonryAdmin/maintenance/metricsSystem/intro.jsp</result>
+            <result name="success">/home/masonryAdmin/maintenance/metricsSystem/intro.jsp</result>
+          </action>         
+    </package>
+    
+</struts>
