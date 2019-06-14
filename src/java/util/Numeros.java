@@ -5,6 +5,7 @@
  */
 package util;
 
+import java.math.BigDecimal;
 import java.text.DecimalFormat;
 
 /**
@@ -32,7 +33,12 @@ public class Numeros {
         }
         return numero;
     }
-
+     public static BigDecimal numeroBigD(String valor) {
+     
+       BigDecimal numero = new BigDecimal(valor);
+     
+        return numero;
+    }
     public static String formateado(double valor, String formato) {
         return new DecimalFormat(formato).format(valor);
     }

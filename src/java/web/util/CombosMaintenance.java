@@ -10,6 +10,7 @@ import java.util.List;
 import org.hibernate.Session;
 import sql.masonryAdmin.maintenance.DtoMaterial;
 import sql.masonryAdmin.maintenance.MaintenanceSQL;
+import sql.masonryAdmin.maintenance.DtoMetricsSystem;
 
 
 /**
@@ -27,4 +28,14 @@ public class CombosMaintenance {
         }
         return combo;
     }
+      public static ArrayList<KeyCombos> getUnits(Session mdk) {
+        ArrayList<KeyCombos> combo = new ArrayList<>();
+        combo.add(new KeyCombos(0, "SELECT ONE METRIC SYSTEM"));
+        List<DtoMetricsSystem> units = MaintenanceSQL.getMetricsSystems(mdk);
+        for (DtoMetricsSystem c : units) {
+            combo.add(new KeyCombos((c.getId()), c.getDescription()));
+        }
+        return combo;
+    }
+
 }

@@ -5,7 +5,7 @@ import java.util.Iterator;
 import org.hibernate.Session;
 import org.hibernate.transform.Transformers;
 import util.Fechas;
-
+import util.Numeros;
 /**
  *
  * @author CR104978
@@ -649,6 +649,98 @@ public class MaintenanceSQL {
                 + " WHERE id = :id")
                 .setParameter("id", m.getId())
                 .setParameter("description", m.getDescription())
+                .setParameter("modified", m.getModified())
+                .setParameter("modifiedBy", m.getModifiedBy())
+                .setParameter("active", m.getActive())
+                .executeUpdate();
+    }
+    
+       ///////////////////Sizes Maintenance/////////////////////  
+
+    public static ArrayList<DtoSize> getSize (Session mdk) {
+        ArrayList<DtoSize> a = new ArrayList<>();
+        Iterator itr = mdk.createNativeQuery("SELECT"
+                + " id,"
+                + " idMetricsSystem,"
+                + " description,"
+                + " length,"
+                + " depth,"
+                + " width,"
+                + " created,"
+                + " createdBy,"
+                + " modified,"
+                + " modifiedBy,"
+                + " active"
+                + " FROM productSize")
+                .setResultTransformer(Transformers.aliasToBean(DtoSize.class))
+                .list().iterator();
+
+        while (itr.hasNext()) {
+            a.add((DtoSize) itr.next());
+        }
+        return a;
+    }
+
+    public static DtoSize getSize(Session mdk, int id) {
+        Iterator itr = mdk.createNativeQuery("SELECT"
+                + " id,"
+                + " idMetricsSystem,"
+                + " description,"
+                + " length,"
+                + " depth,"
+                + " width,"
+                + " created,"
+                + " createdBy,"
+                + " modified,"
+                + " modifiedBy,"
+                + " active"
+                + " FROM productSize"
+                + " WHERE id = :id")
+                .setParameter("id", id)
+                .setResultTransformer(Transformers.aliasToBean(DtoSize.class))
+                .list().iterator();
+        DtoSize m = null;
+        while (itr.hasNext()) {
+            m = (DtoSize) itr.next();
+        }
+        return m;
+    }
+
+    public static void saveSize(Session mdk, DtoSize m) {
+        mdk.createNativeQuery("INSERT INTO productSize"
+                + " (idMetricsSystem, description, length, depth, width, created, createdBy, modified, modifiedBy, active)"
+                + " VALUES"
+                + " (:idMetricsSystem, :description, :length, :depth, :width, :created, :createdBy, :modified, :modifiedBy, :active)")
+                .setParameter("idMetricsSystem", m.getIdMetricsSystem())
+                .setParameter("description", m.getDescription())
+                .setParameter("length", m.getLength())
+                .setParameter("depth", m.getDepth())
+                .setParameter("width", m.getWidth())
+                .setParameter("created", m.getCreated())
+                .setParameter("createdBy", m.getCreatedBy())
+                .setParameter("modified", m.getModified())
+                .setParameter("modifiedBy", m.getModifiedBy())
+                .setParameter("active", m.getActive())
+                .executeUpdate();
+    }
+
+    public static void updateSize(Session mdk, DtoSize m) {
+        mdk.createNativeQuery("UPDATE productSize SET"
+                + " idMetricsSystem = :idMetricsSystem,"
+                + " description = :description,"
+                + " length = :length,"
+                + " depth = :depth,"
+                + " width = :width,"
+                + " modified = :modified,"
+                + " modifiedBy = :modifiedBy,"
+                + " active = :active"
+                + " WHERE id = :id")
+                .setParameter("id", m.getId())
+                .setParameter("idMetricsSystem", m.getIdMetricsSystem())
+                .setParameter("description", m.getDescription())
+                .setParameter("length", m.getLength())
+                .setParameter("depth", m.getDepth())
+                .setParameter("width", m.getWidth())             
                 .setParameter("modified", m.getModified())
                 .setParameter("modifiedBy", m.getModifiedBy())
                 .setParameter("active", m.getActive())
