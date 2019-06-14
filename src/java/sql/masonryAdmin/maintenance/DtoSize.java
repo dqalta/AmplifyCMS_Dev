@@ -20,6 +20,8 @@ public class DtoSize implements Serializable {
     private double length;
     private double depth;
     private double width;
+    private int unitsPerSq2;
+    private int unitsPerSf2;
     private Date created;
     private String createdBy;
     private Date modified;
@@ -86,6 +88,24 @@ public class DtoSize implements Serializable {
     public Date getCreated() {
         return created;
     }
+    public int getUnitsPerSq2() {
+        return unitsPerSq2;
+    }
+
+
+    public void setUnitsPerSq2(int unitsPerSq2) {
+        this.unitsPerSq2 = unitsPerSq2;
+    }
+
+   
+    public int getUnitsPerSf2() {
+        return unitsPerSf2;
+    }
+
+   
+    public void setUnitsPerSf2(int unitsPerSf2) {
+        this.unitsPerSf2 = unitsPerSf2;
+    }
 
     public void setCreated(Date created) {
         this.created = created;
@@ -122,6 +142,9 @@ public class DtoSize implements Serializable {
     public void setActive(Boolean active) {
         this.active = active;
     }
+
+  
+ 
 
  
 

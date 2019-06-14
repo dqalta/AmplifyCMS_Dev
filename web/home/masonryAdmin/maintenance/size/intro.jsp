@@ -66,13 +66,13 @@
                                                                           <st:select class="form-control"  id="idMetricsSystem" name="idMetricsSystem" value="%{idMetricsSystem}" list="units" listKey="id" listValue="description"/>                                          
                                                                       </div>
                                                                   </div> 
-                                                                  <div class="col-sm-2">
+                                                                  <div class="col-sm-3">
                                                                       <st:textfield label="Length" name="length" id="length" class="form-control" value="%{length}" placeholder="Length..."/>
                                                                   </div>    
-                                                                  <div class="col-sm-2">
+                                                                  <div class="col-sm-3">
                                                                       <st:textfield label="Depth" name="depth" id="depth" class="form-control" value="%{depth}" placeholder="Depth..."/>
                                                                   </div> 
-                                                                  <div class="col-sm-2">
+                                                                  <div class="col-sm-3">
                                                                       <st:textfield label="Width" name="width" id="width" class="form-control" value="%{width}" placeholder="Width..."/>
                                                                   </div> 
                                                                   <div class="col-sm-1">
@@ -82,6 +82,16 @@
                                                                           <st:checkbox class="lcc" theme="simple" name="check_active" id="check_active" fieldValue="%{active}" />
                                                                       </div>
                                                                   </div>  
+                                                                      <div class="form-gruop">
+                                                                         <div class="col-sm-3">
+                                                                             <st:textfield label="Units per m2" name="unitsPerSqm2" id="unitsPerSqm2" class="form-control" value="%{unitsPerSqm2}" placeholder="Units per Square Meter..."/>
+                                                                         </div> 
+                                                                        <div class="col-sm-3">
+                                                                             <st:textfield label="Units per ft2" name="unitsPerSqf2" id="unitsPerSqf2" class="form-control" value="%{unitsPerSqf2}" placeholder="Units per Square f..."/>
+                                                                        </div> 
+                                                                                     
+                                                                      </div>
+   
                                                                   </div>
                                                         <br>
                                                     </st:form>   
@@ -125,6 +135,8 @@
                                         <th>Length</th>
                                         <th>Depth</th>
                                         <th>Widht</th>
+                                        <th>Units per M2</th>
+                                        <th>Units per f2</th>
                                         <th>Created</th>
                                         <th>Created By</th>
                                         <th>Modified</th>
@@ -142,7 +154,9 @@
                                                 <td><st:property value="%{#Sizes.description}" /></td> 
                                                 <td><st:property value="%{#Sizes.length}" /></td>   
                                                 <td><st:property value="%{#Sizes.depth}" /></td>   
-                                                <td><st:property value="%{#Sizes.width}" /></td>   
+                                                <td><st:property value="%{#Sizes.width}" /></td>  
+                                                <td><st:property value="%{#Sizes.unitsPerSqm2}" /></td>  
+                                                <td><st:property value="%{#Sizes.unitsPerSqf2}" /></td>  
                                                 <td><st:date name="%{#Sizes.created}" format="dd/MM/yyyy"/></td>       
                                                 <td><st:property value="%{#Sizes.createdBy}" /></td>    
                                                 <td><st:date name="%{#Sizes.modified}" format="dd/MM/yyyy"/></td>    
@@ -159,6 +173,8 @@
                                             </tr>
                                         </st:iterator>
                                     </st:if>
+                                                                     
+
                                 </tbody>
                             </table>
                         </div>

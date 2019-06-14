@@ -657,7 +657,7 @@ public class MaintenanceSQL {
     
        ///////////////////Sizes Maintenance/////////////////////  
 
-    public static ArrayList<DtoSize> getSize (Session mdk) {
+    public static ArrayList<DtoSize> getSizes (Session mdk) {
         ArrayList<DtoSize> a = new ArrayList<>();
         Iterator itr = mdk.createNativeQuery("SELECT"
                 + " id,"
@@ -666,6 +666,8 @@ public class MaintenanceSQL {
                 + " length,"
                 + " depth,"
                 + " width,"
+                + " unitsPerSq2,"
+                + " unitsPerSf2,"
                 + " created,"
                 + " createdBy,"
                 + " modified,"
@@ -689,6 +691,8 @@ public class MaintenanceSQL {
                 + " length,"
                 + " depth,"
                 + " width,"
+                + " unitsPerSq2,"
+                + " unitsPerSf2,"                
                 + " created,"
                 + " createdBy,"
                 + " modified,"
@@ -708,14 +712,16 @@ public class MaintenanceSQL {
 
     public static void saveSize(Session mdk, DtoSize m) {
         mdk.createNativeQuery("INSERT INTO productSize"
-                + " (idMetricsSystem, description, length, depth, width, created, createdBy, modified, modifiedBy, active)"
+                + " (idMetricsSystem, description, length, depth, width, unitsPerSq2, unitsPerSf2, created, createdBy, modified, modifiedBy, active)"
                 + " VALUES"
-                + " (:idMetricsSystem, :description, :length, :depth, :width, :created, :createdBy, :modified, :modifiedBy, :active)")
+                + " (:idMetricsSystem, :description, :length, :depth, :width, :unitsPerSq2, :unitsPerSf2, :created, :createdBy, :modified, :modifiedBy, :active)")
                 .setParameter("idMetricsSystem", m.getIdMetricsSystem())
                 .setParameter("description", m.getDescription())
                 .setParameter("length", m.getLength())
                 .setParameter("depth", m.getDepth())
                 .setParameter("width", m.getWidth())
+                .setParameter("unitsPerSq2", m.getUnitsPerSq2())  
+                .setParameter("unitsPerSf2", m.getUnitsPerSf2())                  
                 .setParameter("created", m.getCreated())
                 .setParameter("createdBy", m.getCreatedBy())
                 .setParameter("modified", m.getModified())
@@ -731,6 +737,8 @@ public class MaintenanceSQL {
                 + " length = :length,"
                 + " depth = :depth,"
                 + " width = :width,"
+                + " unitsPerSq2 = :unitsPerSq2,"
+                + " unitsPerSf2 = :unitsPerSf2,"                  
                 + " modified = :modified,"
                 + " modifiedBy = :modifiedBy,"
                 + " active = :active"
@@ -740,7 +748,9 @@ public class MaintenanceSQL {
                 .setParameter("description", m.getDescription())
                 .setParameter("length", m.getLength())
                 .setParameter("depth", m.getDepth())
-                .setParameter("width", m.getWidth())             
+                .setParameter("width", m.getWidth())
+                .setParameter("unitsPerSq2", m.getUnitsPerSq2())  
+                .setParameter("unitsPerSf2", m.getUnitsPerSf2())                    
                 .setParameter("modified", m.getModified())
                 .setParameter("modifiedBy", m.getModifiedBy())
                 .setParameter("active", m.getActive())
