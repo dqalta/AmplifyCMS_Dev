@@ -49,6 +49,10 @@ and open the template in the editor.
           <action name="metricsSystem" class="web.masonryAdmin.maintenance.MetricsSystem">
             <result name="input">/home/masonryAdmin/maintenance/metricsSystem/intro.jsp</result>
             <result name="success">/home/masonryAdmin/maintenance/metricsSystem/intro.jsp</result>
+          </action>  
+           <action name="size" class="web.masonryAdmin.maintenance.Size">
+            <result name="input">/home/masonryAdmin/maintenance/size/intro.jsp</result>
+            <result name="success">/home/masonryAdmin/maintenance/size/intro.jsp</result>
           </action>         
     </package>
     

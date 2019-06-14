@@ -167,8 +167,12 @@
                     <a href="#"><span class="glyphicon glyphicon-search" aria-hidden="true"></span> Search</a>
                 </li>                
                 <li>
-                    <span class="glyphicon glyphicon-search" aria-hidden="true"></span><font color="#337AB7"> Site Taxonomy</font>
+                    <span class="glyphicon glyphicon-search" aria-hidden="true"></span><font color="#337AB7"> Product Components</font>
                 </li>
+                  <li>
+                    <a href="/MasonryCMS/masonryAdmin/maintenance/product.mdk"><span class="glyphicon glyphicon-tasks" aria-hidden="true"></span> Product Main</a>
+                </li>
+                <li>
                 <li>
                     <a href="/MasonryCMS/masonryAdmin/maintenance/collection.mdk"><span class="glyphicon glyphicon-tasks" aria-hidden="true"></span> Collections</a>
                 </li>
@@ -192,7 +196,7 @@
                 </li>
                   </li>
                 <li>
-                    <a href="/MasonryCMS/masonryAdmin/maintenance/style.mdk"><span class="fa fa-inbox" aria-hidden="true"></span> Product Sizes</a>
+                    <a href="/MasonryCMS/masonryAdmin/maintenance/size.mdk"><span class="fa fa-inbox" aria-hidden="true"></span> Product Sizes</a>
                 </li>
                 <li>
                     <a href="/MasonryCMS/masonryAdmin/maintenance/texture.mdk"><span class="fa fa-inbox" aria-hidden="true"></span> Textures</a>

@@ -44,7 +44,7 @@ public class SubMaterial extends ActionSupport implements SessionAware {
     boolean mensaje;//Variable bandera para saber si se muestra o no el mensaje
 
     //Variables de la pantalla
-    private ArrayList<DtoSubMaterial> submaterials = new ArrayList<>();//Variable con la lista de datos
+    private ArrayList<DtoSubMaterial> subMaterials = new ArrayList<>();//Variable con la lista de datos
     private ArrayList<KeyCombos> materials = new ArrayList<>();
 
     //Variables del mantenimiento
@@ -136,11 +136,11 @@ public class SubMaterial extends ActionSupport implements SessionAware {
 
     //SET GET CUSToMIZED
     public ArrayList<DtoSubMaterial> getSubMaterials() {
-        return submaterials;
+        return subMaterials;
     }
 
-    public void setSubMaterials(ArrayList<DtoSubMaterial> submaterials) {
-        this.submaterials = submaterials;
+    public void setSubMaterials(ArrayList<DtoSubMaterial> subMaterials) {
+        this.subMaterials = subMaterials;
     }
 
     public int getId() {
@@ -253,7 +253,7 @@ public class SubMaterial extends ActionSupport implements SessionAware {
     }
 
     public void chargeSubMaterials() {
-        submaterials = MaintenanceSQL.getSubMaterials(mdk);
+        subMaterials = MaintenanceSQL.getSubMaterials(mdk);
     }
 
     public void chargeSelect() {

@@ -49,7 +49,7 @@
                                         <div id="tabsContents" class="tab-content">
                                             <div class="tab-pane fade active in" id="maintenanceTab">    
                                                 <div class="container-fluid">
-                                                    <st:form id="formulario" name="formulario" cssClass="form-vertical" action="submaterial" method="post" theme="bootstrap">                                        
+                                                    <st:form id="formulario" name="formulario" cssClass="form-vertical" action="subMaterial" method="post" theme="bootstrap">                                        
                                                         <st:hidden id="accion" name="accion" value="%{accion}"/>
                                                         <st:hidden id="idEdit" name="idEdit" value="%{idEdit}"/>
                                                         <br>
@@ -104,7 +104,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <table id="table_submaterial" class="table table-striped" style="width:100%; margin: 0px auto;">
+                            <table id="table_subMaterial" class="table table-striped" style="width:100%; margin: 0px auto;">
                                 <thead>
                                     <tr>
                                         <th>ID</th>

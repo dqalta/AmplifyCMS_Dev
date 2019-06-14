@@ -553,7 +553,7 @@ public class MaintenanceSQL {
     }
 
     public static void saveSubMaterial(Session mdk, DtoSubMaterial m) {
-        mdk.createNativeQuery("INSERT INTO collectionSubCategory"
+        mdk.createNativeQuery("INSERT INTO productSubMaterial"
                 + " (idProductMaterial, description, created, createdBy, modified, modifiedBy, active)"
                 + " VALUES"
                 + " (:idProductMaterial, :description, :created, :createdBy, :modified, :modifiedBy, :active)")
@@ -589,7 +589,6 @@ public class MaintenanceSQL {
         ArrayList<DtoMetricsSystem> a = new ArrayList<>();
         Iterator itr = mdk.createNativeQuery("SELECT"
                 + " id,"
-                + " valueMinimum,"
                 + " description,"
                 + " created,"
                 + " createdBy,"
@@ -606,10 +605,9 @@ public class MaintenanceSQL {
         return a;
     }
 
-    public static DtoMetricsSystem getMetricsSystems(Session mdk, int id) {
+    public static DtoMetricsSystem getMetricsSystem(Session mdk, int id) {
         Iterator itr = mdk.createNativeQuery("SELECT"
                 + " id,"
-                + " valueMinimum,"
                 + " description,"
                 + " created,"
                 + " createdBy,"
@@ -628,13 +626,12 @@ public class MaintenanceSQL {
         return m;
     }
 
-    public static void saveMetricsSystems(Session mdk, DtoMetricsSystem m) {
+    public static void saveMetricsSystem(Session mdk, DtoMetricsSystem m) {
         mdk.createNativeQuery("INSERT INTO metricsSystem"
-                + " (id, description, valueMinimum, created, createdBy, modified, modifiedBy, active)"
+                + " (description, created, createdBy, modified, modifiedBy, active)"
                 + " VALUES"
-                + " (:id, :description, :valueMinimum, :created, :createdBy, :modified, :modifiedBy, :active)") 
+                + " (:description, :created, :createdBy, :modified, :modifiedBy, :active)") 
                 .setParameter("description", m.getDescription())
-                .setParameter("valueMinimum", m.getValueMinimum())
                 .setParameter("created", m.getCreated())
                 .setParameter("createdBy", m.getCreatedBy())
                 .setParameter("modified", m.getModified())
@@ -643,17 +640,15 @@ public class MaintenanceSQL {
                 .executeUpdate();
     }
 
-    public static void updateMetricsSystems(Session mdk, DtoMetricsSystem m) {
+    public static void updateMetricsSystem(Session mdk, DtoMetricsSystem m) {
         mdk.createNativeQuery("UPDATE metricsSystem SET"
                 + " description = :description,"
-                + " valueMinimum = :valueMinimum,"
                 + " modified = :modified,"
                 + " modifiedBy = :modifiedBy,"
                 + " active = :active"
                 + " WHERE id = :id")
                 .setParameter("id", m.getId())
                 .setParameter("description", m.getDescription())
-                .setParameter("valueMinimum", m.getValueMinimum())            
                 .setParameter("modified", m.getModified())
                 .setParameter("modifiedBy", m.getModifiedBy())
                 .setParameter("active", m.getActive())

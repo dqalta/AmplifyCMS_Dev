@@ -11,7 +11,7 @@ $(document).ready(function () {
     mensajes = $("#mensajes").val();
     if (permiso === "true") {
         scroll();
-        dataTable("table_submaterial");
+        dataTable("table_subMaterial");
         $("#idProductMaterial").chosen({width: "100%"});
     }
     if (mensaje === "true") {

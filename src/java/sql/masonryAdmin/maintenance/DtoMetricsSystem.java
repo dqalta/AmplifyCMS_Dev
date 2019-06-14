@@ -22,7 +22,7 @@ public class DtoMetricsSystem implements Serializable {
     private Date modified;
     private String modifiedBy;
     private Boolean active;
-    private float valueMinimum;
+    
     public DtoMetricsSystem() {
     }
 
@@ -83,13 +83,7 @@ public class DtoMetricsSystem implements Serializable {
     }
 
   
-    public float getValueMinimum() {
-        return valueMinimum;
-    }
 
-    public void setValueMinimun(float valueMinimum) {
-        this.valueMinimum = valueMinimum;
-    }
 
 
 }

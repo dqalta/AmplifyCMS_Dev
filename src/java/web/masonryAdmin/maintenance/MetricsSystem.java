@@ -14,8 +14,8 @@ import org.apache.struts2.interceptor.SessionAware;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
-import sql.masonryAdmin.maintenance.DtoMetricsSystem;
 import sql.masonryAdmin.maintenance.MaintenanceSQL;
+import sql.masonryAdmin.maintenance.DtoMetricsSystem;
 import util.Fechas;
 import web.sesion.ORMUtil;
 
@@ -42,12 +42,11 @@ public class MetricsSystem extends ActionSupport implements SessionAware {
     boolean mensaje;//Variable bandera para saber si se muestra o no el mensaje
 
     //Variables de la pantalla
-    private ArrayList<DtoMetricsSystem> metricssystems = new ArrayList<>();//Variable con la lista de datos
+    private ArrayList<DtoMetricsSystem> metricsSystems = new ArrayList<>();//Variable con la lista de datos
 
     //Variables del mantenimiento
     int id;
     String description;
-    float valueMinimum;
     boolean active;
     int idEdit;
 
@@ -133,11 +132,11 @@ public class MetricsSystem extends ActionSupport implements SessionAware {
   
     //SET GET CUSTUMIZED
     public ArrayList<DtoMetricsSystem> getMetricsSystems() {
-        return metricssystems;
+        return metricsSystems;
     }
 
-    public void setCollections(ArrayList<DtoMetricsSystem> metricssystems) {
-        this.metricssystems = metricssystems;
+    public void setMetricsSystems(ArrayList<DtoMetricsSystem> metricsSystems) {
+        this.metricsSystems = metricsSystems;
     }
 
     public int getId() {
@@ -150,13 +149,6 @@ public class MetricsSystem extends ActionSupport implements SessionAware {
 
     public int getIdEdit() {
         return idEdit;
-    }
-      public float getValueMinimum() {
-        return valueMinimum;
-    }
-
-    public void setValueMinimum(float valueMinimum) {
-        this.valueMinimum = valueMinimum;
     }
 
     public void setIdEdit(int idEdit) {
@@ -192,7 +184,6 @@ public class MetricsSystem extends ActionSupport implements SessionAware {
     public void process() {
         switch (accion) {
             case 1:
-                System.out.println("Active: "+active);
                 save();
                 break;
             case 2:
@@ -234,7 +225,7 @@ public class MetricsSystem extends ActionSupport implements SessionAware {
     }
 
     public void chargeMetricsSystems() {
-        metricssystems = MaintenanceSQL.getMetricsSystems(mdk);
+        metricsSystems = MaintenanceSQL.getMetricsSystems(mdk);
     }
 
     public void insert() {
@@ -243,18 +234,17 @@ public class MetricsSystem extends ActionSupport implements SessionAware {
             try {
                 tn = mdk.beginTransaction();//Inicializo la transacción de la DB 
 
-                DtoMetricsSystem m = new DtoMetricsSystem();//Creo un objeto del tipo Manufacturer
+                DtoMetricsSystem m = new DtoMetricsSystem();//Creo un objeto del tipo MetricsSystem
 
                 //Seteo los datos del objeto excepto el id por que es Auto Incremental
                 m.setDescription(description);
-                m.setValueMinimun(valueMinimum);
                 m.setCreated(Fechas.ya());
                 m.setCreatedBy(usuario);
                 m.setModified(Fechas.ya());
                 m.setModifiedBy(usuario);
                 m.setActive(active);//Lo puse en true porque se me olvidó crear el check en el formulario, en la noche hacemos eso jajaja
 
-                MaintenanceSQL.saveMetricsSystems(mdk, m);
+                MaintenanceSQL.saveMetricsSystem(mdk, m);
                 //AdmConsultas.bitacora(o2c, usuario, "Encargado guardado Tipo: " + tipo + ", Codigo: " + codigo);
 
                 tn.commit();// Hago Commit a la transacción para guardar el registro
@@ -265,7 +255,7 @@ public class MetricsSystem extends ActionSupport implements SessionAware {
             } catch (HibernateException x) {
                 //AdmConsultas.error(o2c, x.getMessage());
                 // mensajes = mensajes + "danger<>Error<>Error al guardar encargados: " + codigo + ": " + ExceptionUtils.getMessage(x) + ".";
-                mensajes = mensajes + "danger<>Error<>Error.|";
+                mensajes = mensajes + "danger<>Error<>Error  "+x.getMessage()+".|";
                 mensaje = true;
                 if (tn != null) {//Si hay error y el transacción es distinto de null, es porque la transacción existe, entoncs hago rollback
                     tn.rollback();
@@ -280,20 +270,19 @@ public class MetricsSystem extends ActionSupport implements SessionAware {
             Transaction tn = null;
             try {
                 tn = mdk.beginTransaction();
-                DtoMetricsSystem m = MaintenanceSQL.getMetricsSystems(mdk, idEdit);
+                DtoMetricsSystem m = MaintenanceSQL.getMetricsSystem(mdk, idEdit);
                 if (m != null) {
-                    m.setValueMinimun(valueMinimum);
                     m.setDescription(description);
                     m.setModified(Fechas.ya());
                     m.setModifiedBy(usuario);
                     m.setActive(active);//Lo puse en true porque se me olvidó crear el check en el formulario, en la noche hacemos eso jajaja
 
-                    MaintenanceSQL.updateMetricsSystems(mdk, m);
+                    MaintenanceSQL.updateMetricsSystem(mdk, m);
                     // AdmConsultas.bitacora(o2c, usuario, "Encargado modificado Tipo: " + tipo + ", Codigo: " + codigo);
 
                     tn.commit();
                     clearFields();
-                    mensajes = mensajes + "info<>Information<>Collection modified successfully.";
+                    mensajes = mensajes + "info<>Information<>Measure System modified successfully.";
                     mensaje = true;
                 } else {
                     insert();
@@ -301,7 +290,7 @@ public class MetricsSystem extends ActionSupport implements SessionAware {
             } catch (HibernateException x) {
                 //AdmConsultas.error(o2c, x.getMessage());
                 // mensajes = mensajes + "danger<>Error<>Error al modificar encargados: " + codigo + ": " + ExceptionUtils.getMessage(x) + ".";
-                mensajes = mensajes + "danger<>Error<>Error.|";
+                mensajes = mensajes + "danger<>Error<>Error  "+x.getMessage()+".|";
                 mensaje = true;
                 if (tn != null) {
                     tn.rollback();
@@ -312,14 +301,13 @@ public class MetricsSystem extends ActionSupport implements SessionAware {
     }
 
     public void readForUpdate() {
-        DtoMetricsSystem m = MaintenanceSQL.getMetricsSystems(mdk, idEdit);
+        DtoMetricsSystem m = MaintenanceSQL.getMetricsSystem(mdk, idEdit);
         if (m != null) {
             idEdit = m.getId();
-            valueMinimum= m.getValueMinimum();
             description = m.getDescription();
             active = m.getActive();
         } else {
-            mensajes = mensajes + "danger<>Error<>Collection does not exist.";
+            mensajes = mensajes + "danger<>Error<>Metrics system does not exist.";
             mensaje = true;
         }
     }

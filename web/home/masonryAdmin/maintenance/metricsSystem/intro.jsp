@@ -51,13 +51,11 @@
                                                         <st:hidden id="accion" name="accion" value="%{accion}"/>
                                                         <st:hidden id="idEdit" name="idEdit" value="%{idEdit}"/>
                                                         <br>
+                                                        
                                                         <div class="row">
                                                             <div class="col-sm-5">
-                                                                <st:textfield label="Description:" name="description" id="description" class="form-control" value="%{description}" placeholder="Description..."/>                                                            
-                                                            <div class="col-sm-6">
-                                                                <st:textfield label="Minimum" name="valueMinimum" id="valueMinimum" class="form-control" value="%{valueMinimum}" placeholder="0..."/>
-                                                            </div> 
-                                                            
+                                                                <st:textfield label="Description:" name="description" id="description" class="form-control" value="%{description}" placeholder="Description..."/>                                                                                                      
+                                                            </div>
                                                             <div class="col-sm-2">
                                                                 <div class="form-group">
                                                                     <label for="check_active">Active?</label>
@@ -103,7 +101,6 @@
                                 <thead>
                                     <tr>
                                         <th>ID</th>
-                                        <th>Minimum Value</th>                                        
                                         <th>Description</th>
                                         <th>Created</th>
                                         <th>Created By</th>
@@ -115,10 +112,9 @@
                                 </thead>
                                 <tbody>
                                     <st:if test="%{!getMetricsSystems().isEmpty()}">
-                                        <st:iterator value="" var="MetricsSystems" status="index">
+                                        <st:iterator value="MetricsSystems" var="MetricsSystems" status="index">
                                             <tr>
-                                                <td><st:property value="%{#MetricsSystems.id}" /></td>     
-                                                <td><st:property value="%{#MetricsSystems.valueMinimum}" /></td>           
+                                                <td><st:property value="%{#MetricsSystems.id}" /></td>                                                
                                                 <td><st:property value="%{#MetricsSystems.description}" /></td>        
                                                 <td><st:date name="%{#MetricsSystems.created}" format="dd/MM/yyyy"/></td>       
                                                 <td><st:property value="%{#MetricsSystems.createdBy}" /></td>    
