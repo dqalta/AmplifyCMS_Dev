@@ -9,9 +9,21 @@
         <st:include value="/generals/css-js-Head.jsp" />
         <st:include value="/generals/css-js-Bootstrap.jsp"/>
         <st:include value="/generals/css-js-app.jsp"/>
+          <style type="text/css">
+              * {
+                box-sizing: border-box;
+                }
+              img {
+                    width: 50%;
+                    height: auto;                   
+                    display:block;
+                    margin: 200px auto;
+                    }
+           
+
+        </style>
     </head>
     <body style="margin: 0px;">
-
         <st:if test="%{sesionActiva == true}">     
             <st:include value="/generals/navBarHead.jsp" /> 
             <st:include value="/generals/navBarFooter.jsp" />  
@@ -19,7 +31,7 @@
         <st:else>
             <%response.sendRedirect("/MasonryCMS/");%>
         </st:else> 
-        
+      <img src="/MasonryCMS/home/img/logo.png">
     </body>
 </html>
 
