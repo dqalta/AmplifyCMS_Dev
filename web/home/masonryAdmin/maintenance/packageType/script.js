@@ -68,7 +68,7 @@ function dataTable(id) {
         "bProcessing": true,
         "bDeferRender": true,
         "lengthMenu": [[10, 25, 50, 100, -1], [10, 25, 50, 100, "ALL"]],
-        "oLanguage":
+         "oLanguage":
                 {
                     "sProcessing": "Loading...",
                     "sLengthMenu": "Display _MENU_ entries for page",

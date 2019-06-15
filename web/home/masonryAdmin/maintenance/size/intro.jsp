@@ -155,8 +155,8 @@
                                                 <td><st:property value="%{#Sizes.length}" /></td>   
                                                 <td><st:property value="%{#Sizes.depth}" /></td>   
                                                 <td><st:property value="%{#Sizes.width}" /></td>  
-                                                <td><st:property value="%{#Sizes.unitsPerSqm2}" /></td>  
-                                                <td><st:property value="%{#Sizes.unitsPerSqf2}" /></td>  
+                                                <td><st:property value="%{#Sizes.unitsPerSq2}" /></td>  
+                                                <td><st:property value="%{#Sizes.unitsPerSf2}" /></td>  
                                                 <td><st:date name="%{#Sizes.created}" format="dd/MM/yyyy"/></td>       
                                                 <td><st:property value="%{#Sizes.createdBy}" /></td>    
                                                 <td><st:date name="%{#Sizes.modified}" format="dd/MM/yyyy"/></td>    
