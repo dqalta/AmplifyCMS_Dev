@@ -24,8 +24,9 @@
             <st:hidden id="mensaje" name="mensaje" value="%{mensaje}" />
             <st:hidden id="mensajes" name="mensajes" value="%{mensajes}" />
 
-
-            <st:include value="/generals/navBarHead.jsp" /> 
+            <st:include value="/generals/navBarHead.jsp" >
+                <st:param name="title">UNITS</st:param>
+            </st:include> 
             <st:if test="%{permiso == true}">              
 
 
@@ -51,7 +52,7 @@
                                                         <st:hidden id="accion" name="accion" value="%{accion}"/>
                                                         <st:hidden id="idEdit" name="idEdit" value="%{idEdit}"/>
                                                         <br>
-                                                        
+
                                                         <div class="row">
                                                             <div class="col-sm-5">
                                                                 <st:textfield label="Description:" name="description" id="description" class="form-control" value="%{description}" placeholder="Description..."/>                                                                                                      
@@ -135,12 +136,6 @@
                                 </tbody>
                             </table>
                         </div>
-
-
-                        <span class="ir-arriba" data-toggle="tooltip" data-placement="left" title="" data-original-title="Ir arriba">
-                            <span class="glyphicon glyphicon-menu-up"></span>
-                        </span>
-
 
                         <div class="modal" id="ModalProcesando">
                             <div class="modal-dialog">

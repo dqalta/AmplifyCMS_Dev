@@ -52,7 +52,7 @@ function scroll() {
         container: 'body'
     });
 
-    $('.ir-arriba').click(function () {
+    $('.go-up').click(function () {
         $('body, html').animate({
             scrollTop: '0px'
         }, 300);
@@ -60,9 +60,9 @@ function scroll() {
 
     $(window).scroll(function () {
         if ($(this).scrollTop() > 0) {
-            $('.ir-arriba').slideDown(300);
+            $('.go-up').slideDown(300);
         } else {
-            $('.ir-arriba').slideUp(300);
+            $('.go-up').slideUp(300);
         }
     });
 

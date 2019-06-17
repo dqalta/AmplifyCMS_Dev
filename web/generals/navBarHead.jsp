@@ -1,3 +1,17 @@
+<script type="text/javascript">
+    function LogOut() {
+        $("#ModalLogOut").modal("hide");
+        window.location = "/MasonryCMS/logOut.mdk";
+    }
+    function AskLogOut() {
+        $("#ModalLogOut").modal();
+    }
+    $(document).keydown(function (event) {
+        if (event.keyCode === 27) {
+            $('#ModalLogOut').modal("hide");
+        }
+    });
+</script>
 <style>
     /* Toggle Styles */
 
@@ -117,23 +131,54 @@
         }
     }
 </style>
-<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
-    <div class="container-fluid">
-        <div class="navbar-header">
-            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-                <span class="sr-only">Toggle navigation</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
-            <a class="navbar-brand" href="#menu-toggle" id="menu-toggle"><span class="glyphicon glyphicon-list" aria-hidden="true"></span></a>
+<title>Masonry Admin CMS</title>
+<link rel="shortcut icon" type="image/png" href="/Masonry/home/img/logo.png"/>
+<%@ taglib uri="/struts-tags" prefix="st"%>  
+<st:set var="title">${param.title}</st:set>
+
+
+<div class="modal" id="ModalLogOut">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title"><i class="fa fa-question-circle-o"></i>&nbsp;&nbsp;Masonry CMS</h4>
+            </div>
+            <div class="modal-body">
+                <h4>You really want to close the session?</h4>
+            </div>
+            <div class="modal-footer">
+                <button type="button" style="background-color: #FF6600 !important; " class="btn btn-warning" onclick="LogOut();"><i class="glyphicon glyphicon-log-out"></i>&nbsp;Yes</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal"><i class="glyphicon glyphicon-remove"></i>&nbsp;No</button>
+            </div>
         </div>
-        <div id="navbar" class="navbar-collapse collapse">
+    </div>
+</div>
+
+    <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="#menu-toggle" id="menu-toggle"><span class="glyphicon glyphicon-list" aria-hidden="true"></span></a>
+            </div>
+            <div id="navbar" class="navbar-collapse collapse">
+
+                <ul class="nav navbar-nav navbar-left">
+                    <li><a style="color:#FF6600 !important;"><st:property value="%{title}"/></a></li>
+            </ul>
             <ul class="nav navbar-nav navbar-right">
-                <li><a href="#"><span class="glyphicon glyphicon-home" aria-hidden="true"></span> Home</a></li>
-                <li><a href="#"><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span> Messages </a></li>
-                <li><a href="#"><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span> Help</a></li>
-                <li><a href="#"><span class="glyphicon glyphicon-off" aria-hidden="true"></span> Log Out</a></li>
+                <li><a href="/MasonryCMS/home/home.mdk"><span style="color:#FF6600 !important;" class="glyphicon glyphicon-home" aria-hidden="true"></span> Home</a></li>
+                <!--
+                <li><a href="#"><span style="color:#FF6600 !important;" class="glyphicon glyphicon-question-sign" aria-hidden="true"></span> Messages </a></li>
+                <li><a href="#"><span style="color:#FF6600 !important;" class="glyphicon glyphicon-question-sign" aria-hidden="true"></span> Help</a></li>
+                -->
+                <li><a href="#"><span style="color:#FF6600 !important;" class="fa fa-cog" aria-hidden="true"></span> Profile</a></li>
+                <li><a onclick="AskLogOut();"><span style="color:#FF6600 !important;" class="glyphicon glyphicon-off" aria-hidden="true"></span> Log Out</a></li>
             </ul>
             <form class="navbar-form navbar-right" action="#" method="GET">
                 <div class="input-group">
@@ -147,7 +192,7 @@
     </div>
 </nav>
 
-<div id="wrapper" class="toggled">
+<div id="wrapper" class="toggled" style="overflow:hidden;">
     <div class="container-fluid">
         <!-- Sidebar -->
         <div id="sidebar-wrapper">
@@ -157,55 +202,68 @@
                 </li>
                 <li class="sidebar-brand">
                     <a href="#" class="navbar-brand">
-                        <span class="glyphicon glyphicon-user" aria-hidden="true"></span> Profile
+                        <span class="fa fa-user-circle-o" aria-hidden="true"></span>&nbsp;<span style="color:#FF6600 !important;"><st:property value="#attr.user" /></span>
+
                     </a>
                 </li>
                 <li>
-                    <a href="#"><span class="glyphicon glyphicon-home" aria-hidden="true"></span> Home</a>
+                    <a href="/MasonryCMS/home/home.mdk"><span style="color:#FF6600 !important;" class="glyphicon glyphicon-home" aria-hidden="true"></span> Home</a>
+                </li> 
+                <li>
+                    <a href="/MasonryCMS/home/home.mdk"><span style="color:#FF6600 !important;" class="fa fa-cog" aria-hidden="true"></span> Profile</a>
+                </li> 
+                <hr style="color:#FF6600 !important;">            
+                <li>
+                    <font color="#337AB7"> Administration</font>
                 </li>
                 <li>
-                    <a href="#"><span class="glyphicon glyphicon-search" aria-hidden="true"></span> Search</a>
-                </li>                
+                    <a href="/MasonryCMS/masonryAdmin/admin/user.mdk"><span style="color:#FF6600 !important;" class="fa fa-users" aria-hidden="true"></span> Users</a>
+                </li>  
                 <li>
-                    <span class="glyphicon glyphicon-search" aria-hidden="true"></span><font color="#337AB7"> Product Components</font>
-                </li>
-                  <li>
-                    <a href="/MasonryCMS/masonryAdmin/maintenance/product.mdk"><span class="glyphicon glyphicon-tasks" aria-hidden="true"></span> Product Main</a>
-                </li>
+                    <a href="/MasonryCMS/masonryAdmin/admin/rol.mdk"><span style="color:#FF6600 !important;" class="fa fa-id-card-o" aria-hidden="true"></span> Rols</a>
+                </li>    
+                <hr style="color:#FF6600 !important;">            
                 <li>
-                <li>
-                    <a href="/MasonryCMS/masonryAdmin/maintenance/collection.mdk"><span class="glyphicon glyphicon-tasks" aria-hidden="true"></span> Collections</a>
+                    <font color="#337AB7"> Product Components</font>
                 </li>
                 <li>
-                    <a href="/MasonryCMS/masonryAdmin/maintenance/material.mdk"><span class="glyphicon glyphicon-stats" aria-hidden="true"></span> Materials</a>
+                    <a href="/MasonryCMS/masonryAdmin/maintenance/product.mdk"><span style="color:#FF6600 !important;" class="fa fa-archive" aria-hidden="true"></span> Product Main</a>
                 </li>
                 <li>
-                    <a href="/MasonryCMS/masonryAdmin/maintenance/subMaterial.mdk"><span class="glyphicon glyphicon-stats" aria-hidden="true"></span> Submaterials</a>
+                <li>
+                    <a href="/MasonryCMS/masonryAdmin/maintenance/collection.mdk"><span style="color:#FF6600 !important;" class="fa fa-tags" aria-hidden="true"></span> Collections</a>
                 </li>
                 <li>
-                    <span class="glyphicon glyphicon-search" aria-hidden="true"></span><font color="#337AB7"> Product Administration</font>
+                    <a href="/MasonryCMS/masonryAdmin/maintenance/material.mdk"><span style="color:#FF6600 !important;" class="fa fa-bookmark" aria-hidden="true"></span> Materials</a>
                 </li>
                 <li>
-                    <a href="/MasonryCMS/masonryAdmin/maintenance/manufacturer.mdk"><span class="fa fa-industry" aria-hidden="true"></span> Manufacturers</a>
+                    <a href="/MasonryCMS/masonryAdmin/maintenance/subMaterial.mdk"><span style="color:#FF6600 !important;" class="fa fa-bookmark-o" aria-hidden="true"></span> SubMaterials</a>
+                </li>
+                <hr style="color:#FF6600 !important;">
+                <li>
+                    <font color="#337AB7"> Product Administration</font>
                 </li>
                 <li>
-                    <a href="/MasonryCMS/masonryAdmin/maintenance/packageType.mdk"><span class="fa fa-inbox" aria-hidden="true"></span> Package Types</a>
+                    <a href="/MasonryCMS/masonryAdmin/maintenance/manufacturer.mdk"><span style="color:#FF6600 !important;" class="fa fa-industry" aria-hidden="true"></span> Manufacturers</a>
                 </li>
                 <li>
-                    <a href="/MasonryCMS/masonryAdmin/maintenance/style.mdk"><span class="fa fa-inbox" aria-hidden="true"></span> Product Styles</a>
-                </li>
-                  </li>
-                <li>
-                    <a href="/MasonryCMS/masonryAdmin/maintenance/size.mdk"><span class="fa fa-inbox" aria-hidden="true"></span> Product Sizes</a>
+                    <a href="/MasonryCMS/masonryAdmin/maintenance/packageType.mdk"><span style="color:#FF6600 !important;" class="fa fa-inbox" aria-hidden="true"></span> Package Types</a>
                 </li>
                 <li>
-                    <a href="/MasonryCMS/masonryAdmin/maintenance/texture.mdk"><span class="fa fa-inbox" aria-hidden="true"></span> Textures</a>
+                    <a href="/MasonryCMS/masonryAdmin/maintenance/style.mdk"><span style="color:#FF6600 !important;" class="fa fa-paint-brush" aria-hidden="true"></span> Styles</a>
+                </li>
                 </li>
                 <li>
-                    <a href="/MasonryCMS/masonryAdmin/maintenance/color.mdk"><span class="fa fa-inbox" aria-hidden="true"></span> Colors</a>                                      
+                    <a href="/MasonryCMS/masonryAdmin/maintenance/size.mdk"><span style="color:#FF6600 !important;" class="glyphicon glyphicon-move" aria-hidden="true"></span> Sizes</a>
                 </li>
-                 <li>
-                    <a href="/MasonryCMS/masonryAdmin/maintenance/metricsSystem.mdk"><span class="fa fa-inbox" aria-hidden="true"></span> Metrics Systems</a>                                      
+                <li>
+                    <a href="/MasonryCMS/masonryAdmin/maintenance/texture.mdk"><span style="color:#FF6600 !important;" class="glyphicon glyphicon-th" aria-hidden="true"></span> Textures</a>
+                </li>
+                <li>
+                    <a href="/MasonryCMS/masonryAdmin/maintenance/color.mdk"><span style="color:#FF6600 !important;" class="glyphicon glyphicon-tint" aria-hidden="true"></span> Colors</a>                                      
+                </li>
+                <li>
+                    <a href="/MasonryCMS/masonryAdmin/maintenance/metricsSystem.mdk"><span style="color:#FF6600 !important;" class="fa fa-balance-scale" aria-hidden="true"></span> Metrics Systems</a>                                      
                 </li>
             </ul>
         </div>
@@ -213,5 +271,4 @@
 
         <!-- Page Content -->
         <div id="page-content-wrapper">
-            
-      
+

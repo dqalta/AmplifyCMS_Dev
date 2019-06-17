@@ -13,7 +13,7 @@
     </head>
     <body>
         <div id="contents">  
-            <st:form id="frm" name="frm" action="iniciar" method="post" cssClass="form-horizontal">
+            <st:form id="frm" name="frm" action="login" method="post" cssClass="form-horizontal">
                 <div style="text-align: center; color:#666666;">  
                     <div> <br></div>
                     <h3 style="color:white">Masonry Supply<br>C.M.S</h3>                

@@ -67,23 +67,23 @@ function dataTable(id) {
         "bAutoWidth": true,
         "bProcessing": true,
         "bDeferRender": true,
-        "lengthMenu": [[10, 25, 50, 100, -1], [10, 25, 50, 100, "All"]],
-       "oLanguage":
+        "lengthMenu": [[10, 25, 50, 100, -1], [10, 25, 50, 100, "Todo"]],
+        "oLanguage":
                 {
-                    "sProcessing": "Loading...",
-                    "sLengthMenu": "Display _MENU_ entries for page",
-                    "sZeroRecords": "No record found",
-                    "sInfo": "Showing _START_ to _END_ of _TOTAL_ entries",
-                    "sInfoEmpty": "Showing 0 entries",
-                    "sInfoFiltered": "(Filtering _MAX_ total entries)",
+                    "sProcessing": "Cargando...",
+                    "sLengthMenu": "Mostrar _MENU_ registros por p&aacute;gina",
+                    "sZeroRecords": "No se encontr&oacute; ning&uacute;n registro",
+                    "sInfo": "Mostrando de _START_ a _END_ de _TOTAL_ registros",
+                    "sInfoEmpty": "Mostrando 0 registros",
+                    "sInfoFiltered": "(Filtrado de _MAX_ total registros)",
                     "sInfoPostFix": "",
-                    "sSearch": "Search",
+                    "sSearch": "Buscar",
                     "oPaginate":
                             {
-                                "sFirst": "First",
-                                "sPrevious": "Previous",
-                                "sNext": "Next",
-                                "sLast": "Last"
+                                "sFirst": "Primero",
+                                "sPrevious": "Anterior",
+                                "sNext": "Siguiente",
+                                "sLast": "Final"
                             }
                 },
         "sScrollX": "100%",

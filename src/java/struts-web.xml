@@ -14,11 +14,11 @@ and open the template in the editor.
         <global-exception-mappings>
             <exception-mapping exception="java.lang.Exception" result="error" />
         </global-exception-mappings>      
-       <action name="manufacturer" class="web.masonryAdmin.maintenance.Manufacturer">
+        <action name="manufacturer" class="web.masonryAdmin.maintenance.Manufacturer">
             <result name="input">/home/masonryAdmin/maintenance/manufacturer/intro.jsp</result>
             <result name="success">/home/masonryAdmin/maintenance/manufacturer/intro.jsp</result>
         </action>      
-       <action name="collection" class="web.masonryAdmin.maintenance.Collection">
+        <action name="collection" class="web.masonryAdmin.maintenance.Collection">
             <result name="input">/home/masonryAdmin/maintenance/collection/intro.jsp</result>
             <result name="success">/home/masonryAdmin/maintenance/collection/intro.jsp</result>
         </action> 
@@ -26,34 +26,51 @@ and open the template in the editor.
             <result name="input">/home/masonryAdmin/maintenance/packageType/intro.jsp</result>
             <result name="success">/home/masonryAdmin/maintenance/packageType/intro.jsp</result>
         </action>    
-         <action name="style" class="web.masonryAdmin.maintenance.Style">
+        <action name="style" class="web.masonryAdmin.maintenance.Style">
             <result name="input">/home/masonryAdmin/maintenance/style/intro.jsp</result>
             <result name="success">/home/masonryAdmin/maintenance/style/intro.jsp</result>
         </action>  
-         <action name="texture" class="web.masonryAdmin.maintenance.Texture">
+        <action name="texture" class="web.masonryAdmin.maintenance.Texture">
             <result name="input">/home/masonryAdmin/maintenance/texture/intro.jsp</result>
             <result name="success">/home/masonryAdmin/maintenance/texture/intro.jsp</result>
         </action>    
-         <action name="color" class="web.masonryAdmin.maintenance.Color">
+        <action name="color" class="web.masonryAdmin.maintenance.Color">
             <result name="input">/home/masonryAdmin/maintenance/color/intro.jsp</result>
             <result name="success">/home/masonryAdmin/maintenance/color/intro.jsp</result>
         </action>  
-         <action name="material" class="web.masonryAdmin.maintenance.Material">
+        <action name="material" class="web.masonryAdmin.maintenance.Material">
             <result name="input">/home/masonryAdmin/maintenance/material/intro.jsp</result>
             <result name="success">/home/masonryAdmin/maintenance/material/intro.jsp</result>
         </action> 
-          <action name="subMaterial" class="web.masonryAdmin.maintenance.SubMaterial">
+        <action name="subMaterial" class="web.masonryAdmin.maintenance.SubMaterial">
             <result name="input">/home/masonryAdmin/maintenance/subMaterial/intro.jsp</result>
             <result name="success">/home/masonryAdmin/maintenance/subMaterial/intro.jsp</result>
-          </action>   
-          <action name="metricsSystem" class="web.masonryAdmin.maintenance.MetricsSystem">
+        </action>   
+        <action name="metricsSystem" class="web.masonryAdmin.maintenance.MetricsSystem">
             <result name="input">/home/masonryAdmin/maintenance/metricsSystem/intro.jsp</result>
             <result name="success">/home/masonryAdmin/maintenance/metricsSystem/intro.jsp</result>
-          </action>  
-           <action name="size" class="web.masonryAdmin.maintenance.Size">
+        </action>  
+        <action name="size" class="web.masonryAdmin.maintenance.Size">
             <result name="input">/home/masonryAdmin/maintenance/size/intro.jsp</result>
             <result name="success">/home/masonryAdmin/maintenance/size/intro.jsp</result>
-          </action>         
+        </action> 
+        <action name="product" class="web.masonryAdmin.maintenance.Product">
+            <result name="input">/home/masonryAdmin/maintenance/product/intro.jsp</result>
+            <result name="success">/home/masonryAdmin/maintenance/product/intro.jsp</result>
+        </action>         
+    </package>
+    
+    <package name="masonryAdmin" namespace="/masonryAdmin/admin" extends="struts-default">
+        <global-results>
+            <result name="error">/error.jsp</result>
+        </global-results>
+        <global-exception-mappings>
+            <exception-mapping exception="java.lang.Exception" result="error" />
+        </global-exception-mappings>      
+        <action name="rol" class="web.masonryAdmin.admin.Rol">
+            <result name="input">/home/masonryAdmin/admin/rol/intro.jsp</result>
+            <result name="success">/home/masonryAdmin/admin/rol/intro.jsp</result>
+        </action>           
     </package>
     
 </struts>

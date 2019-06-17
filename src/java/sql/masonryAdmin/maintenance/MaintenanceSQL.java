@@ -1,17 +1,46 @@
 package sql.masonryAdmin.maintenance;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Iterator;
+import java.util.Map;
 import org.hibernate.Session;
 import org.hibernate.transform.Transformers;
+import sql.masonryAdmin.admin.DtoRol;
 import util.Fechas;
 import util.Numeros;
+
 /**
  *
  * @author CR104978
  */
 public class MaintenanceSQL {
 //maintenance for manufacturers
+
+    public static void saveRolDetail(Session cga, int idMasonryRol, String module, String description, boolean permission, String user, Date ya) {
+        if (permission) {
+            cga.createNativeQuery("INSERT INTO masonryRolDetail"
+                    + " (idMasonryRol, module, description, permission, created, createdBy, modified, modifiedBy)"
+                    + " VALUES"
+                    + " (:idMasonryRol, :module, :description, :permission, :created, :createdBy, :modified, :modifiedBy)")
+                    .setParameter("idMasonryRol", idMasonryRol)
+                    .setParameter("module", module)
+                    .setParameter("description", description)
+                    .setParameter("permission", permission)
+                    .setParameter("created", ya)
+                    .setParameter("createdBy", user)
+                    .setParameter("modified", ya)
+                    .setParameter("modifiedBy", user)
+                    .executeUpdate();
+        }
+    }
+
+    public static void deleteRolDetails(Session mdk, int idMasonryRol) {
+        mdk.createNativeQuery("DELETE FROM masonryRolDetail"
+                + " WHERE idMasonryRol = :idMasonryRol")
+                .setParameter("idMasonryRol", idMasonryRol)
+                .executeUpdate();
+    }
 
     public static ArrayList<DtoManufacturer> getManufacturers(Session mdk) {
         ArrayList<DtoManufacturer> a = new ArrayList<>();
@@ -53,6 +82,25 @@ public class MaintenanceSQL {
         return a;
     }
 
+    public static ArrayList<DtoRol> getRols(Session mdk) {
+        ArrayList<DtoRol> a = new ArrayList<>();
+        Iterator itr = mdk.createNativeQuery("SELECT"
+                + " id,"
+                + " description,"
+                + " created,"
+                + " createdBy,"
+                + " modified,"
+                + " modifiedBy"
+                + " FROM masonryRol")
+                .setResultTransformer(Transformers.aliasToBean(DtoRol.class))
+                .list().iterator();
+
+        while (itr.hasNext()) {
+            a.add((DtoRol) itr.next());
+        }
+        return a;
+    }
+
     public static DtoManufacturer getManufacturer(Session mdk, int id) {
         Iterator itr = mdk.createNativeQuery("SELECT"
                 + " id,"
@@ -74,6 +122,45 @@ public class MaintenanceSQL {
         return m;
     }
 
+    public static ArrayList<DtoProduct> getProducts(Session mdk) {
+        ArrayList<DtoProduct> a = new ArrayList<>();
+        Iterator itr = mdk.createNativeQuery("SELECT"
+                + " id,"
+                + " pname,"
+                + " idStyle,"
+                + " idTexture,"
+                + " idPackageType,"
+                + " idMaterial,"
+                + " idSubMaterial,"
+                + " slug,"
+                + " description,"
+                + " idManufacturer,"
+                + " idSize,"
+                + " sku,"
+                + " palletWeight,"
+                + " canSellLayer,"
+                + " unitsPallet,"
+                + " layersPallet,"
+                + " unitsLayer,"
+                + " hasCorner,"
+                + " linearFeetCorner,"
+                + " sqftPerPackageType,"
+                + " qtyOfUnitsPerPackageType,"
+                + " created,"
+                + " createdBy,"
+                + " modified,"
+                + " modifiedBy,"
+                + " active"
+                + " FROM product")
+                .setResultTransformer(Transformers.aliasToBean(DtoProduct.class))
+                .list().iterator();
+
+        while (itr.hasNext()) {
+            a.add((DtoProduct) itr.next());
+        }
+        return a;
+    }
+
     public static DtoCollection getCollection(Session mdk, int id) {
         Iterator itr = mdk.createNativeQuery("SELECT"
                 + " id,"
@@ -91,6 +178,26 @@ public class MaintenanceSQL {
         DtoCollection m = null;
         while (itr.hasNext()) {
             m = (DtoCollection) itr.next();
+        }
+        return m;
+    }
+
+    public static DtoRol getRol(Session mdk, int id) {
+        Iterator itr = mdk.createNativeQuery("SELECT"
+                + " id,"
+                + " description,"
+                + " created,"
+                + " createdBy,"
+                + " modified,"
+                + " modifiedBy"
+                + " FROM masonryRol"
+                + " WHERE id = :id")
+                .setParameter("id", id)
+                .setResultTransformer(Transformers.aliasToBean(DtoRol.class))
+                .list().iterator();
+        DtoRol m = null;
+        while (itr.hasNext()) {
+            m = (DtoRol) itr.next();
         }
         return m;
     }
@@ -123,6 +230,32 @@ public class MaintenanceSQL {
                 .executeUpdate();
     }
 
+    public static void saveRol(Session mdk, DtoRol m) {
+        mdk.createNativeQuery("INSERT INTO masonryRol"
+                + " (description, created, createdBy, modified, modifiedBy)"
+                + " VALUES"
+                + " (:description, :created, :createdBy, :modified, :modifiedBy)")
+                .setParameter("description", m.getDescription())
+                .setParameter("created", m.getCreated())
+                .setParameter("createdBy", m.getCreatedBy())
+                .setParameter("modified", m.getModified())
+                .setParameter("modifiedBy", m.getModifiedBy())
+                .executeUpdate();
+    }
+
+    public static int getLastIdRol(Session mdk, String user) {
+        int result = 0;
+        Iterator itr = mdk.createSQLQuery("SELECT MAX(id) as result"
+                + " FROM masonryRol"
+                + " WHERE createdBy = :user")
+                .setParameter("user", user)
+                .setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP).list().iterator();
+        while (itr.hasNext()) {
+            result = Numeros.entero(String.valueOf(((Map) itr.next()).get("result")));
+        }
+        return result;
+    }
+
     public static void updateManufacturer(Session mdk, DtoManufacturer m) {
         mdk.createNativeQuery("UPDATE manufacturer SET"
                 + " description = :description,"
@@ -150,6 +283,35 @@ public class MaintenanceSQL {
                 .setParameter("modified", m.getModified())
                 .setParameter("modifiedBy", m.getModifiedBy())
                 .setParameter("active", m.getActive())
+                .executeUpdate();
+    }
+
+    public static boolean getRolDetail(Session mdk, int idMasonryRol, String module, String description) {
+        boolean permiso = false;
+        Iterator itr = mdk.createSQLQuery("SELECT permission"
+                + " FROM masonryRolDetail"
+                + " WHERE idMasonryRol = :idMasonryRol"
+                + " AND module = :module"
+                + " AND description = :description")
+                .setParameter("idMasonryRol", idMasonryRol)
+                .setParameter("module", module)
+                .setParameter("description", description).list().iterator();
+        while (itr.hasNext()) {
+            permiso = (Boolean) itr.next();
+        }
+        return permiso;
+    }
+
+    public static void updateRol(Session mdk, DtoRol m) {
+        mdk.createNativeQuery("UPDATE masonryRol SET"
+                + " description = :description,"
+                + " modified = :modified,"
+                + " modifiedBy = :modifiedBy"
+                + " WHERE id = :id")
+                .setParameter("id", m.getId())
+                .setParameter("description", m.getDescription())
+                .setParameter("modified", m.getModified())
+                .setParameter("modifiedBy", m.getModifiedBy())
                 .executeUpdate();
     }
 //maintenance for packagetypes
@@ -630,7 +792,7 @@ public class MaintenanceSQL {
         mdk.createNativeQuery("INSERT INTO metricsSystem"
                 + " (description, created, createdBy, modified, modifiedBy, active)"
                 + " VALUES"
-                + " (:description, :created, :createdBy, :modified, :modifiedBy, :active)") 
+                + " (:description, :created, :createdBy, :modified, :modifiedBy, :active)")
                 .setParameter("description", m.getDescription())
                 .setParameter("created", m.getCreated())
                 .setParameter("createdBy", m.getCreatedBy())
@@ -654,10 +816,9 @@ public class MaintenanceSQL {
                 .setParameter("active", m.getActive())
                 .executeUpdate();
     }
-    
-       ///////////////////Sizes Maintenance/////////////////////  
 
-    public static ArrayList<DtoSize> getSizes (Session mdk) {
+    ///////////////////Sizes Maintenance/////////////////////  
+    public static ArrayList<DtoSize> getSizes(Session mdk) {
         ArrayList<DtoSize> a = new ArrayList<>();
         Iterator itr = mdk.createNativeQuery("SELECT"
                 + " id,"
@@ -692,7 +853,7 @@ public class MaintenanceSQL {
                 + " depth,"
                 + " width,"
                 + " unitsPerSq2,"
-                + " unitsPerSf2,"                
+                + " unitsPerSf2,"
                 + " created,"
                 + " createdBy,"
                 + " modified,"
@@ -720,8 +881,8 @@ public class MaintenanceSQL {
                 .setParameter("length", m.getLength())
                 .setParameter("depth", m.getDepth())
                 .setParameter("width", m.getWidth())
-                .setParameter("unitsPerSq2", m.getUnitsPerSq2())  
-                .setParameter("unitsPerSf2", m.getUnitsPerSf2())                  
+                .setParameter("unitsPerSq2", m.getUnitsPerSq2())
+                .setParameter("unitsPerSf2", m.getUnitsPerSf2())
                 .setParameter("created", m.getCreated())
                 .setParameter("createdBy", m.getCreatedBy())
                 .setParameter("modified", m.getModified())
@@ -738,7 +899,7 @@ public class MaintenanceSQL {
                 + " depth = :depth,"
                 + " width = :width,"
                 + " unitsPerSq2 = :unitsPerSq2,"
-                + " unitsPerSf2 = :unitsPerSf2,"                  
+                + " unitsPerSf2 = :unitsPerSf2,"
                 + " modified = :modified,"
                 + " modifiedBy = :modifiedBy,"
                 + " active = :active"
@@ -749,8 +910,8 @@ public class MaintenanceSQL {
                 .setParameter("length", m.getLength())
                 .setParameter("depth", m.getDepth())
                 .setParameter("width", m.getWidth())
-                .setParameter("unitsPerSq2", m.getUnitsPerSq2())  
-                .setParameter("unitsPerSf2", m.getUnitsPerSf2())                    
+                .setParameter("unitsPerSq2", m.getUnitsPerSq2())
+                .setParameter("unitsPerSf2", m.getUnitsPerSf2())
                 .setParameter("modified", m.getModified())
                 .setParameter("modifiedBy", m.getModifiedBy())
                 .setParameter("active", m.getActive())

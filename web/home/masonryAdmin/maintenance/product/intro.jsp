@@ -15,62 +15,141 @@
         <st:include value="/generals/css-js-Datatables.jsp"/>
         <st:include value="/generals/css-js-app.jsp"/>
         <st:include value="/generals/css-js-LcSwitch.jsp"/>
-
+        <st:include value="/generals/css-js-Chosen.jsp"/>
+        <link rel="stylesheet" type="text/css" href="/MasonryCMS/home/masonryAdmin/maintenance/product/style.css" media="screen" />       
         <script src="/MasonryCMS/home/masonryAdmin/maintenance/product/script.js" type="text/javascript"></script>        
     </head>
     <body style="margin: 0px;">
-        <st:if test="%{sesionActiva == true}">        
-            <div class="titulo">PRODUCTS<hr/></div>
+        <st:if test="%{sesionActiva == true}">     
                 <st:hidden id="permiso" name="permiso" value="%{permiso}" />
                 <st:hidden id="mensaje" name="mensaje" value="%{mensaje}" />
                 <st:hidden id="mensajes" name="mensajes" value="%{mensajes}" />
-                <st:include value="/generals/navBarHead.jsp" /> 
+                <st:include value="/generals/navBarHead.jsp" >
+                    <st:param name="title">PRODUCTS</st:param>
+                </st:include>
                 <st:if test="%{permiso == true}">  
-                <div class="panel-group">
 
-                    <div class="panel panel-default">
-                        <div class="panel-heading clickable">
-                            <h4 class="panel-title">
-                                <a><i class="glyphicon glyphicon-chevron-down"></i></a>
-                            </h4>
-                        </div>
-                        <div id="form-panel" class="panel-collapse collapse">
-                            <div class="panel-body">    
-                                <ul class="nav nav-tabs">
-                                    <li class="active"><a href="#maintenanceTab" data-toggle="tab" aria-expanded="true">Maintenance-Manufacturers</a></li>                  
-                                </ul>
-                                <div id="tabsContents" class="tab-content">
-                                    <div class="tab-pane fade active in" id="maintenanceTab">    
-                                        <div class="container-fluid">
-                                            <st:form id="formulario" name="formulario" cssClass="form-vertical" action="product" method="post" theme="bootstrap">                                        
-                                                <st:hidden id="accion" name="accion" value="%{accion}"/>
-                                                <st:hidden id="idEdit" name="idEdit" value="%{idEdit}"/>
-                                                <br>                                                
-                                                <div class="row">
-                                                    <div class="col-sm-10">
-                                                        <st:textfield label="Description:" name="description" id="description" class="form-control" value="%{description}" placeholder="Description..."/>
-                                                    </div>  
-                                                    <div class="col-sm-2">
-                                                        <div class="form-group">
-                                                            <label for="check_active">Active?</label>
-                                                            <st:hidden id="active" name="active" value="%{active}" />
-                                                            <st:checkbox class="lcc" theme="simple" name="check_active" id="check_active" fieldValue="%{active}" />
-                                                        </div>
-                                                    </div> 
-                                                </div> 
-                                                <br>
-                                            </st:form>   
-                                            <div class="btn-group pull-right">
-                                                <a class="btn btn-danger pull-right" onclick="save();"><i class="glyphicon glyphicon-ok"></i>&nbsp;Save</a>
-                                                <a class="btn btn-default pull-right" onclick="cancel();"><i class="glyphicon glyphicon-remove"></i>&nbsp;Cancel</a>
-                                            </div>  
+                <div class="container">
+                    <div class="row">
+                        <section>
+                            <div class="wizard">
+                                <div class="wizard-inner">
+                                    <div class="connecting-line"></div>
+                                    <ul class="nav nav-tabs" role="tablist">
+
+                                        <li role="presentation" class="active">
+                                            <a href="#step1" data-toggle="tab" data-value="Asiento" aria-controls="step1" role="tab" title="General Information.">
+                                                <span class="round-tab">
+                                                    <i class="fa fa-pencil"></i>
+                                                </span>
+                                            </a>
+                                        </li>
+
+                                        <li role="presentation" class="disabled">
+                                            <a href="#step2" data-toggle="tab" data-value="Mes" aria-controls="step2" role="tab" title="Features.">
+                                                <span class="round-tab">
+                                                    <i class="fa fa-cogs"></i>
+                                                </span>
+                                            </a>
+                                        </li>
+                                        <li role="presentation" class="disabled">
+                                            <a href="#step3" data-toggle="tab" data-value="Fecha" aria-controls="step3" role="tab" title="Categories.">
+                                                <span class="round-tab">
+                                                    <i class="fa fa-sitemap"></i>
+                                                </span>
+                                            </a>
+                                        </li>
+                                        <li role="presentation" class="disabled">
+                                            <a href="#step4" data-toggle="tab" data-value="Dimensions" aria-controls="step4" role="tab" title="Dimensions.">
+                                                <span class="round-tab">
+                                                    <i class="fa fa-arrows"></i>
+                                                </span>
+                                            </a>
+                                        </li>
+                                        <li role="presentation" class="disabled">
+                                            <a href="#step5" data-toggle="tab" data-value="Photos" aria-controls="step5" role="tab" title="Photos.">
+                                                <span class="round-tab">
+                                                    <i class="fa fa-photo"></i>
+                                                </span>
+                                            </a>
+                                        </li>
+
+                                        <li role="presentation" class="disabled">
+                                            <a href="#complete" data-toggle="tab" data-value="Final" aria-controls="complete" role="tab" title="Proceso completo.">
+                                                <span class="round-tab">
+                                                    <i class="glyphicon glyphicon-ok"></i>
+                                                </span>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+
+
+                                <div class="tab-content">
+                                    <div class="tab-pane active" role="tabpanel" id="step1">
+                                        <h3></h3>
+                                        <div class="row">
+                                                                                               
                                         </div>
+                                        <ul class="list-inline pull-right">
+                                            <li><button onclick="cancelar();" type="button" class="btn btn-default"><i class="glyphicon glyphicon-remove"></i> Cancel</button></li>
+                                            <li><button type="button" class="btn btn-warning next-step"><i class="glyphicon glyphicon-arrow-right"></i> Next</button></li>
+                                        </ul>
                                     </div>
+                                    <div class="tab-pane" role="tabpanel" id="step2">
+                                        <h3>Seleccione un mes contable</h3>
+                                        <div class="row">
+                                           
+                                        </div>
+                                        <ul class="list-inline pull-right">
+                                            <li><button type="button" class="btn btn-default prev-step"><i class="glyphicon glyphicon-arrow-left"></i> Anterior</button></li>
+                                            <li><button type="button" class="btn btn-primary next-step"><i class="glyphicon glyphicon-arrow-right"></i> Siguiente</button></li>
+                                        </ul>
+                                    </div>
+                                    <div class="tab-pane" role="tabpanel" id="step3">
+                                        <h3>Seleccione la fecha que desea asignar</h3>
+                                        <div class="row">
+                                            
+                                        </div>
+
+                                        <ul class="list-inline pull-right">
+                                            <li><button type="button" class="btn btn-default prev-step"><i class="glyphicon glyphicon-arrow-left"></i> Anterior</button></li>
+                                            <li><button onclick="preguntaCambiarFecha();" type="button" class="btn btn-primary"><i class="glyphicon glyphicon-transfer"></i> Cambiar Fecha</button></li>
+                                        </ul>
+                                    </div>
+                                    <div class="tab-pane" role="tabpanel" id="step4">
+                                        <h3></h3>
+                                        <div class="row">
+                                                                                               
+                                        </div>
+                                        <ul class="list-inline pull-right">
+                                            <li><button onclick="cancelar();" type="button" class="btn btn-default"><i class="glyphicon glyphicon-remove"></i> Cancel</button></li>
+                                            <li><button type="button" class="btn btn-warning next-step"><i class="glyphicon glyphicon-arrow-right"></i> Next</button></li>
+                                        </ul>
+                                    </div>
+                                    <div class="tab-pane" role="tabpanel" id="step5">
+                                        <h3></h3>
+                                        <div class="row">
+                                                                                               
+                                        </div>
+                                        <ul class="list-inline pull-right">
+                                            <li><button onclick="cancelar();" type="button" class="btn btn-default"><i class="glyphicon glyphicon-remove"></i> Cancel</button></li>
+                                            <li><button type="button" class="btn btn-warning next-step"><i class="glyphicon glyphicon-arrow-right"></i> Next</button></li>
+                                        </ul>
+                                    </div>
+                                    <div class="tab-pane" role="tabpanel" id="complete">
+                                        <h3>Proceso exitoso</h3>
+                                        <p>Se ha cambiado la fecha con &eacute;xito</p>
+                                        <button onclick="cancelar();" type="button" class="btn btn-primary"><i class="glyphicon glyphicon-ok"></i> Listo</button>
+                                    </div>
+                                    <div class="clearfix"></div>
                                 </div>
                             </div>
-                        </div>
+                        </section>
                     </div>
                 </div>
+
+<%--
 
                 <div style="padding: 20px;" class="table-responsive">
                     <table id="table_product" class="table table-striped" style="width:100%; margin: 0px auto;">
@@ -87,36 +166,31 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <st:if test="%{!getManufacturers().isEmpty()}">
-                                <st:iterator value="manufacturers" var="manufacturers" status="index">
-                                    <tr>
-                                        <td><st:property value="%{#manufacturers.id}" /></td>           
-                                        <td><st:property value="%{#manufacturers.description}" /></td>        
-                                        <td><st:date name="%{#manufacturers.created}" format="dd/MM/yyyy"/></td>       
-                                        <td><st:property value="%{#manufacturers.createdBy}" /></td>    
-                                        <td><st:date name="%{#manufacturers.modified}" format="dd/MM/yyyy"/></td>    
-                                        <td><st:property value="%{#manufacturers.modifiedBy}" /></td>       
-                                        <td>
-                                            <st:if test="%{#manufacturers.active == true}">
-                                                <i class="glyphicon glyphicon-off text-success" data-toggle="tooltip" data-placement="top" title="" data-original-title="Active"</i>
-                                            </st:if>
-                                            <st:else>
-                                                <i class="glyphicon glyphicon-off text-danger"  data-toggle="tooltip" data-placement="top" title="" data-original-title="Inactive"></i>
-                                            </st:else>
-                                        </td>       
-                                        <td onclick="edit('<st:property value="%{#manufacturers.id}" />');"><i class="glyphicon glyphicon-pencil" data-toggle="tooltip" data-placement="left" title="" data-original-title="Edit Row"></i></td>
-                                    </tr>
-                                </st:iterator>
-                            </st:if>
+                               <st:if test="%{!getProducts().isEmpty()}">
+                                   <st:iterator value="products" var="products" status="index">
+                                       <tr>
+                                           <td><st:property value="%{#products.id}" /></td>           
+                                           <td><st:property value="%{#products.pname}" /></td>        
+                                           <td><st:date name="%{#products.created}" format="dd/MM/yyyy"/></td>       
+                                           <td><st:property value="%{#products.createdBy}" /></td>    
+                                           <td><st:date name="%{#products.modified}" format="dd/MM/yyyy"/></td>    
+                                           <td><st:property value="%{#products.modifiedBy}" /></td>       
+                                           <td>
+                                               <st:if test="%{#products.active == true}">
+                                                   <i class="glyphicon glyphicon-off text-success" data-toggle="tooltip" data-placement="top" title="" data-original-title="Active"</i>
+                                               </st:if>
+                                               <st:else>
+                                                   <i class="glyphicon glyphicon-off text-danger"  data-toggle="tooltip" data-placement="top" title="" data-original-title="Inactive"></i>
+                                               </st:else>
+                                           </td>       
+                                           <td onclick="edit('<st:property value="%{#products.id}" />');"><i class="glyphicon glyphicon-pencil" data-toggle="tooltip" data-placement="left" title="" data-original-title="Edit Row"></i></td>
+                                       </tr>
+                                   </st:iterator>
+                               </st:if>
                         </tbody>
                     </table>
                 </div>
-
-
-                <span class="ir-arriba" data-toggle="tooltip" data-placement="left" title="" data-original-title="Ir arriba">
-                    <span class="glyphicon glyphicon-menu-up"></span>
-                </span>
-
+--%>
 
                 <div class="modal" id="ModalProcesando">
                     <div class="modal-dialog">

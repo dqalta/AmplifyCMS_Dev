@@ -11,80 +11,21 @@ $(document).ready(function () {
     mensajes = $("#mensajes").val();
     if (permiso === "true") {
         scroll();
-        dataTable("table_product");
-        $("#idStyle").chosen({width: "100%"});
-        $("#idTexture").chosen({width: "100%"});
-        $("#idPackageType").chosen({width: "100%"});
-        $("#idMaterial").chosen({width: "100%"});
-        $("#idSubMaterial").chosen({width: "100%"});
-        $("#idManufacturer").chosen({width: "100%"});
-        $("#idSize").chosen({width: "100%"});
-        $("#color").chosen({width: "100%"});
-        $("#collection").chosen({width: "100%"});
+        dataTable("table_rols");
     }
     if (mensaje === "true") {
         mostrarNotificaciones();
     }
     $('#form-panel').collapse();
     chargeChecks();
-    chargeCheckBoxes();
-    chargeTabs();
 });
 
-function nextTab(elem) {
-    $(elem).next().find('a[data-toggle="tab"]').click();
-}
-function prevTab(elem) {
-    $(elem).prev().find('a[data-toggle="tab"]').click();
-}
-
-function chargeTabs() {
-
-    $('.nav-tabs > li a[title]').tooltip();
-
-    //Wizard
-    $('a[data-toggle="tab"]').on('show.bs.tab', function (e) {
-        var $target = $(e.target);
-        if ($target.parent().hasClass('disabled') || accion === 2) {
-            return false;
-        }
-    });
-
-    $(".next-step").click(function (e) {
-        var $active = $('.wizard .nav-tabs li.active');
-        $active.next().removeClass('disabled');
-        nextTab($active);
-    });
-
-    $(".prev-step").click(function (e) {
-        var $active = $('.wizard .nav-tabs li.active');
-        prevTab($active);
-    });
-}
-
-function chargeCheckBoxes() {
-    var arr = ["active"];
-    for (var i = 0; i < arr.length; i++) {
-        if ($("#" + arr[i]).val() === "true") {
-            $("#check_" + arr[i]).lcs_on();
-        } else {
-            $("#check_" + arr[i]).lcs_off();
-        }
-    }
-}
-
 function chargeChecks() {
-    $(".lcc").lc_switch('Yes', 'No');
-    $('body').delegate('.lcc', 'lcs-statuschange', function () {
-        var status = ($(this).is(':checked')) ? true : false;
-        var id = $(this).attr("id");
-        $("#" + id.replace("check_", "")).val(status);
-    });
+    $("input:checkbox").iCheck({checkboxClass: "icheckbox_flat-orange"});
 }
-
 function cancel() {
     $("#ModalProcesando").modal({backdrop: 'static', keyboard: false});
-    window.location = "/MasonryCMS/masonryAdmin/maintenance/product.mdk";
+    window.location = "/MasonryCMS/masonryAdmin/admin/rol.mdk";
 }
 
 function save() {

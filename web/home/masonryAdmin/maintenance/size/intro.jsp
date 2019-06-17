@@ -26,8 +26,9 @@
             <st:hidden id="mensaje" name="mensaje" value="%{mensaje}" />
             <st:hidden id="mensajes" name="mensajes" value="%{mensajes}" />
 
-
-            <st:include value="/generals/navBarHead.jsp" /> 
+            <st:include value="/generals/navBarHead.jsp" >
+                <st:param name="title">SIZES</st:param>
+            </st:include>
             <st:if test="%{permiso == true}">              
 
 
@@ -57,42 +58,42 @@
                                                             <div class="col-sm-3">
                                                                 <st:textfield label="Description:" name="description" id="description" class="form-control" value="%{description}" placeholder="Description..."/>
                                                             </div>   
-                                                         </div>
-                                                                <div class="row">
+                                                        </div>
+                                                        <div class="row">
 
-                                                                  <div class="col-sm-2">                                                      
-                                                                      <div class="form-group">
-                                                                          <label for="idMetricsSystem">Unit</label>
-                                                                          <st:select class="form-control"  id="idMetricsSystem" name="idMetricsSystem" value="%{idMetricsSystem}" list="units" listKey="id" listValue="description"/>                                          
-                                                                      </div>
-                                                                  </div> 
-                                                                  <div class="col-sm-3">
-                                                                      <st:textfield label="Length" name="length" id="length" class="form-control" value="%{length}" placeholder="Length..."/>
-                                                                  </div>    
-                                                                  <div class="col-sm-3">
-                                                                      <st:textfield label="Depth" name="depth" id="depth" class="form-control" value="%{depth}" placeholder="Depth..."/>
-                                                                  </div> 
-                                                                  <div class="col-sm-3">
-                                                                      <st:textfield label="Width" name="width" id="width" class="form-control" value="%{width}" placeholder="Width..."/>
-                                                                  </div> 
-                                                                  <div class="col-sm-1">
-                                                                      <div class="form-group">
-                                                                          <label for="check_active">Active?</label>
-                                                                          <st:hidden id="active" name="active" value="%{active}" />
-                                                                          <st:checkbox class="lcc" theme="simple" name="check_active" id="check_active" fieldValue="%{active}" />
-                                                                      </div>
-                                                                  </div>  
-                                                                      <div class="form-gruop">
-                                                                         <div class="col-sm-3">
-                                                                             <st:textfield label="Units per m2" name="unitsPerSqm2" id="unitsPerSqm2" class="form-control" value="%{unitsPerSqm2}" placeholder="Units per Square Meter..."/>
-                                                                         </div> 
-                                                                        <div class="col-sm-3">
-                                                                             <st:textfield label="Units per ft2" name="unitsPerSqf2" id="unitsPerSqf2" class="form-control" value="%{unitsPerSqf2}" placeholder="Units per Square f..."/>
-                                                                        </div> 
-                                                                                     
-                                                                      </div>
-   
-                                                                  </div>
+                                                            <div class="col-sm-2">                                                      
+                                                                <div class="form-group">
+                                                                    <label for="idMetricsSystem">Unit</label>
+                                                                    <st:select class="form-control"  id="idMetricsSystem" name="idMetricsSystem" value="%{idMetricsSystem}" list="units" listKey="id" listValue="description"/>                                          
+                                                                </div>
+                                                            </div> 
+                                                            <div class="col-sm-3">
+                                                                <st:textfield label="Length" name="length" id="length" class="form-control" value="%{length}" placeholder="Length..."/>
+                                                            </div>    
+                                                            <div class="col-sm-3">
+                                                                <st:textfield label="Depth" name="depth" id="depth" class="form-control" value="%{depth}" placeholder="Depth..."/>
+                                                            </div> 
+                                                            <div class="col-sm-3">
+                                                                <st:textfield label="Width" name="width" id="width" class="form-control" value="%{width}" placeholder="Width..."/>
+                                                            </div> 
+                                                            <div class="col-sm-1">
+                                                                <div class="form-group">
+                                                                    <label for="check_active">Active?</label>
+                                                                    <st:hidden id="active" name="active" value="%{active}" />
+                                                                    <st:checkbox class="lcc" theme="simple" name="check_active" id="check_active" fieldValue="%{active}" />
+                                                                </div>
+                                                            </div>  
+                                                            <div class="form-gruop">
+                                                                <div class="col-sm-3">
+                                                                    <st:textfield label="Units per m2" name="unitsPerSqm2" id="unitsPerSqm2" class="form-control" value="%{unitsPerSqm2}" placeholder="Units per Square Meter..."/>
+                                                                </div> 
+                                                                <div class="col-sm-3">
+                                                                    <st:textfield label="Units per ft2" name="unitsPerSqf2" id="unitsPerSqf2" class="form-control" value="%{unitsPerSqf2}" placeholder="Units per Square f..."/>
+                                                                </div> 
+
+                                                            </div>
+
+                                                        </div>
                                                         <br>
                                                     </st:form>   
                                                     <div class="btn-group pull-right">
@@ -173,17 +174,11 @@
                                             </tr>
                                         </st:iterator>
                                     </st:if>
-                                                                     
+
 
                                 </tbody>
                             </table>
                         </div>
-
-
-                        <span class="ir-arriba" data-toggle="tooltip" data-placement="left" title="" data-original-title="Ir arriba">
-                            <span class="glyphicon glyphicon-menu-up"></span>
-                        </span>
-
 
                         <div class="modal" id="ModalProcesando">
                             <div class="modal-dialog">

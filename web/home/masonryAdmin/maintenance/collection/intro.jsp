@@ -24,7 +24,9 @@
                 <st:hidden id="permiso" name="permiso" value="%{permiso}" />
                 <st:hidden id="mensaje" name="mensaje" value="%{mensaje}" />
                 <st:hidden id="mensajes" name="mensajes" value="%{mensajes}" />
-                <st:include value="/generals/navBarHead.jsp" /> 
+                <st:include value="/generals/navBarHead.jsp" >
+                    <st:param name="title">COLLECTIONS</st:param>
+                </st:include>
                 <st:if test="%{permiso == true}"> 
                 <div class="panel-group">
 
@@ -111,12 +113,6 @@
                         </tbody>
                     </table>
                 </div>
-
-
-                <span class="ir-arriba" data-toggle="tooltip" data-placement="left" title="" data-original-title="Ir arriba">
-                    <span class="glyphicon glyphicon-menu-up"></span>
-                </span>
-
 
                 <div class="modal" id="ModalProcesando">
                     <div class="modal-dialog">

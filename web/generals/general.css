@@ -120,10 +120,10 @@ hr {
     border-bottom-color: #FF6600 !important;
 }
 
-.ir-arriba {
+.go-up {
     display:none;
     padding:10px;
-    color:#d00f10;
+    color:#FF6600;
     background:#d8d8d8;
     font-size:20px;
     cursor:pointer;
