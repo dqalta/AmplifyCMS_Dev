@@ -57,7 +57,11 @@ and open the template in the editor.
         <action name="product" class="web.masonryAdmin.maintenance.Product">
             <result name="input">/home/masonryAdmin/maintenance/product/intro.jsp</result>
             <result name="success">/home/masonryAdmin/maintenance/product/intro.jsp</result>
-        </action>         
+        </action>      
+          <action name="vendor" class="web.masonryAdmin.maintenance.Vendor">
+            <result name="input">/home/masonryAdmin/maintenance/vendor/intro.jsp</result>
+            <result name="success">/home/masonryAdmin/maintenance/vendor/intro.jsp</result>
+        </action>    
     </package>
     
     <package name="masonryAdmin" namespace="/masonryAdmin/admin" extends="struts-default">

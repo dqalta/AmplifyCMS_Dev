@@ -917,5 +917,77 @@ public class MaintenanceSQL {
                 .setParameter("active", m.getActive())
                 .executeUpdate();
     }
+    
+    
+   /////////////////////////////////// Vendor maintenance //////
+    public static ArrayList<DtoVendor> getVendors(Session mdk) {
+        ArrayList<DtoVendor> a = new ArrayList<>();
+        Iterator itr = mdk.createNativeQuery("SELECT"
+                + " id,"
+                + " vname,"
+                + " created,"
+                + " createdBy,"
+                + " modified,"
+                + " modifiedBy,"
+                + " active"
+                + " FROM vendor")
+                .setResultTransformer(Transformers.aliasToBean(DtoVendor.class))
+                .list().iterator();
+
+        while (itr.hasNext()) {
+            a.add((DtoVendor) itr.next());
+        }
+        return a;
+    }
+
+    public static DtoVendor getVendor(Session mdk, int id) {
+        Iterator itr = mdk.createNativeQuery("SELECT"
+                + " id,"
+                + " vname,"
+                + " created,"
+                + " createdBy,"
+                + " modified,"
+                + " modifiedBy,"
+                + " active"
+                + " FROM vendor"
+                + " WHERE id = :id")
+                .setParameter("id", id)
+                .setResultTransformer(Transformers.aliasToBean(DtoVendor.class))
+                .list().iterator();
+        DtoVendor m = null;
+        while (itr.hasNext()) {
+            m = (DtoVendor) itr.next();
+        }
+        return m;
+    }
+
+    public static void saveVendor(Session mdk, DtoVendor m) {
+        mdk.createNativeQuery("INSERT INTO vendor"
+                + " (id, vname, created, createdBy, modified, modifiedBy, active)"
+                + " VALUES"
+                + " (:id, :vname, :created, :createdBy, :modified, :modifiedBy, :active)")
+                .setParameter("vname", m.getVname())
+                .setParameter("created", m.getCreated())
+                .setParameter("createdBy", m.getCreatedBy())
+                .setParameter("modified", m.getModified())
+                .setParameter("modifiedBy", m.getModifiedBy())
+                .setParameter("active", m.getActive())
+                .executeUpdate();
+    }
+
+    public static void updateVendor(Session mdk, DtoVendor m) {
+        mdk.createNativeQuery("UPDATE vendor SET"
+                + " vname = :vname,"
+                + " modified = :modified,"
+                + " modifiedBy = :modifiedBy,"
+                + " active = :active"
+                + " WHERE id = :id")
+                .setParameter("id", m.getId())
+                .setParameter("vname", m.getVname())            
+                .setParameter("modified", m.getModified())
+                .setParameter("modifiedBy", m.getModifiedBy())
+                .setParameter("active", m.getActive())
+                .executeUpdate();
+    }
 
 }
