@@ -478,9 +478,9 @@ public class Product extends ActionSupport implements SessionAware {
         textures = CombosMaintenance.getTextures(mdk);
         packageTypes = CombosMaintenance.getPackageTypes(mdk);
         materials = CombosMaintenance.getMaterials(mdk);
-        subMaterials = CombosMaintenance.getSubMaterials(mdk, idMaterial);
+        subMaterials = CombosMaintenance.getSubMaterials(mdk);
         manufacturers = CombosMaintenance.getManufacturers(mdk);
-        sizes = CombosMaintenance.getSizes(mdk);
+        sizes = CombosMaintenance.getStyles(mdk);
         colors = CombosMaintenance.getColors(mdk);
         collections = CombosMaintenance.getCollections(mdk);
     }

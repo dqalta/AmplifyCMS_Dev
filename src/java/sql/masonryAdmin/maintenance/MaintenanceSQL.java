@@ -692,29 +692,6 @@ public class MaintenanceSQL {
         return a;
     }
 
-    public static ArrayList<DtoSubMaterial> getSubMaterials(Session mdk, int idProductMaterial) {
-        ArrayList<DtoSubMaterial> a = new ArrayList<>();
-        Iterator itr = mdk.createNativeQuery("SELECT"
-                + " id,"
-                + " idProductMaterial,"
-                + " description,"
-                + " created,"
-                + " createdBy,"
-                + " modified,"
-                + " modifiedBy,"
-                + " active"
-                + " FROM productSubMaterial"
-                + " WHERE idProductMaterial  = :idProductMaterial")
-                .setParameter("idProductMaterial", idProductMaterial)
-                .setResultTransformer(Transformers.aliasToBean(DtoSubMaterial.class))
-                .list().iterator();
-
-        while (itr.hasNext()) {
-            a.add((DtoSubMaterial) itr.next());
-        }
-        return a;
-    }
-
     public static DtoSubMaterial getSubMaterial(Session mdk, int id) {
         Iterator itr = mdk.createNativeQuery("SELECT"
                 + " id,"
@@ -963,7 +940,7 @@ public class MaintenanceSQL {
         return a;
     }
 
-    public static DtoVendor getVendor(Session mdk, int id) {
+    public static DtoVendor getVendor(Session mdk, String id) {
         Iterator itr = mdk.createNativeQuery("SELECT"
                 + " id,"
                 + " vname,"
@@ -989,6 +966,7 @@ public class MaintenanceSQL {
                 + " (id, vname, created, createdBy, modified, modifiedBy, active)"
                 + " VALUES"
                 + " (:id, :vname, :created, :createdBy, :modified, :modifiedBy, :active)")
+                .setParameter("id", m.getId())
                 .setParameter("vname", m.getVname())
                 .setParameter("created", m.getCreated())
                 .setParameter("createdBy", m.getCreatedBy())
