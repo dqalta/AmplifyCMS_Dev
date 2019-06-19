@@ -221,10 +221,7 @@
                 </li>  
                 <li>
                     <a href="/MasonryCMS/masonryAdmin/admin/rol.mdk"><span style="color:#FF6600 !important;" class="fa fa-id-card-o" aria-hidden="true"></span> Rols</a>
-                </li> 
-                <li>
-                    <a href="/MasonryCMS/masonryAdmin/maintenance/vendor.mdk"><span style="color:#FF6600 !important;" class="glyphicon glyphicon-briefcase" class="fa fa-id-card-o" aria-hidden="true"></span> Vendor</a>
-                </li>                                 
+                </li>    
                 <hr style="color:#FF6600 !important;">            
                 <li>
                     <font color="#337AB7"> Product Components</font>

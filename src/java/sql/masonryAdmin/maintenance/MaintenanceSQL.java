@@ -692,6 +692,29 @@ public class MaintenanceSQL {
         return a;
     }
 
+    public static ArrayList<DtoSubMaterial> getSubMaterials(Session mdk, int idProductMaterial) {
+        ArrayList<DtoSubMaterial> a = new ArrayList<>();
+        Iterator itr = mdk.createNativeQuery("SELECT"
+                + " id,"
+                + " idProductMaterial,"
+                + " description,"
+                + " created,"
+                + " createdBy,"
+                + " modified,"
+                + " modifiedBy,"
+                + " active"
+                + " FROM productSubMaterial"
+                + " WHERE idProductMaterial  = :idProductMaterial")
+                .setParameter("idProductMaterial", idProductMaterial)
+                .setResultTransformer(Transformers.aliasToBean(DtoSubMaterial.class))
+                .list().iterator();
+
+        while (itr.hasNext()) {
+            a.add((DtoSubMaterial) itr.next());
+        }
+        return a;
+    }
+
     public static DtoSubMaterial getSubMaterial(Session mdk, int id) {
         Iterator itr = mdk.createNativeQuery("SELECT"
                 + " id,"
@@ -912,79 +935,6 @@ public class MaintenanceSQL {
                 .setParameter("width", m.getWidth())
                 .setParameter("unitsPerSq2", m.getUnitsPerSq2())
                 .setParameter("unitsPerSf2", m.getUnitsPerSf2())
-                .setParameter("modified", m.getModified())
-                .setParameter("modifiedBy", m.getModifiedBy())
-                .setParameter("active", m.getActive())
-                .executeUpdate();
-    }
-    
-    
-   /////////////////////////////////// Vendor maintenance //////
-    public static ArrayList<DtoVendor> getVendors(Session mdk) {
-        ArrayList<DtoVendor> a = new ArrayList<>();
-        Iterator itr = mdk.createNativeQuery("SELECT"
-                + " id,"
-                + " vname,"
-                + " created,"
-                + " createdBy,"
-                + " modified,"
-                + " modifiedBy,"
-                + " active"
-                + " FROM vendor")
-                .setResultTransformer(Transformers.aliasToBean(DtoVendor.class))
-                .list().iterator();
-
-        while (itr.hasNext()) {
-            a.add((DtoVendor) itr.next());
-        }
-        return a;
-    }
-
-    public static DtoVendor getVendor(Session mdk, String id) {
-        Iterator itr = mdk.createNativeQuery("SELECT"
-                + " id,"
-                + " vname,"
-                + " created,"
-                + " createdBy,"
-                + " modified,"
-                + " modifiedBy,"
-                + " active"
-                + " FROM vendor"
-                + " WHERE id = :id")
-                .setParameter("id", id)
-                .setResultTransformer(Transformers.aliasToBean(DtoVendor.class))
-                .list().iterator();
-        DtoVendor m = null;
-        while (itr.hasNext()) {
-            m = (DtoVendor) itr.next();
-        }
-        return m;
-    }
-
-    public static void saveVendor(Session mdk, DtoVendor m) {
-        mdk.createNativeQuery("INSERT INTO vendor"
-                + " (id, vname, created, createdBy, modified, modifiedBy, active)"
-                + " VALUES"
-                + " (:id, :vname, :created, :createdBy, :modified, :modifiedBy, :active)")
-                .setParameter("id", m.getId())
-                .setParameter("vname", m.getVname())
-                .setParameter("created", m.getCreated())
-                .setParameter("createdBy", m.getCreatedBy())
-                .setParameter("modified", m.getModified())
-                .setParameter("modifiedBy", m.getModifiedBy())
-                .setParameter("active", m.getActive())
-                .executeUpdate();
-    }
-
-    public static void updateVendor(Session mdk, DtoVendor m) {
-        mdk.createNativeQuery("UPDATE vendor SET"
-                + " vname = :vname,"
-                + " modified = :modified,"
-                + " modifiedBy = :modifiedBy,"
-                + " active = :active"
-                + " WHERE id = :id")
-                .setParameter("id", m.getId())
-                .setParameter("vname", m.getVname())            
                 .setParameter("modified", m.getModified())
                 .setParameter("modifiedBy", m.getModifiedBy())
                 .setParameter("active", m.getActive())

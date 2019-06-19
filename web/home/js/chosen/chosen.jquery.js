@@ -552,11 +552,11 @@
             return true;
         };
 
-        AbstractChosen.default_multiple_text = "Seleccione algunas opciones";
+        AbstractChosen.default_multiple_text = "Select some options";
 
-        AbstractChosen.default_single_text = "No hay opciones disponibles";
+        AbstractChosen.default_single_text = "There are no options available";
 
-        AbstractChosen.default_no_result_text = "Sin resultados";
+        AbstractChosen.default_no_result_text = "Without results";
 
         return AbstractChosen;
 

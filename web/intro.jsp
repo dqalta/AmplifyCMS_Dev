@@ -23,14 +23,14 @@
 
                 <div class="input-group">
                     <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
-                        <st:textfield class="input" cssClass="form-control" name="usuario" id="usuario" placeholder="Username..."/>
+                        <st:textfield class="input" cssClass="form-control" name="usuario" id="usuario" placeholder="Ingrese el usuario..."/>
                 </div>
 
                 <br>
 
                 <div class="input-group">
                     <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
-                        <st:password  class="input" cssClass="form-control" placeholder="Password..." id="contrasena" name="contrasena" />
+                        <st:password  class="input" cssClass="form-control" placeholder="Contraseña..." id="contrasena" name="contrasena" />
                 </div>
 
                 <br>
