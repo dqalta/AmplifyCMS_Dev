@@ -3,11 +3,8 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/home/developer/NetBeansProjects/MasonryCMS/web/home/masonryAdmin/maintenance/submaterial/intro.jsp</file>
-            <file>file:/home/developer/NetBeansProjects/MasonryCMS/web/home/home.jsp</file>
-            <file>file:/home/developer/NetBeansProjects/MasonryCMS/src/java/sql/masonryAdmin/maintenance/MaintenanceSQL.java</file>
-            <file>file:/home/developer/NetBeansProjects/MasonryCMS/web/generals/navBarHead.jsp</file>
-            <file>file:/home/developer/NetBeansProjects/MasonryCMS/src/java/web/masonryAdmin/maintenance/SubMaterial.java</file>
+            <file>file:/home/developer/NetBeansProjects/AmplifyCMS_Dev/web/home/masonryAdmin/maintenance/vendor/intro.jsp</file>
+            <file>file:/home/developer/NetBeansProjects/AmplifyCMS_Dev/src/java/web/masonryAdmin/queries/ajax/SelectSubMaterials.java</file>
         </group>
     </open-files>
 </project-private>

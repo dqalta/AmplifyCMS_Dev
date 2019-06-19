@@ -45,6 +45,16 @@ public class CombosMaintenance {
         }
         return combo;
     }
+        public static ArrayList<KeyCombos> getSubMaterials(Session mdk, int material) {
+        ArrayList<KeyCombos> combo = new ArrayList<>();
+        combo.add(new KeyCombos(0, "SELECT ONE SUBMATERIAL"));
+        List<DtoSubMaterial> subMaterials = MaintenanceSQL.getSubMaterials(mdk, material);
+        for (DtoSubMaterial c : subMaterials) {
+            combo.add(new KeyCombos((c.getId()), c.getDescription()));
+        }
+        return combo;
+    }
+
 
     public static ArrayList<KeyCombos> getStyles(Session mdk) {
         ArrayList<KeyCombos> combo = new ArrayList<>();
@@ -55,7 +65,15 @@ public class CombosMaintenance {
         }
         return combo;
     }
-
+public static ArrayList<KeyCombos> getSizes(Session mdk) {
+        ArrayList<KeyCombos> combo = new ArrayList<>();
+        combo.add(new KeyCombos(0, "SELECT ONE SIZE"));
+        List<DtoSize> styles = MaintenanceSQL.getSizes(mdk);
+        for (DtoSize c : styles) {
+            combo.add(new KeyCombos((c.getId()), c.getDescription()));
+        }
+        return combo;
+    }
     public static ArrayList<KeyCombos> getManufacturers(Session mdk) {
         ArrayList<KeyCombos> combo = new ArrayList<>();
         combo.add(new KeyCombos(0, "SELECT ONE MANUFACTURER"));

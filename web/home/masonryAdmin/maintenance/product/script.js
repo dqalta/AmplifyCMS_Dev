@@ -29,13 +29,175 @@ $(document).ready(function () {
     chargeChecks();
     chargeCheckBoxes();
     chargeTabs();
-});
+    initUploadFile();
 
+});
+function initUploadFile() {
+    $(".imgAdd").click(function () {
+        $(this).closest(".row").find('.imgAdd').before('<div class="col-sm-2 imgUp"><div class="imagePreview"></div><label class="btn btn-warning  btn-upload">Upload<input type="file" class="uploadFile img" value="Upload Photo" style="width:0px;height:0px;overflow:hidden;"></label><i class="fa fa-times del"></i></div>');
+    });
+    $(document).on("click", "i.del", function () {
+        $(this).parent().remove();
+    });
+    $(function () {
+        $(document).on("change", ".uploadFile", function ()
+        {
+            var uploadFile = $(this);
+            var files = !!this.files ? this.files : [];
+            if (!files.length || !window.FileReader)
+                return; // no file selected, or no FileReader support
+
+            if (/^image/.test(files[0].type)) { // only image file
+                var reader = new FileReader(); // instance of the FileReader
+                reader.readAsDataURL(files[0]); // read the local file
+
+                reader.onloadend = function () { // set image data as background of div
+                    //alert(uploadFile.closest(".upimage").find('.imagePreview').length);
+                    uploadFile.closest(".imgUp").find('.imagePreview').css("background-image", "url(" + this.result + ")");
+                }
+            }
+
+        });
+    });
+}
 function nextTab(elem) {
     $(elem).next().find('a[data-toggle="tab"]').click();
 }
 function prevTab(elem) {
     $(elem).prev().find('a[data-toggle="tab"]').click();
+}
+function validateStep1() {
+   /* mensajes = "";
+    mensaje = false;
+    //VALIDAR QUE CAMPOS NO SEAN BLANCOS NI NULOS
+    if (($("#sku").val() === null) || ($("#sku").val().replace(" ", "") === "")) {
+        mensajes = mensajes + "danger<>Error<>Please complete field 'SKU'.|";
+        mensaje = true;
+    }
+    if (($("#pname").val() === null) || ($("#pname").val().replace(" ", "") === "")) {
+        mensajes = mensajes + "danger<>Error<>Please complete field 'Name'.|";
+        mensaje = true;
+    }
+    if (($("#description").val() === null) || ($("#description").val().replace(" ", "") === "")) {
+        mensajes = mensajes + "danger<>Error<>Please complete field 'Description'.|";
+        mensaje = true;
+    }
+    if (($("#idManufacturer").val() === "0")) {
+        mensajes = mensajes + "danger<>Error<>Please select one 'Manufacturer'.|";
+        mensaje = true;
+    }
+    if (($("#collection").val() === null)) {
+        mensajes = mensajes + "danger<>Error<>Please select at least one 'Collection'.|";
+        mensaje = true;
+    }
+    if (mensaje) {
+        mostrarNotificaciones();
+    } else {*/
+        var $active = $('.wizard .nav-tabs li.active');
+        $active.next().removeClass('disabled');
+        nextTab($active);
+    //}
+}
+
+function validateStep2() {
+   /* mensajes = "";
+    mensaje = false;
+    //VALIDAR QUE CAMPOS NO SEAN BLANCOS NI NULOS
+    if (($("#idStyle").val() === "0")) {
+        mensajes = mensajes + "danger<>Error<>Please select one 'Style'.|";
+        mensaje = true;
+    }
+    if (($("#idTexture").val() === "0")) {
+        mensajes = mensajes + "danger<>Error<>Please select one 'Texture'.|";
+        mensaje = true;
+    }
+    if (($("#idPackageType").val() === "0")) {
+        mensajes = mensajes + "danger<>Error<>Please select one 'Package Type'.|";
+        mensaje = true;
+    }
+    if (($("#idSize").val() === "0")) {
+        mensajes = mensajes + "danger<>Error<>Please select one 'Size'.|";
+        mensaje = true;
+    }
+    if (($("#color").val() === null)) {
+        mensajes = mensajes + "danger<>Error<>Please select at least one 'Collection'.|";
+        mensaje = true;
+    }
+    if (mensaje) {
+        mostrarNotificaciones();
+    } else {*/
+        var $active = $('.wizard .nav-tabs li.active');
+        $active.next().removeClass('disabled');
+        nextTab($active);
+   // }
+}
+
+function validateStep3() {
+   /* mensajes = "";
+    mensaje = false;
+    //VALIDAR QUE CAMPOS NO SEAN BLANCOS NI NULOS
+    if (($("#idMaterial").val() === "0")) {
+        mensajes = mensajes + "danger<>Error<>Please select one 'Material'.|";
+        mensaje = true;
+    }
+    if (($("#idSubMaterial").val() === "0")) {
+        mensajes = mensajes + "danger<>Error<>Please select one 'Sub Material'.|";
+        mensaje = true;
+    }
+    if (mensaje) {
+        mostrarNotificaciones();
+    } else {*/
+        var $active = $('.wizard .nav-tabs li.active');
+        $active.next().removeClass('disabled');
+        nextTab($active);
+   // }
+}
+
+
+function validateStep4() {
+    /*  mensajes = "";
+     mensaje = false;
+     //VALIDAR QUE CAMPOS NO SEAN BLANCOS NI NULOS
+     if (($("#idMaterial").val() === "0")) {
+     mensajes = mensajes + "danger<>Error<>Please select one 'Material'.|";
+     mensaje = true;
+     }
+     if (($("#idSubMaterial").val() === "0")) {
+     mensajes = mensajes + "danger<>Error<>Please select one 'Sub Material'.|";
+     mensaje = true;
+     }
+     if (mensaje) {
+     mostrarNotificaciones();
+     } else {*/
+    var $active = $('.wizard .nav-tabs li.active');
+    $active.next().removeClass('disabled');
+    nextTab($active);
+    // }
+}
+
+function chargeSubMaterials() {
+    var material = $("#idMaterial").val();
+    if (material === null) {
+        material = "";
+    }
+    $.ajax({
+        tradional: true,
+        type: "post",
+        datatype: "html",
+        data:
+                {
+                    "material": material
+                },
+        url: "/MasonryCMS/masonryAdmin/queries/ajax/select-sub-materials.mdk",
+        success: function (html)
+        {
+            $("#idSubMaterial").html(html).trigger("chosen:updated");
+        },
+        error: function (estado)
+        {
+            //   alert(estado);
+        }
+    });
 }
 
 function chargeTabs() {
@@ -64,6 +226,8 @@ function chargeTabs() {
 
 function chargeCheckBoxes() {
     var arr = ["active"];
+    var arr = ["hasCorner", "canSellLayer"];
+
     for (var i = 0; i < arr.length; i++) {
         if ($("#" + arr[i]).val() === "true") {
             $("#check_" + arr[i]).lcs_on();
