@@ -12,6 +12,9 @@ $(document).ready(function () {
     if (permiso === "true") {
         scroll();
         dataTable("table_vendor");
+          $("#province").chosen({width: "100%"});
+          $("#city").chosen({width: "100%"});
+          $("#postalCode").chosen({width: "100%"});
     }
     if (mensaje === "true") {
         mostrarNotificaciones();
@@ -41,6 +44,56 @@ function chargeChecks() {
     });
 }
 
+function chargeCities() {
+    var province = $("#province").val();
+    if (province === null) {
+        province = "";
+    }
+
+    $.ajax({
+        tradional: true,
+        type: "post",
+        datatype: "html",
+        data:
+                {
+                    "province": province
+                },
+        url: "/MasonryCMS/masonryAdmin/queries/ajax/select-cities.mdk",
+        success: function (html)
+        {
+            $("#city").html(html).trigger("chosen:updated");
+        },
+        error: function (estado)
+        {
+            //   alert(estado);
+        }
+    });
+}
+
+function chargePostalCodes() {
+    var city = $("#city").val();
+    if (city === null) {
+        city = "";
+    }
+    $.ajax({
+        tradional: true,
+        type: "post",
+        datatype: "html",
+        data:
+                {
+                    "city": city
+                },
+        url: "/MasonryCMS/masonryAdmin/queries/ajax/select-postal-codes.mdk",
+        success: function (html)
+        {
+            $("#postalCode").html(html).trigger("chosen:updated");
+        },
+        error: function (estado)
+        {
+            //   alert(estado);
+        }
+    });
+}
 function cancel() {
     $("#ModalProcesando").modal({backdrop: 'static', keyboard: false});
     window.location = "/MasonryCMS/masonryAdmin/maintenance/vendor.mdk";
@@ -70,9 +123,10 @@ function activeContact(id) {
 }
 function saveAddress() {
     $("#ModalProcesando").modal({backdrop: 'static', keyboard: false});
-    $("#accion").val(3);
+    $("#accion").val(6);
     $("#formulario").submit();
 }
+
 
 function edit(id) {
     $("#ModalProcesando").modal({backdrop: 'static', keyboard: false});

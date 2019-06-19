@@ -88,7 +88,19 @@ and open the template in the editor.
                 <param name="contentType">text/html</param>
                 <param name="inputName">inputStream</param>
             </result>
+        </action> 
+         <action name="select-cities" class="web.masonryAdmin.queries.ajax.SelectCities">
+            <result type="stream">
+                <param name="contentType">text/html</param>
+                <param name="inputName">inputStream</param>
+            </result>
         </action>  
+         <action name="select-postal-codes" class="web.masonryAdmin.queries.ajax.SelectPostalCodes">
+            <result type="stream">
+                <param name="contentType">text/html</param>
+                <param name="inputName">inputStream</param>
+            </result>
+        </action> 
     </package>
     
 </struts>

@@ -15,10 +15,12 @@ import sql.masonryAdmin.maintenance.DtoMaterial;
 import sql.masonryAdmin.maintenance.MaintenanceSQL;
 import sql.masonryAdmin.maintenance.DtoMetricsSystem;
 import sql.masonryAdmin.maintenance.DtoPackageType;
+import sql.masonryAdmin.maintenance.DtoPostalCode;
 import sql.masonryAdmin.maintenance.DtoSize;
 import sql.masonryAdmin.maintenance.DtoStyle;
 import sql.masonryAdmin.maintenance.DtoSubMaterial;
 import sql.masonryAdmin.maintenance.DtoTexture;
+import sql.masonryAdmin.maintenance.DtoString;
 
 /**
  *
@@ -138,6 +140,33 @@ public static ArrayList<KeyCombos> getSizes(Session mdk) {
        combo.add(new KeyCombos(2, "Mobile Number"));
        combo.add(new KeyCombos(3, "Office phone Number"));
        combo.add(new KeyCombos(4, "Other"));
+        return combo;
+    }
+    public static ArrayList<KeyCombosString> getProvincePostalCodes(Session mdk) {
+        ArrayList<KeyCombosString> combo = new ArrayList<>();
+        combo.add(new KeyCombosString("NONE"));
+        List<DtoString> provincePostalCodes = MaintenanceSQL.getProvincePostalCodes(mdk);
+        for (DtoString c : provincePostalCodes) {
+            combo.add(new KeyCombosString (c.getDescription()));
+        }
+        return combo;
+    }
+      public static ArrayList<KeyCombosString> getCitiesPostalCodes(Session mdk, String province) {
+        ArrayList<KeyCombosString> combo = new ArrayList<>();     
+        combo.add(new KeyCombosString("NONE"));
+        List<DtoString> cities = MaintenanceSQL.getCitiesPostalCodes(mdk, province);
+        for (DtoString c : cities) {
+            combo.add(new KeyCombosString(c.getDescription()));
+        }
+        return combo;
+    }
+       public static ArrayList<KeyCombosString> getPostalCodes(Session mdk, String city) {
+        ArrayList<KeyCombosString> combo = new ArrayList<>();     
+        combo.add(new KeyCombosString("NONE"));
+        List<DtoString> postalCodes = MaintenanceSQL.getPostalCodes(mdk, city);
+        for (DtoString c : postalCodes) {
+            combo.add(new KeyCombosString(c.getDescription()));
+        }
         return combo;
     }
 }

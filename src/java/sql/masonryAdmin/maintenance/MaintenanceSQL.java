@@ -81,6 +81,35 @@ public class MaintenanceSQL {
         }
         return a;
     }
+    public static ArrayList<DtoPostalCode> getPostalCodes(Session mdk) {
+        ArrayList<DtoPostalCode> a = new ArrayList<>();
+        Iterator itr = mdk.createNativeQuery("SELECT"
+                + " id,"
+                + " postalCode,"
+                + " city,"
+                + " province,"
+                + " active"
+                + " FROM postalCode")
+                .setResultTransformer(Transformers.aliasToBean(DtoPostalCode.class))
+                .list().iterator();
+
+        while (itr.hasNext()) {
+            a.add((DtoPostalCode) itr.next());
+        }
+        return a;
+    }
+    public static ArrayList<DtoString> getProvincePostalCodes(Session mdk) {
+        ArrayList<DtoString> a = new ArrayList<>();
+        Iterator itr = mdk.createNativeQuery("SELECT distinct province as description"      
+                + " FROM postalCode")
+                .setResultTransformer(Transformers.aliasToBean(DtoString.class))
+                .list().iterator();
+
+        while (itr.hasNext()) {
+            a.add((DtoString) itr.next());
+        }
+        return a;
+    }
 
     public static ArrayList<DtoRol> getRols(Session mdk) {
         ArrayList<DtoRol> a = new ArrayList<>();
@@ -1108,4 +1137,136 @@ public class MaintenanceSQL {
         }
         return a;
     }
+          public static ArrayList<DtoString> getCitiesPostalCodes(Session mdk, String province) {
+        ArrayList<DtoString> a = new ArrayList<>();
+        Iterator itr = mdk.createNativeQuery("SELECT distinct city as description"           
+                + " FROM postalCode"
+                + " WHERE province = :province")
+                .setParameter("province", province)
+                .setResultTransformer(Transformers.aliasToBean(DtoString.class))
+                .list().iterator();
+
+        while (itr.hasNext()) {
+            a.add((DtoString) itr.next());
+        }
+        return a;
+    }
+           public static ArrayList<DtoString> getPostalCodes(Session mdk, String city) {
+        ArrayList<DtoString> a = new ArrayList<>();
+        Iterator itr = mdk.createNativeQuery("SELECT distinct postalCode as description"           
+                + " FROM postalCode"
+                + " WHERE city = :city")
+                .setParameter("city", city)
+                .setResultTransformer(Transformers.aliasToBean(DtoString.class))
+                .list().iterator();
+
+        while (itr.hasNext()) {
+            a.add((DtoString) itr.next());
+        }
+        return a;
+    }
+    ///////////////////////////Maintenance Vendor Address/////////////////////
+            ///vendor contact maintenance//////
+
+        public static ArrayList<DtoVendorAddress> getVendorsAddress(Session mdk, String idVendor) {
+        ArrayList<DtoVendorAddress> a = new ArrayList<>();
+        Iterator itr = mdk.createNativeQuery("SELECT"
+                + " id,"
+                + " idVendor,"
+                + " idPostalCode,"
+                + " description,"   
+                + " created,"
+                + " createdBy,"
+                + " modified,"
+                + " modifiedBy,"
+                + " active"
+                + " FROM vendorAddress"
+                + " WHERE idVendor=:idVendor")
+                .setParameter("idVendor", idVendor)
+                .setResultTransformer(Transformers.aliasToBean(DtoVendorAddress.class))
+                .list().iterator();
+
+        while (itr.hasNext()) {
+            a.add((DtoVendorAddress) itr.next());
+        }
+        return a;
+    }
+
+    public static DtoVendorAddress getVendorAddress(Session mdk, String id) {
+        Iterator itr = mdk.createNativeQuery("SELECT"
+                + " id,"
+                + " idVendor,"
+                + " idPostalCode,"
+                + " description,"   
+                + " created,"
+                + " createdBy,"
+                + " modified,"
+                + " modifiedBy,"
+                + " active"
+                + " FROM vendorAddress"
+                + " WHERE idVendor=:idVendor")
+                .setParameter("id", id)
+                .setResultTransformer(Transformers.aliasToBean(DtoVendorAddress.class))
+                .list().iterator();
+        DtoVendorAddress m = null;
+        while (itr.hasNext()) {
+            m = (DtoVendorAddress) itr.next();
+        }
+        return m;
+    }
+    public static void saveVendorAddress(Session mdk, DtoVendorAddress m) {
+        mdk.createNativeQuery("INSERT INTO vendorAddress"
+                + " (idVendor, idPostalCode, description, created, createdBy, modified, modifiedBy, active)"
+                + " VALUES"
+                + " (:idVendor,:idPostalCode, :description, :created, :createdBy, :modified, :modifiedBy, :active)")
+                .setParameter("idVendor", m.getIdVendor())
+                .setParameter("idPostalCode",m.getIdPostalCode())
+                .setParameter("description", m.getDescription())
+                .setParameter("type", m.getType())
+                .setParameter("created", m.getCreated())
+                .setParameter("createdBy", m.getCreatedBy())
+                .setParameter("modified", m.getModified())
+                .setParameter("modifiedBy", m.getModifiedBy())
+                .setParameter("active", m.getActive())
+                .executeUpdate();
+    }
+     public static void updateVendorAddress(Session mdk, DtoVendorAddress m) {
+        mdk.createNativeQuery("UPDATE vendorContact SET"
+                + " idPostalCode= :idPostalCode,"
+                + " description= :description,"
+                + " modified = :modified,"
+                + " modifiedBy = :modifiedBy,"
+                + " active = :active"
+                + " WHERE id = :id")
+                .setParameter("id", m.getId())    
+                .setParameter("idPostalCode",m.getIdPostalCode())
+                .setParameter("description", m.getDescription())
+                .setParameter("modified", m.getModified())
+                .setParameter("modifiedBy", m.getModifiedBy())
+                .setParameter("active", m.getActive())
+                .executeUpdate();
+}
+        public static void deleteVendorAddress(Session mdk, int idVendorAddress) {
+        mdk.createNativeQuery("DELETE FROM vendorAddress"
+                + " WHERE id = :id")
+                .setParameter("id", idVendorAddress)
+                .executeUpdate();
+    }
+     public static void activeVendorAddress(Session mdk, DtoVendorAddress m) {
+        mdk.createNativeQuery("UPDATE vendorAddress SET"
+                + " idPostalCode= :idPostalCode,"
+                + " description= :description,"
+                + " modified = :modified,"
+                + " modifiedBy = :modifiedBy,"
+                + " active = :active"
+                + " WHERE id = :id")
+                .setParameter("id", m.getId())
+                .setParameter("idPostalCode",m.getIdPostalCode())
+                .setParameter("description", m.getDescription())
+                .setParameter("modified", m.getModified())
+                .setParameter("modifiedBy", m.getModifiedBy())
+                .setParameter("active", m.getActive())
+                .executeUpdate();
+}
+           
 }

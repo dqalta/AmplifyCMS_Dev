@@ -15,6 +15,7 @@
         <st:include value="/generals/css-js-Datatables.jsp"/>
         <st:include value="/generals/css-js-LcSwitch.jsp"/>
         <st:include value="/generals/css-js-app.jsp"/>
+        <st:include value="/generals/css-js-Chosen.jsp"/>
         <script src="/MasonryCMS/home/masonryAdmin/maintenance/vendor/script.js" type="text/javascript"></script>        
     </head>
     <body style="margin: 0px;">
@@ -60,8 +61,6 @@
                                             <div id="tabsContents" class="tab-content">
                                                 <div class="tab-pane fade active in" id="maintenanceTab">    
                                                     <div class="container-fluid">
-
-
                                                         <br>
                                                         <div class="row">
 
@@ -91,8 +90,7 @@
                                                         </div>  
                                                     </div>
                                                 </div>
-                                                <!--                                             <  !--Tab for vendor contact details                                                  -->
-
+                                                                    <%--Tab for information about vendors --%>
                                                 <div class="tab-pane fade" id="maintenanceTab1">    
                                                     <div class="container-fluid">                        
                                                         <br>
@@ -137,8 +135,7 @@
                                                                                     <td><st:property value="%{#vendorsContacts.type}" /></td>                                        
                                                                                     <td>
                                                                                         <st:if test="%{#vendorsContacts.active == true}">
-                                                                                            <i onclick="activeContact('<st:property value="%{#vendorsContacts.id}" />');" class="glyphicon glyphicon-off text-success" data-toggle="tooltip" data-placement="top" title="" data-original-title="Active"</i>
-                                                                                            
+                                                                                            <i onclick="activeContact('<st:property value="%{#vendorsContacts.id}" />');" class="glyphicon glyphicon-off text-success" data-toggle="tooltip" data-placement="top" title="" data-original-title="Active"</i>                                                                                            
                                                                                         </st:if>
                                                                                         <st:else>
                                                                                             <i onclick="activeContact('<st:property value="%{#vendorsContacts.id}" />');" class="glyphicon glyphicon-off text-danger"  data-toggle="tooltip" data-placement="top" title="" data-original-title="Inactive"></i>
@@ -157,7 +154,7 @@
                                                     </div>
                                                 </div>
 
-                                                <!--Tab for vendor address details-->                                                  
+<!--                                                Tab for vendor address details-->
 
                                                 <div class="tab-pane fade" id="maintenanceTab2">    
                                                     <div class="container-fluid">
@@ -165,20 +162,68 @@
                                                         <br>
                                                         <div class="row">
                                                             <div class="col-sm-3">
-                                                                <%--         <st:select class="form-control"  id="idPostalCode" name="idPostalCode" value="%{idPostalCode}" list="postalCodes" listKey="idPostalCode" listValue="Postal Codes"/>   </div>--%>
-                                                                <div class="col-sm-3">
-                                                                    <%--!  <st:textfield label="Address Details" name="description" id="description" class="form-control" value="%{description}" placeholder="Street address..."/>--%>
-                                                                </div>
-                                                                <div class="col-sm-2">
-                                                                  
+                                                                <div class="form-group">
+                                                                    <label for="province">Province:</label>
+                                                                    <st:select class="form-control"  id="province" name="province" value="%{province}" list="provincePostalCodes" listKey="description" listValue="description" onchange="chargeCities();"/>
                                                                 </div> 
+                                                            </div> 
+                                                                <div class="col-sm-3">
+                                                                <div class="form-group">
+                                                                    <label for="city">City:</label>
+                                                                       <st:select class="form-control"  id="city" name="city" value="%{city}" list="cities" listKey="description" listValue="description" onchange="chargePostalCodes();"/>
+                                                                 </div> 
+                                                                </div> 
+                                                                 <div class="col-sm-3">                                                           
+                                                                 <div class="form-group">                                                                
+                                                                    <label for="postalCode">Postal Code</label>
+                                                                     <st:select class="form-control"  id="postalCode" name="postalCode" value="%{postalCode}" list="postalCodes" listKey="description" listValue="description"/>
+                                                                 </div>
+                                                                 </div>
+                                                                  <div class="col-sm-3">
+                                                                  <st:textfield label="Address" name="description" id="description" class="form-control" value="%{description}" placeholder="Complete the vendor address here.."/>
+                                                                  </div>                                                 
+                                                           
                                                             </div>
                                                             <br>
 
                                                             <div class="btn-group pull-right">
                                                                 <a class="btn btn-danger pull-right" onclick="saveAddress();"><i class="glyphicon glyphicon-ok"></i>&nbsp;Save</a>
-                                                                <a class="btn btn-default pull-right" onclick="cancel();"><i class="glyphicon glyphicon-remove"></i>&nbsp;Cancel</a>
-                                                            </div>  
+                                                                <a class="btn btn-defaqult pull-right" onclick="cancel();"><i class="glyphicon glyphicon-remove"></i>&nbsp;Cancel</a>
+                                                            </div> 
+                                                                  <div class="row">
+                                                            <div class="col-sm-7">
+                                                                <table id="tableAddress" class="table table-striped" style="width:100%; margin: 0px auto;">
+                                                                    <thead>
+                                                                        <tr>
+                                                                            <th>Postal Code</th>
+                                                                            <th>Address</th>
+                                                                            <th>&nbsp;</th>
+                                                                            <th>&nbsp;</th>                              
+                                                                        </tr>
+                                                                    </thead>
+                                                                    <tbody>
+                                                                        <st:if test="%{!getVendorsAddress().isEmpty()}">
+                                                                            <st:iterator value="vendorsContacts" var="vendorsContacts" status="index">
+                                                                                <tr>
+                                                                                    <td><st:property value="%{#vendorsContacts.description}" /></td>   
+                                                                                    <td><st:property value="%{#vendorsContacts.type}" /></td>                                        
+                                                                                    <td>
+                                                                                        <st:if test="%{#vendorsContacts.active == true}">
+                                                                                            <i onclick="activeContact('<st:property value="%{#vendorsContacts.id}" />');" class="glyphicon glyphicon-off text-success" data-toggle="tooltip" data-placement="top" title="" data-original-title="Active"</i>                                                                                            
+                                                                                        </st:if>
+                                                                                        <st:else>
+                                                                                            <i onclick="activeContact('<st:property value="%{#vendorsContacts.id}" />');" class="glyphicon glyphicon-off text-danger"  data-toggle="tooltip" data-placement="top" title="" data-original-title="Inactive"></i>
+                                                                                        </st:else>
+                                                                                    </td>
+                                                                                     <td>
+                                                                                        <i data-toggle="tooltip" data-placement="top" title="" data-original-title="Delete Contact" onclick="deleteContact('<st:property value="%{#vendorsContacts.id}" />');" class="pull-right glyphicon glyphicon-remove"></i></td>                                                                                                           
+                                                                                </tr>
+                                                                            </st:iterator>
+                                                                        </st:if> 
+                                                                    </tbody>
+                                                                </table>
+                                                            </div>
+                                                         </div>
                                                         </div>
                                                     </div> 
                                                 </div>
