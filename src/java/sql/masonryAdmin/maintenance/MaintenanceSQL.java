@@ -692,29 +692,6 @@ public class MaintenanceSQL {
         return a;
     }
 
-    public static ArrayList<DtoSubMaterial> getSubMaterials(Session mdk, int idProductMaterial) {
-        ArrayList<DtoSubMaterial> a = new ArrayList<>();
-        Iterator itr = mdk.createNativeQuery("SELECT"
-                + " id,"
-                + " idProductMaterial,"
-                + " description,"
-                + " created,"
-                + " createdBy,"
-                + " modified,"
-                + " modifiedBy,"
-                + " active"
-                + " FROM productSubMaterial"
-                + " WHERE idProductMaterial  = :idProductMaterial")
-                .setParameter("idProductMaterial", idProductMaterial)
-                .setResultTransformer(Transformers.aliasToBean(DtoSubMaterial.class))
-                .list().iterator();
-
-        while (itr.hasNext()) {
-            a.add((DtoSubMaterial) itr.next());
-        }
-        return a;
-    }
-
     public static DtoSubMaterial getSubMaterial(Session mdk, int id) {
         Iterator itr = mdk.createNativeQuery("SELECT"
                 + " id,"
@@ -940,5 +917,173 @@ public class MaintenanceSQL {
                 .setParameter("active", m.getActive())
                 .executeUpdate();
     }
+    
+    
+   /////////////////////////////////// Vendor maintenance //////
+    public static ArrayList<DtoVendor> getVendors(Session mdk) {
+        ArrayList<DtoVendor> a = new ArrayList<>();
+        Iterator itr = mdk.createNativeQuery("SELECT"
+                + " id,"
+                + " vname,"
+                + " created,"
+                + " createdBy,"
+                + " modified,"
+                + " modifiedBy,"
+                + " active"
+                + " FROM vendor")
+                .setResultTransformer(Transformers.aliasToBean(DtoVendor.class))
+                .list().iterator();
 
+        while (itr.hasNext()) {
+            a.add((DtoVendor) itr.next());
+        }
+        return a;
+    }
+
+    public static DtoVendor getVendor(Session mdk, String id) {
+        Iterator itr = mdk.createNativeQuery("SELECT"
+                + " id,"
+                + " vname,"
+                + " created,"
+                + " createdBy,"
+                + " modified,"
+                + " modifiedBy,"
+                + " active"
+                + " FROM vendor"
+                + " WHERE id = :id")
+                .setParameter("id", id)
+                .setResultTransformer(Transformers.aliasToBean(DtoVendor.class))
+                .list().iterator();
+        DtoVendor m = null;
+        while (itr.hasNext()) {
+            m = (DtoVendor) itr.next();
+        }
+        return m;
+    }
+
+    public static void saveVendor(Session mdk, DtoVendor m) {
+        mdk.createNativeQuery("INSERT INTO vendor"
+                + " (id, vname, created, createdBy, modified, modifiedBy, active)"
+                + " VALUES"
+                + " (:id, :vname, :created, :createdBy, :modified, :modifiedBy, :active)")
+                .setParameter("id", m.getId())
+                .setParameter("vname", m.getVname())
+                .setParameter("created", m.getCreated())
+                .setParameter("createdBy", m.getCreatedBy())
+                .setParameter("modified", m.getModified())
+                .setParameter("modifiedBy", m.getModifiedBy())
+                .setParameter("active", m.getActive())
+                .executeUpdate();
+    }
+
+    public static void updateVendor(Session mdk, DtoVendor m) {
+        mdk.createNativeQuery("UPDATE vendor SET"
+                + " vname = :vname,"
+                + " modified = :modified,"
+                + " modifiedBy = :modifiedBy,"
+                + " active = :active"
+                + " WHERE id = :id")
+                .setParameter("id", m.getId())
+                .setParameter("vname", m.getVname())            
+                .setParameter("modified", m.getModified())
+                .setParameter("modifiedBy", m.getModifiedBy())
+                .setParameter("active", m.getActive())
+                .executeUpdate();
+    }
+   ///vendor contact maintenance//////
+
+        public static ArrayList<DtoVendorContact> getVendorsContacts(Session mdk, String idVendor) {
+        ArrayList<DtoVendorContact> a = new ArrayList<>();
+        Iterator itr = mdk.createNativeQuery("SELECT"
+                + " id,"
+                + " idVendor,"
+                + " description,"
+                + " type,"
+                + " created,"
+                + " createdBy,"
+                + " modified,"
+                + " modifiedBy,"
+                + " active"
+                + " FROM vendorContact"
+                + " WHERE idVendor=:idVendor")
+                .setParameter("idVendor", idVendor)
+                .setResultTransformer(Transformers.aliasToBean(DtoVendorContact.class))
+                .list().iterator();
+
+        while (itr.hasNext()) {
+            a.add((DtoVendorContact) itr.next());
+        }
+        return a;
+    }
+
+    public static DtoVendorContact getVendorsContact(Session mdk, int id) {
+        Iterator itr = mdk.createNativeQuery("SELECT"
+                + " id,"
+                + " idVendor,"
+                + " description,"
+                + " type,"
+                + " created,"
+                + " createdBy,"
+                + " modified,"
+                + " modifiedBy,"
+                + " active"
+                + " FROM vendorContact"
+                + " WHERE id = :id")
+                .setParameter("id", id)
+                .setResultTransformer(Transformers.aliasToBean(DtoVendorContact.class))
+                .list().iterator();
+        DtoVendorContact m = null;
+        while (itr.hasNext()) {
+            m = (DtoVendorContact) itr.next();
+        }
+        return m;
+    }
+    public static void saveVendorContact(Session mdk, DtoVendorContact m) {
+        mdk.createNativeQuery("INSERT INTO vendorContact"
+                + " (idVendor, description, type, created, createdBy, modified, modifiedBy, active)"
+                + " VALUES"
+                + " (:idVendor, :description, :type, :created, :createdBy, :modified, :modifiedBy, :active)")
+    
+                .setParameter("idVendor", m.getIdVendor())
+                .setParameter("description", m.getDescription())
+                .setParameter("type", m.getType())
+                .setParameter("created", m.getCreated())
+                .setParameter("createdBy", m.getCreatedBy())
+                .setParameter("modified", m.getModified())
+                .setParameter("modifiedBy", m.getModifiedBy())
+                .setParameter("active", m.getActive())
+                .executeUpdate();
+    }
+     public static void updateVendorContact(Session mdk, DtoVendorContact m) {
+        mdk.createNativeQuery("UPDATE vendorContact SET"
+                + " modified = :modified,"
+                + " modifiedBy = :modifiedBy,"
+                + " active = :active"
+                + " WHERE id = :id")
+                .setParameter("id", m.getId())                 
+                .setParameter("modified", m.getModified())
+                .setParameter("modifiedBy", m.getModifiedBy())
+                .setParameter("active", m.getActive())
+                .executeUpdate();
+}
+        public static void deleteVendorContact(Session mdk, int idContact) {
+        mdk.createNativeQuery("DELETE FROM vendorContact"
+                + " WHERE id = :id")
+                .setParameter("id", idContact)
+                .executeUpdate();
+    }
+     public static void activeVendorContact(Session mdk, DtoVendorContact m) {
+        mdk.createNativeQuery("UPDATE vendorContact SET"
+                + " type = :vname,"
+                + " modified = :modified,"
+                + " modifiedBy = :modifiedBy,"
+                + " active = :active"
+                + " WHERE id = :id")
+                .setParameter("id", m.getId())
+                .setParameter("type", m.getType())            
+                .setParameter("modified", m.getModified())
+                .setParameter("modifiedBy", m.getModifiedBy())
+                .setParameter("active", m.getActive())
+                .executeUpdate();
+}
 }

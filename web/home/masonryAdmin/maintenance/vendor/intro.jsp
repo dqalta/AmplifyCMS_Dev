@@ -25,7 +25,7 @@
             <st:hidden id="mensajes" name="mensajes" value="%{mensajes}" />
 
             <st:include value="/generals/navBarHead.jsp" >
-                <st:param name="title">TEXTURES</st:param>
+                <st:param name="title">Vendors</st:param>
             </st:include>
             <st:if test="%{permiso == true}">              
 
@@ -41,21 +41,37 @@
                                     </h4>
                                 </div>
                                 <div id="form-panel" class="panel-collapse collapse">
-                                    <div class="panel-body">    
-                                        <ul class="nav nav-tabs">
-                                            <li class="active"><a href="#maintenanceTab" data-toggle="tab" aria-expanded="true">Vendors</a></li>                  
-                                        </ul>
-                                        <div id="tabsContents" class="tab-content">
-                                            <div class="tab-pane fade active in" id="maintenanceTab">    
-                                                <div class="container-fluid">
-                                                    <st:form id="formulario" name="formulario" cssClass="form-vertical" action="vendor" method="post" theme="bootstrap">                                        
-                                                        <st:hidden id="accion" name="accion" value="%{accion}"/>
-                                                        <st:hidden id="idEdit" name="idEdit" value="%{idEdit}"/>
+                                    <div class="panel-body">   
+                                        <st:form id="formulario" name="formulario" cssClass="form-vertical" action="vendor" method="post" theme="bootstrap">
+                                            <st:hidden id="accion" name="accion" value="%{accion}"/>
+                                            <st:hidden id="idEdit" name="idEdit" value="%{idEdit}"/>
+                                            <st:hidden id="idContact" name="idContact" value="%{idContact}"/>
+                                            <ul class="nav nav-tabs"> <%--block tabs without previous data entry--%>
+                                                <li class="active"><a data-toggle="tab" href="#maintenanceTab"  aria-expanded="true">General information</a></li>    
+                                                    <st:if test="%{existVendor == true}"> 
+                                                    <li><a data-toggle="tab" href="#maintenanceTab1" aria-expanded="true">Contact Details</a></li>  
+                                                    <li><a data-toggle="tab" href="#maintenanceTab2"  aria-expanded="true">Address</a></li>                                          
+                                                    </st:if>
+                                                    <st:else>
+                                                    <li class="disabled"><a>Contact Details</a></li> 
+                                                    <li class="disabled"><a>Address</a></li>
+                                                    </st:else> 
+                                            </ul>
+                                            <div id="tabsContents" class="tab-content">
+                                                <div class="tab-pane fade active in" id="maintenanceTab">    
+                                                    <div class="container-fluid">
+
+
                                                         <br>
                                                         <div class="row">
-                                                            <div class="col-sm-3">
-                                                                <st:textfield label="Vendor ID" name="id" id="id" class="form-control" value="%{id}" placeholder="Vendors id.."/>
-                                                            </div>
+
+                                                            <st:if test="%{existVendor == true}"> 
+                                                                <div class="col-sm-3">
+                                                                    <st:textfield label="Vendor ID" name="id" id="id" class="form-control disabled" value="%{id}" placeholder="Vendors id.." readonly="true"/>
+                                                                </div>
+                                                            </st:if>                                                                        
+
+
                                                             <div class="col-sm-3">
                                                                 <st:textfield label="Vendor Name" name="vname" id="vname" class="form-control" value="%{vname}" placeholder="Vendors Name..."/>
                                                             </div>
@@ -68,102 +84,180 @@
                                                             </div> 
                                                         </div>
                                                         <br>
-                                                    </st:form>   
-                                                    <div class="btn-group pull-right">
-                                                        <a class="btn btn-danger pull-right" onclick="save();"><i class="glyphicon glyphicon-ok"></i>&nbsp;Save</a>
-                                                        <a class="btn btn-default pull-right" onclick="cancel();"><i class="glyphicon glyphicon-remove"></i>&nbsp;Cancel</a>
-                                                    </div>  
+
+                                                        <div class="btn-group pull-right">
+                                                            <a class="btn btn-danger pull-right" onclick="save();"><i class="glyphicon glyphicon-ok"></i>&nbsp;Save</a>
+                                                            <a class="btn btn-default pull-right" onclick="cancel();"><i class="glyphicon glyphicon-remove"></i>&nbsp;Cancel</a>
+                                                        </div>  
+                                                    </div>
+                                                </div>
+                                                <!--                                             <  !--Tab for vendor contact details                                                  -->
+
+                                                <div class="tab-pane fade" id="maintenanceTab1">    
+                                                    <div class="container-fluid">                        
+                                                        <br>
+                                                        <div class="row">
+                                                            <div class="col-sm-3">
+                                                                <st:textfield label="Description" name="description" id="description" class="form-control" value="%{description}" placeholder="Contact detail.."/>
+                                                            </div>                                                 
+                                                                <div class="col-sm-3">                                                      
+                                                                <div class="form-group">
+                                                                    <label for=type">Type:</label>
+                                                                    <st:select class="form-control"  id="type" name="type" value="%{type}" list="types" listKey="description" listValue="description"/>                                          
+                                                                </div>
+                                                            </div>
+                                                          
+                                                            <div class="col-sm-1">
+                                                                <div class="form-group" data-toggle="tooltip" data-placement="rigth" title="" data-original-title="Add Contact" > 
+                                                                    <label class="control-label" for="addDiv">Add:</label> 
+                                                                    <div id="addDiv"> 
+                                                                        <a class="btn btn-danger" onclick="saveContact();">
+                                                                            <i class="glyphicon glyphicon-plus"></i></a>
+                                                                    </div> 
+                                                                </div> 
+                                                            </div> 
+                                                        </div>
+                                                        <br>
+                                                        <div class="row">
+                                                            <div class="col-sm-7">
+                                                                <table id="tableContact" class="table table-striped" style="width:100%; margin: 0px auto;">
+                                                                    <thead>
+                                                                        <tr>
+                                                                            <th>Description</th>
+                                                                            <th>Type</th>
+                                                                            <th>&nbsp;</th>
+                                                                            <th>&nbsp;</th>                              
+                                                                        </tr>
+                                                                    </thead>
+                                                                    <tbody>
+                                                                        <st:if test="%{!getVendorsContacts().isEmpty()}">
+                                                                            <st:iterator value="vendorsContacts" var="vendorsContacts" status="index">
+                                                                                <tr>
+                                                                                    <td><st:property value="%{#vendorsContacts.description}" /></td>   
+                                                                                    <td><st:property value="%{#vendorsContacts.type}" /></td>                                        
+                                                                                    <td>
+                                                                                        <st:if test="%{#vendorsContacts.active == true}">
+                                                                                            <i onclick="activeContact('<st:property value="%{#vendorsContacts.id}" />');" class="glyphicon glyphicon-off text-success" data-toggle="tooltip" data-placement="top" title="" data-original-title="Active"</i>
+                                                                                            
+                                                                                        </st:if>
+                                                                                        <st:else>
+                                                                                            <i onclick="activeContact('<st:property value="%{#vendorsContacts.id}" />');" class="glyphicon glyphicon-off text-danger"  data-toggle="tooltip" data-placement="top" title="" data-original-title="Inactive"></i>
+                                                                                        </st:else>
+                                                                                    </td>
+                                                                                     <td>
+                                                                                        <i data-toggle="tooltip" data-placement="top" title="" data-original-title="Delete Contact" onclick="deleteContact('<st:property value="%{#vendorsContacts.id}" />');" class="pull-right glyphicon glyphicon-remove"></i></td>                                                                                                           
+                                                                                </tr>
+                                                                            </st:iterator>
+                                                                        </st:if> 
+                                                                    </tbody>
+                                                                </table>
+                                                            </div>
+                                                        </div>
+
+                                                    </div>
+                                                </div>
+
+                                                <!--Tab for vendor address details-->                                                  
+
+                                                <div class="tab-pane fade" id="maintenanceTab2">    
+                                                    <div class="container-fluid">
+
+                                                        <br>
+                                                        <div class="row">
+                                                            <div class="col-sm-3">
+                                                                <%--         <st:select class="form-control"  id="idPostalCode" name="idPostalCode" value="%{idPostalCode}" list="postalCodes" listKey="idPostalCode" listValue="Postal Codes"/>   </div>--%>
+                                                                <div class="col-sm-3">
+                                                                    <%--!  <st:textfield label="Address Details" name="description" id="description" class="form-control" value="%{description}" placeholder="Street address..."/>--%>
+                                                                </div>
+                                                                <div class="col-sm-2">
+                                                                  
+                                                                </div> 
+                                                            </div>
+                                                            <br>
+
+                                                            <div class="btn-group pull-right">
+                                                                <a class="btn btn-danger pull-right" onclick="saveAddress();"><i class="glyphicon glyphicon-ok"></i>&nbsp;Save</a>
+                                                                <a class="btn btn-default pull-right" onclick="cancel();"><i class="glyphicon glyphicon-remove"></i>&nbsp;Cancel</a>
+                                                            </div>  
+                                                        </div>
+                                                    </div> 
                                                 </div>
                                             </div>
+                                        </st:form>
+                                    </div>
+                                </div>
+
+                            </div>
+
+
+                            <div style="padding: 20px;" class="table-responsive">
+
+
+                                <table id="table_vendor" class="table table-striped" style="width:100%; margin: 0px auto;">
+                                    <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Vendor Name</th>
+                                            <th>Created</th>
+                                            <th>Created By</th>
+                                            <th>Modified</th>
+                                            <th>Modified By</th>
+                                            <th>Active</th>
+                                            <th>Edit</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <st:if test="%{!getVendors().isEmpty()}">
+                                            <st:iterator value="Vendors" var="Vendors" status="index">
+                                                <tr>
+                                                    <td><st:property value="%{#Vendors.id}" /></td>           
+                                                    <td><st:property value="%{#Vendors.vname}" /></td>        
+                                                    <td><st:date name="%{#Vendors.created}" format="dd/MM/yyyy"/></td>       
+                                                    <td><st:property value="%{#Vendors.createdBy}" /></td>    
+                                                    <td><st:date name="%{#Vendors.modified}" format="dd/MM/yyyy"/></td>    
+                                                    <td><st:property value="%{#Vendors.modifiedBy}" /></td>       
+                                                    <td>
+                                                        <st:if test="%{#Vendors.active == true}">
+                                                            <i class="glyphicon glyphicon-off text-success" data-toggle="tooltip" data-placement="top" title="" data-original-title="Active"</i>
+                                                        </st:if>
+                                                        <st:else>
+                                                            <i class="glyphicon glyphicon-off text-danger"  data-toggle="tooltip" data-placement="top" title="" data-original-title="Inactive"></i>
+                                                        </st:else>
+                                                    </td>       
+                                                    <td onclick="edit('<st:property value="%{#Vendors.id}" />');"><i class="glyphicon glyphicon-pencil" data-toggle="tooltip" data-placement="left" title="" data-original-title="Edit Row"></i></td>
+                                                </tr>
+                                            </st:iterator>
+                                        </st:if>
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <div class="modal" id="ModalProcesando">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h4 class="modal-title"><i class="glyphicon glyphicon-folder-open"></i>&nbsp;&nbsp;Masonry CMS</h4>
+                                        </div>
+                                        <div class="modal-body">
+                                            <h4>Processing, Please wait...<i class="glyphicon glyphicon-repeat fast-right-spinner"></i></h4>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
 
-                        <div style="padding: 20px;" class="table-responsive">
-                            <style>
-                                table.dataTable tbody th,
-                                table.dataTable tbody td {
-                                    white-space: nowrap;
-                                }
-                                .dataTables_filter,
-                                .dataTables_info { 
-                                    display: none;
-                                }
-                            </style>
-                            <div class="row">
-                                <div class="col-sm-12">
-                                    <div class="input-group">
-                                        <span class="input-group-addon"><i class="glyphicon glyphicon-search"></i></span>
-                                        <input id="fieldSearch" type="text" class="form-control" placeholder="Enter the data to search...">
-                                    </div>
-                                </div>
-                            </div>
-                            <table id="table_vendor" class="table table-striped" style="width:100%; margin: 0px auto;">
-                                <thead>
-                                    <tr>
-                                        <th>ID</th>
-                                        <th>Vendor Name</th>
-                                        <th>Created</th>
-                                        <th>Created By</th>
-                                        <th>Modified</th>
-                                        <th>Modified By</th>
-                                        <th>Active</th>
-                                        <th>Edit</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <st:if test="%{!getVendors().isEmpty()}">
-                                        <st:iterator value="Vendors" var="Vendors" status="index">
-                                            <tr>
-                                                <td><st:property value="%{#Vendors.id}" /></td>           
-                                                <td><st:property value="%{#Vendors.vname}" /></td>        
-                                                <td><st:date name="%{#Vendors.created}" format="dd/MM/yyyy"/></td>       
-                                                <td><st:property value="%{#Vendors.createdBy}" /></td>    
-                                                <td><st:date name="%{#Vendors.modified}" format="dd/MM/yyyy"/></td>    
-                                                <td><st:property value="%{#Vendors.modifiedBy}" /></td>       
-                                                <td>
-                                                    <st:if test="%{#Vendors.active == true}">
-                                                        <i class="glyphicon glyphicon-off text-success" data-toggle="tooltip" data-placement="top" title="" data-original-title="Active"</i>
-                                                    </st:if>
-                                                    <st:else>
-                                                        <i class="glyphicon glyphicon-off text-danger"  data-toggle="tooltip" data-placement="top" title="" data-original-title="Inactive"></i>
-                                                    </st:else>
-                                                </td>       
-                                                <td onclick="edit('<st:property value="%{#Vendors.id}" />');"><i class="glyphicon glyphicon-pencil" data-toggle="tooltip" data-placement="left" title="" data-original-title="Edit Row"></i></td>
-                                            </tr>
-                                        </st:iterator>
-                                    </st:if>
-                                </tbody>
-                            </table>
-                        </div>
 
-                        <div class="modal" id="ModalProcesando">
-                            <div class="modal-dialog">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h4 class="modal-title"><i class="glyphicon glyphicon-folder-open"></i>&nbsp;&nbsp;Masonry CMS</h4>
-                                    </div>
-                                    <div class="modal-body">
-                                        <h4>Processing, Please wait...<i class="glyphicon glyphicon-repeat fast-right-spinner"></i></h4>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                        </st:if> 
+                        <st:else>
+                            <st:include value="/generals/permiso.jsp" />
+                        </st:else>
 
-                    </st:if> 
+                        <st:include value="/generals/navBarFooter.jsp" /> 
+                    </st:if>
                     <st:else>
-                        <st:include value="/generals/permiso.jsp" />
-                    </st:else>
-
-                    <st:include value="/generals/navBarFooter.jsp" /> 
-                </st:if>
-                <st:else>
-                    <%response.sendRedirect("/MasonryCMS/");%>
-                </st:else> 
+                        <%response.sendRedirect("/MasonryCMS/");%>
+                    </st:else> 
+                </div>
             </div>
-        </div>
 
 
 

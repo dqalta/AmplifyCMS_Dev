@@ -9,15 +9,23 @@ import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionSupport;
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import javax.servlet.http.HttpServletRequest;
+import org.apache.commons.lang3.RandomStringUtils;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.struts2.interceptor.SessionAware;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import sql.masonryAdmin.maintenance.DtoVendor;
+import sql.masonryAdmin.maintenance.DtoVendorContact; //handles de second tab data
 import sql.masonryAdmin.maintenance.MaintenanceSQL;
 import util.Fechas;
 import web.sesion.ORMUtil;
+import web.util.CombosMaintenance;
+import web.util.KeyCombos;
+import web.util.KeyCombosPostalCodes;
 
 /**
  *
@@ -40,15 +48,24 @@ public class Vendor extends ActionSupport implements SessionAware {
     String menu;//String de los permisos del menu 
     String mensajes = "";//Variable para cargar el texto del resultado de las validaciones o acciones
     boolean mensaje;//Variable bandera para saber si se muestra o no el mensaje
-
+    private boolean existVendor;
     //Variables de la pantalla
     private ArrayList<DtoVendor> vendors = new ArrayList<>();//Variable con la lista de datos
+    private ArrayList<DtoVendorContact> vendorsContacts = new ArrayList<>();//Variable con la lista de datos
 
-    //Variables del mantenimiento
+    //Handles the postal codes 
+    private ArrayList<KeyCombosPostalCodes> postalCodes = new ArrayList<>();//Variable con la lista de datos
+    private ArrayList<KeyCombos> types = new ArrayList<>();
+    //vendors vars
     private String id;
     private String vname;
     private boolean active;
     private String idEdit;
+    // vendor contact vars
+    private int idContact;
+    private String description;
+    private String type;
+    // vendor address details
 
     public Vendor() {
         Map<String, Object> session = ActionContext.getContext().getSession();
@@ -58,6 +75,7 @@ public class Vendor extends ActionSupport implements SessionAware {
             usuario = String.valueOf(session.get("user"));
             permiso = true; //AdmConsultas.getPermiso(o2c, "ADMINISTRACIÓN", "Encargados", usuario);            
             menu = "";//AdmConsultas.menuUsuario(o2c, usuario);
+            chargeSelect();
         } else {
             sesionActiva = false;
         }
@@ -130,21 +148,32 @@ public class Vendor extends ActionSupport implements SessionAware {
     }
 
     //SET GET CUSToMIZED
-  
-     public String getVname() {
+    //controls tabs navigation
+    public boolean isExistVendor() {
+        return existVendor;
+    }
+
+    public void setExistVendor(boolean existVendor) {
+        this.existVendor = existVendor;
+    }
+
+    public String getVname() {
         return vname;
     }
-  public void setVname(String vname) {
+
+    public void setVname(String vname) {
         this.vname = vname;
     }
 
-   public ArrayList<DtoVendor> getVendors() {
+    public ArrayList<DtoVendor> getVendors() {
         return vendors;
     }
-  public void setVendors(ArrayList<DtoVendor> vendors) {
+
+    public void setVendors(ArrayList<DtoVendor> vendors) {
         this.vendors = vendors;
     }
-  public String getId() {
+
+    public String getId() {
         return id;
     }
 
@@ -164,16 +193,62 @@ public class Vendor extends ActionSupport implements SessionAware {
         return idEdit;
     }
 
-     public void setIdEdit(String idEdit) {
+    public void setIdEdit(String idEdit) {
         this.idEdit = idEdit;
     }
+//refactor of vendor contact vars
 
+    public String getDescription() {
+        return description;
+    }
 
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public ArrayList<KeyCombos> getTypes() {
+        return types;
+    }
+
+    public void setTypes(ArrayList<KeyCombos> types) {
+        this.types = types;
+    }
+
+    public ArrayList<DtoVendorContact> getVendorsContacts() {
+        return vendorsContacts;
+    }
+
+    public void setVendorsContacts(ArrayList<DtoVendorContact> vendorsContacts) {
+        this.vendorsContacts = vendorsContacts;
+    }
+
+    public ArrayList<KeyCombosPostalCodes> getPostalCodes() {
+        return postalCodes;
+    }
+
+    public void setPostalCodes(ArrayList<KeyCombosPostalCodes> postalCodes) {
+        this.postalCodes = postalCodes;
+    }
+
+    public int getIdContact() {
+        return idContact;
+    }
+
+    public void setIdContact(int idContact) {
+        this.idContact = idContact;
+    }
 
     ////////
     @Override
-    public String execute() {
+    public String execute() { //the class start here
         if (permiso == true) {
             process();
             mdk.close();//Cerrar la conexión de la base de datos SIEMPRE
@@ -184,23 +259,44 @@ public class Vendor extends ActionSupport implements SessionAware {
     //METODOS ADICIONALES
     public void process() {
         switch (accion) {
-            case 1:
+            case 1: {
                 save();
                 break;
-            case 2:
+            }
+            case 2: {
                 readForUpdate();
                 break;
+            }
+            case 3: {
+                saveContact();
+                break;
+            }
+            case 4: {
+                deleteContact();
+                break;
+            }
+            case 5: {
+                activeContact();
+                break;
+            }
         }
-        chargeVendors();
+        chargeTables();
+existVendor = MaintenanceSQL.getVendor(mdk, id) != null;
     }
 
     public void clearFields() {
         id = "";
         vname = "";
         accion = 0;
-        idEdit="";
-        
-        setActive(false);
+        idEdit = "";
+
+        active = false;
+    }
+
+    public void clearFieldsContact() {
+        description = "";
+        type = "Email";
+
     }
 
     public boolean validateFields() {
@@ -218,6 +314,34 @@ public class Vendor extends ActionSupport implements SessionAware {
         return flag;
     }
 
+    public boolean validateFieldsContact() {
+        boolean flag = true;
+        mensajes = "";
+        mensaje = false;
+        //VALIDAR QUE CAMPOS NO SEAN BLANCOS NI NULOS
+        if ((description == null) || (description.isEmpty())) {
+            mensajes = mensajes + "danger<>Error<>Please complete field 'Description Contact'.|";
+            flag = false;
+            mensaje = true;
+
+        }
+        if (type.equals("Email")) {
+            Pattern pattern = Pattern.compile("^(.+)@(.+)$");
+                                                
+            Matcher mather = pattern.matcher(description);
+            if (!mather.find()) {
+                mensajes = mensajes + "danger<>Error<>The Email hasn't a valid text format.|";
+                flag = false;
+                mensaje = true;
+
+            }
+        }
+
+   
+        
+        return flag;
+    }
+
     public void save() {
         if (getIdEdit().equals("")) {
             insert();
@@ -226,8 +350,103 @@ public class Vendor extends ActionSupport implements SessionAware {
         }
     }
 
-    public void chargeVendors() {
-        setVendors(MaintenanceSQL.getVendors(mdk));
+    public void deleteContact() {
+        Transaction tn = null;
+        try {
+            tn = mdk.beginTransaction();
+
+            MaintenanceSQL.deleteVendorContact(mdk, idContact);
+            tn.commit();
+            mensajes = mensajes + "info<>Information<>Contact deleted successfully";
+            mensaje = true;
+
+        } catch (HibernateException x) {
+            mensajes = mensajes + "danger<>Error<>Deleted not permitted" + ExceptionUtils.getMessage(x) + ".";
+            mensaje = true;
+            if (tn != null) {
+                tn.rollback();
+            }
+        }
+    }
+
+    public void activeContact() {
+        Transaction tn = null;
+        try {
+            tn = mdk.beginTransaction();
+            DtoVendorContact m = MaintenanceSQL.getVendorsContact(mdk, idContact);
+            if (m != null) {
+                m.setModified(Fechas.ya());
+                m.setModifiedBy(usuario);
+                m.setActive(!m.getActive());
+                MaintenanceSQL.updateVendorContact(mdk, m);
+                // AdmConsultas.bitacora(o2c, usuario, "Encargado modificado Tipo: " + tipo + ", Codigo: " + codigo);
+
+                tn.commit();
+
+                mensajes = mensajes + "info<>Information<>Status of the Contact modified successfully.";
+                mensaje = true;
+            } else {
+                insert();
+            }
+        } catch (HibernateException x) {
+            //AdmConsultas.error(o2c, x.getMessage());
+            // mensajes = mensajes + "danger<>Error<>Error al modificar encargados: " + codigo + ": " + ExceptionUtils.getMessage(x) + ".";
+            mensajes = mensajes + "danger<>Error<>Error.|";
+            mensaje = true;
+            if (tn != null) {
+                tn.rollback();
+            }
+        }
+        mensaje = true;
+    }
+
+    public void saveContact() {
+        if (validateFieldsContact()) {
+            Transaction tn = null;//Inicializo la transacción de la BD en null
+            try {
+                tn = mdk.beginTransaction();//Inicializo la transacción de la DB 
+
+                DtoVendorContact m = new DtoVendorContact();//Creo un objeto del tipo style
+                System.out.println("idVendor" + id);
+                //Setting the fields, including id -is not auto incremental
+                m.setIdVendor(id);
+                m.setDescription(description);
+                m.setType(type);
+                m.setCreated(Fechas.ya());
+                m.setCreatedBy(usuario);
+                m.setModified(Fechas.ya());
+                m.setModifiedBy(usuario);
+                m.setActive(true);//Lo puse en true porque se me olvidó crear el check en el formulario, en la noche hacemos eso jajaja
+
+                MaintenanceSQL.saveVendorContact(mdk, m);
+                //AdmConsultas.bitacora(o2c, usuario, "Encargado guardado Tipo: " + tipo + ", Codigo: " + codigo);
+
+                tn.commit();// Hago Commit a la transacción para guardar el registro
+                clearFieldsContact();
+                mensajes = mensajes + "info<>Information<>Contact detail saved successfully.";
+                mensaje = true;
+
+            } catch (HibernateException x) {
+                //AdmConsultas.error(o2c, x.getMessage());
+                // mensajes = mensajes + "danger<>Error<>Error al guardar encargados: " + codigo + ": " + ExceptionUtils.getMessage(x) + ".";
+                mensajes = mensajes + "danger<>Error<>Error.|";
+                mensaje = true;
+                if (tn != null) {//Si hay error y el transacción es distinto de null, es porque la transacción existe, entoncs hago rollback
+                    tn.rollback();
+                }
+            }
+            mensaje = true;
+
+        }
+    }
+
+    public void chargeTables() {
+        vendors = MaintenanceSQL.getVendors(mdk);
+        vendorsContacts = MaintenanceSQL.getVendorsContacts(mdk, id);
+    }
+
+    public void chargeSelect() {
+        types = CombosMaintenance.getTypeContact();
     }
 
     public void insert() {
@@ -239,7 +458,15 @@ public class Vendor extends ActionSupport implements SessionAware {
                 DtoVendor m = new DtoVendor();//Creo un objeto del tipo style
 
                 //Setting the fields, including id -is not auto incremental
-                m.setId(id);
+                String guid = RandomStringUtils.randomAlphanumeric(15);
+                boolean flag = (MaintenanceSQL.getVendor(mdk, guid) != null);
+
+                while (flag) {
+                    guid = RandomStringUtils.randomAlphanumeric(15);
+                    flag = (MaintenanceSQL.getVendor(mdk, guid) != null);
+                }
+                m.setId(guid);
+                id = guid;
                 m.setVname(vname);
                 m.setCreated(Fechas.ya());
                 m.setCreatedBy(usuario);
@@ -251,7 +478,8 @@ public class Vendor extends ActionSupport implements SessionAware {
                 //AdmConsultas.bitacora(o2c, usuario, "Encargado guardado Tipo: " + tipo + ", Codigo: " + codigo);
 
                 tn.commit();// Hago Commit a la transacción para guardar el registro
-                clearFields();
+                existVendor = true;
+
                 mensajes = mensajes + "info<>Information<>Vendor saved successfully.";
                 mensaje = true;
 
@@ -274,7 +502,7 @@ public class Vendor extends ActionSupport implements SessionAware {
             try {
                 tn = mdk.beginTransaction();
                 DtoVendor m = MaintenanceSQL.getVendor(mdk, getIdEdit());
-                if (m != null) {                   
+                if (m != null) {
                     m.setVname(vname);
                     m.setModified(Fechas.ya());
                     m.setModifiedBy(usuario);
@@ -303,15 +531,23 @@ public class Vendor extends ActionSupport implements SessionAware {
         }
     }
 
+    public void updateContact() {
+        if (validateFields()) {
+
+        }
+    }
+
     public void readForUpdate() {
         DtoVendor m = MaintenanceSQL.getVendor(mdk, getIdEdit());
         if (m != null) {
-            id= m.getId();
+            id = m.getId();
             vname = m.getVname();
-            setActive((boolean) m.getActive());
+            active = m.getActive();
+            existVendor = true;
         } else {
             mensajes = mensajes + "danger<>Error<>Vendor does not exist.";
             mensaje = true;
         }
     }
+
 }

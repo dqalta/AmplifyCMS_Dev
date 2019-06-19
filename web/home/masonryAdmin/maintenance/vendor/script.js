@@ -51,7 +51,28 @@ function save() {
     $("#accion").val(1);
     $("#formulario").submit();
 }
-
+function saveContact() {
+    $("#ModalProcesando").modal({backdrop: 'static', keyboard: false});
+    $("#accion").val(3);
+    $("#formulario").submit();
+}
+function deleteContact(id) {
+    $("#ModalProcesando").modal({backdrop: 'static', keyboard: false});
+    $("#accion").val(4);
+    $("#idContact").val(id);
+    $("#formulario").submit();
+}
+function activeContact(id) {
+    $("#ModalProcesando").modal({backdrop: 'static', keyboard: false});
+    $("#accion").val(5);
+    $("#idContact").val(id);
+    $("#formulario").submit();
+}
+function saveAddress() {
+    $("#ModalProcesando").modal({backdrop: 'static', keyboard: false});
+    $("#accion").val(3);
+    $("#formulario").submit();
+}
 
 function edit(id) {
     $("#ModalProcesando").modal({backdrop: 'static', keyboard: false});
