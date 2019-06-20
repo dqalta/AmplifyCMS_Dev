@@ -121,9 +121,16 @@ function activeContact(id) {
     $("#idContact").val(id);
     $("#formulario").submit();
 }
+
 function saveAddress() {
     $("#ModalProcesando").modal({backdrop: 'static', keyboard: false});
     $("#accion").val(6);
+    $("#formulario").submit();
+}
+function activeAddress(id) {
+    $("#ModalProcesando").modal({backdrop: 'static', keyboard: false});
+    $("#accion").val(7);
+    $("#idAddress").val(id);
     $("#formulario").submit();
 }
 

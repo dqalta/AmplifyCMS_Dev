@@ -47,6 +47,7 @@
                                             <st:hidden id="accion" name="accion" value="%{accion}"/>
                                             <st:hidden id="idEdit" name="idEdit" value="%{idEdit}"/>
                                             <st:hidden id="idContact" name="idContact" value="%{idContact}"/>
+                                            <st:hidden id="idAddress" name="idAddress" value="%{idAddress}"/>
                                             <ul class="nav nav-tabs"> <%--block tabs without previous data entry--%>
                                                 <li class="active"><a data-toggle="tab" href="#maintenanceTab"  aria-expanded="true">General information</a></li>    
                                                     <st:if test="%{existVendor == true}"> 
@@ -192,36 +193,36 @@
                                                             </div> 
                                                                   <div class="row">
                                                             <div class="col-sm-7">
-                                                                <table id="tableAddress" class="table table-striped" style="width:100%; margin: 0px auto;">
-                                                                    <thead>
-                                                                        <tr>
-                                                                            <th>Postal Code</th>
-                                                                            <th>Address</th>
-                                                                            <th>&nbsp;</th>
-                                                                            <th>&nbsp;</th>                              
-                                                                        </tr>
-                                                                    </thead>
-                                                                    <tbody>
-                                                                        <st:if test="%{!getVendorsAddress().isEmpty()}">
-                                                                            <st:iterator value="vendorsContacts" var="vendorsContacts" status="index">
-                                                                                <tr>
-                                                                                    <td><st:property value="%{#vendorsContacts.description}" /></td>   
-                                                                                    <td><st:property value="%{#vendorsContacts.type}" /></td>                                        
-                                                                                    <td>
-                                                                                        <st:if test="%{#vendorsContacts.active == true}">
-                                                                                            <i onclick="activeContact('<st:property value="%{#vendorsContacts.id}" />');" class="glyphicon glyphicon-off text-success" data-toggle="tooltip" data-placement="top" title="" data-original-title="Active"</i>                                                                                            
-                                                                                        </st:if>
-                                                                                        <st:else>
-                                                                                            <i onclick="activeContact('<st:property value="%{#vendorsContacts.id}" />');" class="glyphicon glyphicon-off text-danger"  data-toggle="tooltip" data-placement="top" title="" data-original-title="Inactive"></i>
-                                                                                        </st:else>
-                                                                                    </td>
-                                                                                     <td>
-                                                                                        <i data-toggle="tooltip" data-placement="top" title="" data-original-title="Delete Contact" onclick="deleteContact('<st:property value="%{#vendorsContacts.id}" />');" class="pull-right glyphicon glyphicon-remove"></i></td>                                                                                                           
-                                                                                </tr>
-                                                                            </st:iterator>
-                                                                        </st:if> 
-                                                                    </tbody>
-                                                                </table>
+                                                                    <table id="tableAddress" class="table table-striped" style="width:100%; margin: 0px auto;">
+                                                                        <thead>
+                                                                            <tr>
+                                                                                <th>Postal Code</th>
+                                                                                <th>Address</th>
+                                                                                <th>&nbsp;</th>
+                                                                                <th>&nbsp;</th>                              
+                                                                            </tr>
+                                                                        </thead>
+                                                                        <tbody>
+                                                                            <st:if test="%{!getVendorsAddress().isEmpty()}">
+                                                                                <st:iterator value="VendorsAddress" var="VendorsAddress" status="index">
+                                                                                    <tr>
+                                                                                        <td><st:property value="%{#VendorsAddress.description}" /></td>   
+                                                                                        <td><st:property value="%{#VendorsAddress.postalCodes}" /></td>                                        
+                                                                                        <td>
+                                                                                            <st:if test="%{#VendorsAddress.active == true}">
+                                                                                                <i onclick="activeAddress('<st:property value="%{#VendorsAddress.id}" />');" class="glyphicon glyphicon-off text-success" data-toggle="tooltip" data-placement="top" title="" data-original-title="Active"</i>                                                                                            
+                                                                                            </st:if>
+                                                                                            <st:else>
+                                                                                                <i onclick="activeAddress('<st:property value="%{#VendorsAddress.id}" />');" class="glyphicon glyphicon-off text-danger"  data-toggle="tooltip" data-placement="top" title="" data-original-title="Inactive"></i>
+                                                                                            </st:else>
+                                                                                        </td>
+                                                                                         <td>
+                                                                                            <i data-toggle="tooltip" data-placement="top" title="" data-original-title="Delete Contact" onclick="deleteContact('<st:property value="%{#VendorsAddress.id}" />');" class="pull-right glyphicon glyphicon-remove"></i></td>                                                                                                           
+                                                                                    </tr>
+                                                                                </st:iterator>
+                                                                            </st:if> 
+                                                                        </tbody>
+                                                                    </table>
                                                             </div>
                                                          </div>
                                                         </div>

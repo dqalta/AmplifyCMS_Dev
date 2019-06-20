@@ -1168,7 +1168,8 @@ public class MaintenanceSQL {
     ///////////////////////////Maintenance Vendor Address/////////////////////
             ///vendor contact maintenance//////
 
-        public static ArrayList<DtoVendorAddress> getVendorsAddress(Session mdk, String idVendor) {
+        public static ArrayList<DtoVendorAddress> getVendorsAddress(Session mdk, String id) {
+         
         ArrayList<DtoVendorAddress> a = new ArrayList<>();
         Iterator itr = mdk.createNativeQuery("SELECT"
                 + " id,"
@@ -1182,7 +1183,7 @@ public class MaintenanceSQL {
                 + " active"
                 + " FROM vendorAddress"
                 + " WHERE idVendor=:idVendor")
-                .setParameter("idVendor", idVendor)
+                .setParameter("idVendor", id)
                 .setResultTransformer(Transformers.aliasToBean(DtoVendorAddress.class))
                 .list().iterator();
 
@@ -1205,7 +1206,7 @@ public class MaintenanceSQL {
                 + " active"
                 + " FROM vendorAddress"
                 + " WHERE idVendor=:idVendor")
-                .setParameter("id", id)
+                .setParameter("idVendor", id)
                 .setResultTransformer(Transformers.aliasToBean(DtoVendorAddress.class))
                 .list().iterator();
         DtoVendorAddress m = null;
@@ -1218,11 +1219,10 @@ public class MaintenanceSQL {
         mdk.createNativeQuery("INSERT INTO vendorAddress"
                 + " (idVendor, idPostalCode, description, created, createdBy, modified, modifiedBy, active)"
                 + " VALUES"
-                + " (:idVendor,:idPostalCode, :description, :created, :createdBy, :modified, :modifiedBy, :active)")
+                + " (:idVendor, :idPostalCode, :description, :created, :createdBy, :modified, :modifiedBy, :active)")
                 .setParameter("idVendor", m.getIdVendor())
                 .setParameter("idPostalCode",m.getIdPostalCode())
-                .setParameter("description", m.getDescription())
-                .setParameter("type", m.getType())
+                .setParameter("description", m.getDescription())         
                 .setParameter("created", m.getCreated())
                 .setParameter("createdBy", m.getCreatedBy())
                 .setParameter("modified", m.getModified())
@@ -1231,7 +1231,7 @@ public class MaintenanceSQL {
                 .executeUpdate();
     }
      public static void updateVendorAddress(Session mdk, DtoVendorAddress m) {
-        mdk.createNativeQuery("UPDATE vendorContact SET"
+        mdk.createNativeQuery("UPDATE vendorAddress SET"
                 + " idPostalCode= :idPostalCode,"
                 + " description= :description,"
                 + " modified = :modified,"
@@ -1268,5 +1268,19 @@ public class MaintenanceSQL {
                 .setParameter("active", m.getActive())
                 .executeUpdate();
 }
-           
+   
+       public static int getIdPostalCodes(Session mdk, String postalCode) {
+        int id = 0;
+        Iterator itr = mdk.createSQLQuery("SELECT id"
+                + " FROM postalCode"
+                + " WHERE postalCode = :postalCode")
+                .setParameter("postalCode", postalCode)
+                .setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP).list().iterator();
+        while (itr.hasNext()) {
+            id = Numeros.entero(String.valueOf(((Map) itr.next()).get("id")));
+        }
+     
+        return id;
+    }
 }
+

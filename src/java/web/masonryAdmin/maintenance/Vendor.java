@@ -53,6 +53,8 @@ public class Vendor extends ActionSupport implements SessionAware {
     //Variables de la pantalla
     private ArrayList<DtoVendor> vendors = new ArrayList<>();//Variable con la lista de datos
     private ArrayList<DtoVendorContact> vendorsContacts = new ArrayList<>();//Variable con la lista de datos
+    private ArrayList<DtoVendorAddress> vendorsAddress = new ArrayList<>();//Variable con la lista de datos
+
 
     //Handles the postal codes 
    // private ArrayList<KeyCombosPostalCodes> postalCodes = new ArrayList<>();//Variable con la lista de datos
@@ -67,6 +69,7 @@ public class Vendor extends ActionSupport implements SessionAware {
     private String vname;
     private boolean active;
     private String idEdit;
+    private String idAddress;
     // vendor contact vars
     private int idContact;
     private String description;
@@ -76,7 +79,7 @@ public class Vendor extends ActionSupport implements SessionAware {
     private String city;
     //vendors address vars
     private int idPostalCode;
-    
+    private String postalCode;
     
     public Vendor() {
         Map<String, Object> session = ActionContext.getContext().getSession();
@@ -303,6 +306,33 @@ public class Vendor extends ActionSupport implements SessionAware {
     public void setIdPostalCode(int idPostalCode) {
         this.idPostalCode = idPostalCode;
     }
+    
+    public String getPostalCode() {
+        return postalCode;
+    }
+
+    public void setPostalCode(String postalCode) {
+        this.postalCode = postalCode;
+    }
+    ////Set and get of the subtable Vendor Address
+       public String getIdAddress() {
+        return idAddress;
+    }
+
+
+    public void setIdAddress(String idAddress) {
+        this.idAddress = idAddress;
+    }
+    public ArrayList<DtoVendorAddress> getVendorsAddress() {
+        return vendorsAddress;
+    }
+
+ 
+    public void setVendorsAddress(ArrayList<DtoVendorAddress> vendorsAddress) {
+        this.vendorsAddress = vendorsAddress;
+    }
+
+
     ////////
     @Override
     public String execute() { //the class start here
@@ -340,6 +370,10 @@ public class Vendor extends ActionSupport implements SessionAware {
                 saveAddress();
                 break;
             }
+              case 7: {
+                activeAddress();
+                break;
+            }
         }
         chargeTables();
 existVendor = MaintenanceSQL.getVendor(mdk, id) != null;
@@ -359,7 +393,10 @@ existVendor = MaintenanceSQL.getVendor(mdk, id) != null;
         type = "Email";
 
     }
+  public void clearFieldsAddress() {
+        description = "";        
 
+    }
     public boolean validateFields() {
         boolean flag = true;
         mensajes = "";
@@ -406,21 +443,17 @@ existVendor = MaintenanceSQL.getVendor(mdk, id) != null;
         mensaje = false;
         //VALIDAR QUE CAMPOS NO SEAN BLANCOS NI NULOS
         if ((description == null) || (description.isEmpty())) {
-            mensajes = mensajes + "danger<>Error<>Please complete field 'Description Contact'.|";
+            mensajes = mensajes + "danger<>Error<>Please complete field 'Address Details'.|";
             flag = false;
             mensaje = true;
 
         }
-        if (type.equals("Email")) {
-            Pattern pattern = Pattern.compile("^(.+)@(.+)$");
-                                                
-            Matcher mather = pattern.matcher(description);
-            if (!mather.find()) {
-                mensajes = mensajes + "danger<>Error<>The Email hasn't a valid text format.|";
+        if (city.equals("NONE")) {
+                   mensajes = mensajes + "danger<>Error<>The postal code must be selected.|";
                 flag = false;
                 mensaje = true;
 
-            }
+            
         }
        
         return flag;
@@ -482,6 +515,37 @@ existVendor = MaintenanceSQL.getVendor(mdk, id) != null;
         }
         mensaje = true;
     }
+        public void activeAddress() {
+        Transaction tn = null;
+        try {
+            tn = mdk.beginTransaction();
+            System.out.print("vendedor por parametro"+id);
+            DtoVendorAddress m = MaintenanceSQL.getVendorAddress(mdk,id);
+            if (m != null) {
+                m.setModified(Fechas.ya());
+                m.setModifiedBy(usuario);
+                m.setActive(!m.getActive());
+                MaintenanceSQL.updateVendorAddress(mdk, m);
+                // AdmConsultas.bitacora(o2c, usuario, "Encargado modificado Tipo: " + tipo + ", Codigo: " + codigo);
+
+                tn.commit();
+
+                mensajes = mensajes + "info<>Information<>Status of the Contact modified successfully.";
+                mensaje = true;
+            } else {
+                insert();
+            }
+        } catch (HibernateException x) {
+            //AdmConsultas.error(o2c, x.getMessage());
+            // mensajes = mensajes + "danger<>Error<>Error al modificar encargados: " + codigo + ": " + ExceptionUtils.getMessage(x) + ".";
+            mensajes = mensajes + "danger<>Error<>Error.|";
+            mensaje = true;
+            if (tn != null) {
+                tn.rollback();
+            }
+        }
+        mensaje = true;
+    }
 
     public void saveContact() {
         if (validateFieldsContact()) {
@@ -489,8 +553,7 @@ existVendor = MaintenanceSQL.getVendor(mdk, id) != null;
             try {
                 tn = mdk.beginTransaction();//Inicializo la transacción de la DB 
 
-                DtoVendorContact m = new DtoVendorContact();//Creo un objeto del tipo style
-                System.out.println("idVendor" + id);
+                DtoVendorContact m = new DtoVendorContact();//Creo un objeto del tipo style      
                 //Setting the fields, including id -is not auto incremental
                 m.setIdVendor(id);
                 m.setDescription(description);
@@ -505,7 +568,7 @@ existVendor = MaintenanceSQL.getVendor(mdk, id) != null;
                 //AdmConsultas.bitacora(o2c, usuario, "Encargado guardado Tipo: " + tipo + ", Codigo: " + codigo);
 
                 tn.commit();// Hago Commit a la transacción para guardar el registro
-                clearFieldsContact();
+                clearFieldsAddress();
                 mensajes = mensajes + "info<>Information<>Contact detail saved successfully.";
                 mensaje = true;
 
@@ -529,9 +592,10 @@ existVendor = MaintenanceSQL.getVendor(mdk, id) != null;
                 tn = mdk.beginTransaction();//Inicializo la transacción de la DB 
 
                 DtoVendorAddress m = new DtoVendorAddress();//Creo un objeto del tipo style
-                System.out.println("idVendor" + id);
-                //Setting the fields, including id -is not auto incremental
+           
+                //Setting the fields, including id -is not auto incremental                                  
                 m.setIdVendor(id);
+                idPostalCode = MaintenanceSQL.getIdPostalCodes(mdk, postalCode);                  
                 m.setIdPostalCode(idPostalCode);
                 m.setDescription(description);               
                 m.setCreated(Fechas.ya());
@@ -544,7 +608,7 @@ existVendor = MaintenanceSQL.getVendor(mdk, id) != null;
                 //AdmConsultas.bitacora(o2c, usuario, "Encargado guardado Tipo: " + tipo + ", Codigo: " + codigo);
 
                 tn.commit();// Hago Commit a la transacción para guardar el registro
-                clearFieldsContact();
+                clearFieldsAddress();
                 mensajes = mensajes + "info<>Information<>Vendor's address saved successfully.";
                 mensaje = true;
 
@@ -564,6 +628,8 @@ existVendor = MaintenanceSQL.getVendor(mdk, id) != null;
     public void chargeTables() {
         vendors = MaintenanceSQL.getVendors(mdk);
         vendorsContacts = MaintenanceSQL.getVendorsContacts(mdk, id);
+        System.out.print(id);
+        vendorsAddress= MaintenanceSQL.getVendorsAddress(mdk, id);
     }
 
     public void chargeSelect() {
@@ -674,6 +740,8 @@ existVendor = MaintenanceSQL.getVendor(mdk, id) != null;
         }
     }
 
+
+ 
 
 
 
