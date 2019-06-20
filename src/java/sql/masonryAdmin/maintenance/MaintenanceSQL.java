@@ -1248,7 +1248,7 @@ public class MaintenanceSQL {
 }
         public static void deleteVendorAddress(Session mdk, String idVendorAddress) {
         mdk.createNativeQuery("DELETE FROM vendorAddress"
-                + " WHERE id = :id")
+                + " WHERE idVendor = :id")
                 .setParameter("id", idVendorAddress)
                 .executeUpdate();
     }

@@ -9,6 +9,7 @@
         <st:include value="/generals/css-js-Head.jsp" />
         <st:include value="/generals/css-js-Bootstrap.jsp"/>
         <st:include value="/generals/css-js-app.jsp"/>
+        <link rel="icon" type="image/png" href="/MasonryCMS/home/img/favicon.ico" />
         <style type="text/css">
             * {
                 box-sizing: border-box;

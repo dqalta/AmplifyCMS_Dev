@@ -220,7 +220,7 @@
                                                                                             </st:else>
                                                                                         </td>
                                                                                          <td>
-                                                                                            <i data-toggle="tooltip" data-placement="top" title="" data-original-title="Delete Contact" onclick="deleteContact('<st:property value="%{#VendorsAddress.id}" />');" class="pull-right glyphicon glyphicon-remove"></i></td>                                                                                                           
+                                                                                            <i data-toggle="tooltip" data-placement="top" title="" data-original-title="Delete Address" onclick="deleteAddress('<st:property value="%{#VendorsAddress.id}" />');" class="pull-right glyphicon glyphicon-remove"></i></td>                                                                                                           
                                                                                     </tr>
                                                                                 </st:iterator>
                                                                             </st:if> 
