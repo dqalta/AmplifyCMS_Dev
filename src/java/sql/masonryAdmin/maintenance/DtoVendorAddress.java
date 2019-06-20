@@ -18,7 +18,7 @@ public class DtoVendorAddress implements Serializable {
     private int id;
     private String idVendor;
     private int idPostalCode;
-    private String description;
+    private String descriptionAddress;
     private String type;
     private Date created;
     private String createdBy;
@@ -50,12 +50,12 @@ public class DtoVendorAddress implements Serializable {
 
   
     public String getDescription() {
-        return description;
+        return descriptionAddress;
     }
 
   
     public void setDescription(String description) {
-        this.description = description;
+        this.descriptionAddress = description;
     }
 
 

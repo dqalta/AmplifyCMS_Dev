@@ -72,7 +72,8 @@ public class Vendor extends ActionSupport implements SessionAware {
     private String idAddress;
     // vendor contact vars
     private int idContact;
-    private String description;
+    private String descriptionContact;
+   
     private String type;
     // vendor address details
     private String province;
@@ -80,7 +81,7 @@ public class Vendor extends ActionSupport implements SessionAware {
     //vendors address vars
     private int idPostalCode;
     private String postalCode;
-    
+    private String descriptionAddress;
     public Vendor() {
         Map<String, Object> session = ActionContext.getContext().getSession();
         if (session.get("en-sesion") != null) {
@@ -213,12 +214,12 @@ public class Vendor extends ActionSupport implements SessionAware {
     }
 //refactor of vendor contact vars
 
-    public String getDescription() {
-        return description;
+    public String getDescriptionContact() {
+        return descriptionContact;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setDescriptionContact(String descriptionContact) {
+        this.descriptionContact = descriptionContact;
     }
 
     public String getType() {
@@ -331,7 +332,14 @@ public class Vendor extends ActionSupport implements SessionAware {
     public void setVendorsAddress(ArrayList<DtoVendorAddress> vendorsAddress) {
         this.vendorsAddress = vendorsAddress;
     }
+    public String getDescriptionAddress() {
+        return descriptionAddress;
+    }
 
+
+    public void setDescriptionAddress(String descriptionAddress) {
+        this.descriptionAddress = descriptionAddress;
+    }
 
     ////////
     @Override
@@ -393,12 +401,12 @@ existVendor = MaintenanceSQL.getVendor(mdk, id) != null;
     }
 
     public void clearFieldsContact() {
-        description = "";
+        descriptionContact = "";
         type = "Email";
 
     }
   public void clearFieldsAddress() {
-        description = "";        
+        descriptionAddress = "";        
 
     }
     public boolean validateFields() {
@@ -421,7 +429,7 @@ existVendor = MaintenanceSQL.getVendor(mdk, id) != null;
         mensajes = "";
         mensaje = false;
         //VALIDAR QUE CAMPOS NO SEAN BLANCOS NI NULOS
-        if ((description == null) || (description.isEmpty())) {
+        if ((descriptionContact == null) || (descriptionContact.isEmpty())) {
             mensajes = mensajes + "danger<>Error<>Please complete field 'Description Contact'.|";
             flag = false;
             mensaje = true;
@@ -430,7 +438,7 @@ existVendor = MaintenanceSQL.getVendor(mdk, id) != null;
         if (type.equals("Email")) {
             Pattern pattern = Pattern.compile("^(.+)@(.+)$");
                                                 
-            Matcher mather = pattern.matcher(description);
+            Matcher mather = pattern.matcher(descriptionContact);
             if (!mather.find()) {
                 mensajes = mensajes + "danger<>Error<>The Email hasn't a valid text format.|";
                 flag = false;
@@ -446,7 +454,7 @@ existVendor = MaintenanceSQL.getVendor(mdk, id) != null;
         mensajes = "";
         mensaje = false;
         //VALIDAR QUE CAMPOS NO SEAN BLANCOS NI NULOS
-        if ((description == null) || (description.isEmpty())) {
+        if ((descriptionAddress == null) || (descriptionAddress.isEmpty())) {
             mensajes = mensajes + "danger<>Error<>Please complete field 'Address Details'.|";
             flag = false;
             mensaje = true;
@@ -577,7 +585,7 @@ existVendor = MaintenanceSQL.getVendor(mdk, id) != null;
                 DtoVendorContact m = new DtoVendorContact();//Creo un objeto del tipo style      
                 //Setting the fields, including id -is not auto incremental
                 m.setIdVendor(id);
-                m.setDescription(description);
+                m.setDescription(descriptionContact);
                 m.setType(type);
                 m.setCreated(Fechas.ya());
                 m.setCreatedBy(usuario);
@@ -618,7 +626,7 @@ existVendor = MaintenanceSQL.getVendor(mdk, id) != null;
                 m.setIdVendor(id);
                 idPostalCode = MaintenanceSQL.getIdPostalCodes(mdk, postalCode);                  
                 m.setIdPostalCode(idPostalCode);
-                m.setDescription(description);               
+                m.setDescription(descriptionAddress);               
                 m.setCreated(Fechas.ya());
                 m.setCreatedBy(usuario);
                 m.setModified(Fechas.ya());
@@ -760,6 +768,8 @@ existVendor = MaintenanceSQL.getVendor(mdk, id) != null;
             mensaje = true;
         }
     }
+
+   
 
 
  

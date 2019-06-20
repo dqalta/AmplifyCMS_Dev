@@ -97,7 +97,7 @@
                                                         <br>
                                                         <div class="row">
                                                             <div class="col-sm-3">
-                                                                <st:textfield label="Description" name="description" id="description" class="form-control" value="%{description}" placeholder="Vendor detail"/>
+                                                                <st:textfield label="Description" name="descriptionContact" id="descriptionContact" class="form-control" value="%{descriptionContact}" placeholder="Vendor detail"/>
                                                             </div>                                                 
                                                                 <div class="col-sm-3">                                                      
                                                                 <div class="form-group">
@@ -183,7 +183,7 @@
                                                         </div>   
                                                          <div class="row">
                                                             <div class="col-sm-6">
-                                                               <st:textfield label="Address" name="description" id="description" class="form-control" value="%{description}" placeholder="Vendor Address"/>
+                                                               <st:textfield label="Address" name="descriptionAddress" id="descriptionAddress" class="form-control" value="%{descriptionAddress}" placeholder="Vendor Address"/>
                                                          </div>  
                                                          </div> 
                                                            
