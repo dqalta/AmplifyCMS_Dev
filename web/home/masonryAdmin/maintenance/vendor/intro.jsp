@@ -97,7 +97,7 @@
                                                         <br>
                                                         <div class="row">
                                                             <div class="col-sm-3">
-                                                                <st:textfield label="Description" name="description" id="description" class="form-control" value="%{description}" placeholder="Contact detail.."/>
+                                                                <st:textfield label="Description" name="description" id="description" class="form-control" value="%{description}" placeholder="Vendor detail"/>
                                                             </div>                                                 
                                                                 <div class="col-sm-3">                                                      
                                                                 <div class="form-group">
@@ -150,10 +150,10 @@
                                                                     </tbody>
                                                                 </table>
                                                             </div>
-                                                        </div>
+                                                          </div> <!--closes row of vendor contacts-->
 
-                                                    </div>
-                                                </div>
+                                                    </div><!--closes panel of vendor contacts-->
+                                                </div><!--closes de tab -->
 
 <!--                                                Tab for vendor address details-->
 
@@ -168,30 +168,33 @@
                                                                     <st:select class="form-control"  id="province" name="province" value="%{province}" list="provincePostalCodes" listKey="description" listValue="description" onchange="chargeCities();"/>
                                                                 </div> 
                                                             </div> 
-                                                                <div class="col-sm-3">
+                                                              <div class="col-sm-3">
                                                                 <div class="form-group">
                                                                     <label for="city">City:</label>
                                                                        <st:select class="form-control"  id="city" name="city" value="%{city}" list="cities" listKey="description" listValue="description" onchange="chargePostalCodes();"/>
                                                                  </div> 
-                                                                </div> 
-                                                                 <div class="col-sm-3">                                                           
+                                                             </div> 
+                                                              <div class="col-sm-3">                                                           
                                                                  <div class="form-group">                                                                
                                                                     <label for="postalCode">Postal Code</label>
                                                                      <st:select class="form-control"  id="postalCode" name="postalCode" value="%{postalCode}" list="postalCodes" listKey="description" listValue="description"/>
                                                                  </div>
-                                                                 </div>
-                                                                  <div class="col-sm-3">
-                                                                  <st:textfield label="Address" name="description" id="description" class="form-control" value="%{description}" placeholder="Complete the vendor address here.."/>
-                                                                  </div>                                                 
+                                                              </div>
+                                                        </div>   
+                                                         <div class="row">
+                                                            <div class="col-sm-6">
+                                                               <st:textfield label="Address" name="description" id="description" class="form-control" value="%{description}" placeholder="Vendor Address"/>
+                                                         </div>  
+                                                         </div> 
                                                            
-                                                            </div>
+                                                          
                                                             <br>
 
                                                             <div class="btn-group pull-right">
                                                                 <a class="btn btn-danger pull-right" onclick="saveAddress();"><i class="glyphicon glyphicon-ok"></i>&nbsp;Save</a>
                                                                 <a class="btn btn-defaqult pull-right" onclick="cancel();"><i class="glyphicon glyphicon-remove"></i>&nbsp;Cancel</a>
                                                             </div> 
-                                                                  <div class="row">
+                                                           <div class="row">
                                                             <div class="col-sm-7">
                                                                     <table id="tableAddress" class="table table-striped" style="width:100%; margin: 0px auto;">
                                                                         <thead>
@@ -223,17 +226,19 @@
                                                                             </st:if> 
                                                                         </tbody>
                                                                     </table>
+                                                                  </div>
                                                             </div>
-                                                         </div>
-                                                        </div>
-                                                    </div> 
-                                                </div>
-                                            </div>
-                                        </st:form>
-                                    </div>
+                                                         </div> <!--closes container-->
+                                                        </div><!--closes tab of vendor address-->
+                                                    </div> <!--closes tabs in general-->
+                                          </st:form>          
+                                    </div><!--closes the panel body-->
+                                 </div> <!--closes the form panel-->
+                                   
+                                    </div>    <!--closes thepanel panel default-->
                                 </div>
 
-                            </div>
+                            </div> <!--closes the row-->
 
 
                             <div style="padding: 20px;" class="table-responsive">

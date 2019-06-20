@@ -1246,7 +1246,7 @@ public class MaintenanceSQL {
                 .setParameter("active", m.getActive())
                 .executeUpdate();
 }
-        public static void deleteVendorAddress(Session mdk, int idVendorAddress) {
+        public static void deleteVendorAddress(Session mdk, String idVendorAddress) {
         mdk.createNativeQuery("DELETE FROM vendorAddress"
                 + " WHERE id = :id")
                 .setParameter("id", idVendorAddress)

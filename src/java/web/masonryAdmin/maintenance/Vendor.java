@@ -374,6 +374,10 @@ public class Vendor extends ActionSupport implements SessionAware {
                 activeAddress();
                 break;
             }
+                case 8: {
+                deleteAddress();
+                break;
+            }
         }
         chargeTables();
 existVendor = MaintenanceSQL.getVendor(mdk, id) != null;
@@ -484,7 +488,24 @@ existVendor = MaintenanceSQL.getVendor(mdk, id) != null;
             }
         }
     }
+  public void deleteAddress() {
+        Transaction tn = null;
+        try {
+            tn = mdk.beginTransaction();
 
+            MaintenanceSQL.deleteVendorAddress(mdk, id);
+            tn.commit();
+            mensajes = mensajes + "info<>Information<>Address deleted successfully";
+            mensaje = true;
+
+        } catch (HibernateException x) {
+            mensajes = mensajes + "danger<>Error<>Deleted not permitted" + ExceptionUtils.getMessage(x) + ".";
+            mensaje = true;
+            if (tn != null) {
+                tn.rollback();
+            }
+        }
+    }
     public void activeContact() {
         Transaction tn = null;
         try {
@@ -628,7 +649,7 @@ existVendor = MaintenanceSQL.getVendor(mdk, id) != null;
     public void chargeTables() {
         vendors = MaintenanceSQL.getVendors(mdk);
         vendorsContacts = MaintenanceSQL.getVendorsContacts(mdk, id);
-        System.out.print(id);
+        System.out.println(id);
         vendorsAddress= MaintenanceSQL.getVendorsAddress(mdk, id);
     }
 

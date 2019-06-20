@@ -115,6 +115,12 @@ function deleteContact(id) {
     $("#idContact").val(id);
     $("#formulario").submit();
 }
+function deleteAddress(id) {
+    $("#ModalProcesando").modal({backdrop: 'static', keyboard: false});
+    $("#accion").val(8);
+    $("#idAddress").val(id);
+    $("#formulario").submit();
+}
 function activeContact(id) {
     $("#ModalProcesando").modal({backdrop: 'static', keyboard: false});
     $("#accion").val(5);
