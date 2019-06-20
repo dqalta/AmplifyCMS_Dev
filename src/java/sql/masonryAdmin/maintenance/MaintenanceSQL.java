@@ -1168,29 +1168,48 @@ public class MaintenanceSQL {
     ///////////////////////////Maintenance Vendor Address/////////////////////
             ///vendor contact maintenance//////
 
-        public static ArrayList<DtoVendorAddress> getVendorsAddress(Session mdk, String id) {
-         
-        ArrayList<DtoVendorAddress> a = new ArrayList<>();
+        public static ArrayList<DtoVendorAddressQuery> getVendorsAddress(Session mdk, String id) {
+     
+        ArrayList<DtoVendorAddressQuery> a = new ArrayList<>();
         Iterator itr = mdk.createNativeQuery("SELECT"
-                + " id,"
-                + " idVendor,"
-                + " idPostalCode,"
-                + " description,"   
-                + " created,"
-                + " createdBy,"
-                + " modified,"
-                + " modifiedBy,"
-                + " active"
-                + " FROM vendorAddress"
-                + " WHERE idVendor=:idVendor")
+                + " V.id,"
+                + " V.description,"   
+                + " P.postalCode,"
+                + " P.city,"   
+                + " P.province"  
+                + " FROM vendorAddress as V INNER JOIN postalCode as P"
+                + " ON V.idPostalCode = P.id"               
+                + " WHERE V.idVendor=:idVendor")
                 .setParameter("idVendor", id)
-                .setResultTransformer(Transformers.aliasToBean(DtoVendorAddress.class))
+                .setResultTransformer(Transformers.aliasToBean(DtoVendorAddressQuery.class))
                 .list().iterator();
 
         while (itr.hasNext()) {
-            a.add((DtoVendorAddress) itr.next());
+            a.add((DtoVendorAddressQuery) itr.next());
         }
-        return a;
+        return a;        
+// 
+//        ArrayList<DtoVendorAddress> a = new ArrayList<>();
+//        Iterator itr = mdk.createNativeQuery("SELECT"
+//                + " id,"
+//                + " idVendor,"
+//                + " idPostalCode,"
+//                + " description,"   
+//                + " created,"
+//                + " createdBy,"
+//                + " modified,"
+//                + " modifiedBy,"
+//                + " active"
+//                + " FROM vendorAddress"
+//                + " WHERE idVendor=:idVendor")
+//                .setParameter("idVendor", id)
+//                .setResultTransformer(Transformers.aliasToBean(DtoVendorAddress.class))
+//                .list().iterator();
+//
+//        while (itr.hasNext()) {
+//            a.add((DtoVendorAddress) itr.next());
+//        }
+//        return a;
     }
 
     public static DtoVendorAddress getVendorAddress(Session mdk, String id) {

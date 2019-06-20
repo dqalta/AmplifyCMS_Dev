@@ -20,6 +20,7 @@ import org.hibernate.Session;
 import org.hibernate.Transaction;
 import sql.masonryAdmin.maintenance.DtoVendor;
 import sql.masonryAdmin.maintenance.DtoVendorAddress;
+import sql.masonryAdmin.maintenance.DtoVendorAddressQuery;
 import sql.masonryAdmin.maintenance.DtoVendorContact; //handles de second tab data
 import sql.masonryAdmin.maintenance.MaintenanceSQL;
 import util.Fechas;
@@ -54,6 +55,7 @@ public class Vendor extends ActionSupport implements SessionAware {
     private ArrayList<DtoVendor> vendors = new ArrayList<>();//Variable con la lista de datos
     private ArrayList<DtoVendorContact> vendorsContacts = new ArrayList<>();//Variable con la lista de datos
     private ArrayList<DtoVendorAddress> vendorsAddress = new ArrayList<>();//Variable con la lista de datos
+    private ArrayList<DtoVendorAddressQuery> vendorsAddressQuery = new ArrayList<>();//Variable con la lista de datos
 
 
     //Handles the postal codes 
@@ -657,8 +659,7 @@ existVendor = MaintenanceSQL.getVendor(mdk, id) != null;
     public void chargeTables() {
         vendors = MaintenanceSQL.getVendors(mdk);
         vendorsContacts = MaintenanceSQL.getVendorsContacts(mdk, id);
-        System.out.println(id);
-        vendorsAddress= MaintenanceSQL.getVendorsAddress(mdk, id);
+        vendorsAddressQuery= MaintenanceSQL.getVendorsAddress(mdk, id);
     }
 
     public void chargeSelect() {
@@ -767,6 +768,20 @@ existVendor = MaintenanceSQL.getVendor(mdk, id) != null;
             mensajes = mensajes + "danger<>Error<>Vendor does not exist.";
             mensaje = true;
         }
+    }
+
+    /**
+     * @return the vendorsAddressQuery
+     */
+    public ArrayList<DtoVendorAddressQuery> getVendorsAddressQuery() {
+        return vendorsAddressQuery;
+    }
+
+    /**
+     * @param vendorsAddressQuery the vendorsAddressQuery to set
+     */
+    public void setVendorsAddressQuery(ArrayList<DtoVendorAddressQuery> vendorsAddressQuery) {
+        this.vendorsAddressQuery = vendorsAddressQuery;
     }
 
    
