@@ -199,28 +199,32 @@
                                                                     <table id="tableAddress" class="table table-striped" style="width:100%; margin: 0px auto;">
                                                                         <thead>
                                                                             <tr>
-                                                                                <th>Postal Code</th>
                                                                                 <th>Address</th>
+                                                                                <th>Postal Code</th>
+                                                                                <th>City</th>
+                                                                                <th>Province</th>
                                                                                 <th>&nbsp;</th>
                                                                                 <th>&nbsp;</th>                              
                                                                             </tr>
                                                                         </thead>
                                                                         <tbody>
-                                                                            <st:if test="%{!getVendorsAddress().isEmpty()}">
-                                                                                <st:iterator value="VendorsAddress" var="VendorsAddress" status="index">
+                                                                            <st:if test="%{!getVendorsAddressQuery().isEmpty()}">
+                                                                                <st:iterator value="vendorsAddressQuery" var="vendorsAddressQuery" status="index">
                                                                                     <tr>
-                                                                                        <td><st:property value="%{#VendorsAddress.description}" /></td>   
-                                                                                        <td><st:property value="%{#VendorsAddress.postalCodes}" /></td>                                        
+                                                                                        <td><st:property value="%{#vendorsAddressQuery.description}" /></td>     
+                                                                                        <td><st:property value="%{#vendorsAddressQuery.postalCode}" /></td>   
+                                                                                        <td><st:property value="%{#vendorsAddressQuery.city}" /></td>   
+                                                                                        <td><st:property value="%{#vendorsAddressQuery.province}" /></td>   
                                                                                         <td>
-                                                                                            <st:if test="%{#VendorsAddress.active == true}">
-                                                                                                <i onclick="activeAddress('<st:property value="%{#VendorsAddress.id}" />');" class="glyphicon glyphicon-off text-success" data-toggle="tooltip" data-placement="top" title="" data-original-title="Active"</i>                                                                                            
+                                                                                            <st:if test="%{#vendorsAddressQuery.active == true}">
+                                                                                                <i onclick="activeAddress('<st:property value="%{#vendorsAddressQuery.id}" />');" class="glyphicon glyphicon-off text-success" data-toggle="tooltip" data-placement="top" title="" data-original-title="Active"</i>                                                                                            
                                                                                             </st:if>
                                                                                             <st:else>
-                                                                                                <i onclick="activeAddress('<st:property value="%{#VendorsAddress.id}" />');" class="glyphicon glyphicon-off text-danger"  data-toggle="tooltip" data-placement="top" title="" data-original-title="Inactive"></i>
+                                                                                                <i onclick="activeAddress('<st:property value="%{#vendorsAddressQuery.id}" />');" class="glyphicon glyphicon-off text-danger"  data-toggle="tooltip" data-placement="top" title="" data-original-title="Inactive"></i>
                                                                                             </st:else>
                                                                                         </td>
                                                                                          <td>
-                                                                                            <i data-toggle="tooltip" data-placement="top" title="" data-original-title="Delete Address" onclick="deleteAddress('<st:property value="%{#VendorsAddress.id}" />');" class="pull-right glyphicon glyphicon-remove"></i></td>                                                                                                           
+                                                                                            <i data-toggle="tooltip" data-placement="top" title="" data-original-title="Delete Address" onclick="deleteAddress('<st:property value="%{#vendorsAddressQuery.id}" />');" class="pull-right glyphicon glyphicon-remove"></i></td>                                                                                                           
                                                                                     </tr>
                                                                                 </st:iterator>
                                                                             </st:if> 
