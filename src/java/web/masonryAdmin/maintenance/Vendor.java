@@ -57,14 +57,12 @@ public class Vendor extends ActionSupport implements SessionAware {
     private ArrayList<DtoVendorAddress> vendorsAddress = new ArrayList<>();//Variable con la lista de datos
     private ArrayList<DtoVendorAddressQuery> vendorsAddressQuery = new ArrayList<>();//Variable con la lista de datos
 
-
     //Handles the postal codes 
-   // private ArrayList<KeyCombosPostalCodes> postalCodes = new ArrayList<>();//Variable con la lista de datos
+    // private ArrayList<KeyCombosPostalCodes> postalCodes = new ArrayList<>();//Variable con la lista de datos
     private ArrayList<KeyCombos> types = new ArrayList<>();
     private ArrayList<KeyCombosString> provincePostalCodes = new ArrayList<>();
     private ArrayList<KeyCombosString> cities = new ArrayList<>();
     private ArrayList<KeyCombosString> postalCodes = new ArrayList<>();
-
 
     //vendors vars
     private String id;
@@ -75,7 +73,7 @@ public class Vendor extends ActionSupport implements SessionAware {
     // vendor contact vars
     private int idContact;
     private String descriptionContact;
-   
+
     private String type;
     // vendor address details
     private String province;
@@ -84,6 +82,7 @@ public class Vendor extends ActionSupport implements SessionAware {
     private int idPostalCode;
     private String postalCode;
     private String descriptionAddress;
+
     public Vendor() {
         Map<String, Object> session = ActionContext.getContext().getSession();
         if (session.get("en-sesion") != null) {
@@ -93,7 +92,7 @@ public class Vendor extends ActionSupport implements SessionAware {
             permiso = true; //AdmConsultas.getPermiso(o2c, "ADMINISTRACIÓN", "Encargados", usuario);            
             menu = "";//AdmConsultas.menuUsuario(o2c, usuario);
             chargeSelect();
-            
+
         } else {
             sesionActiva = false;
         }
@@ -232,7 +231,6 @@ public class Vendor extends ActionSupport implements SessionAware {
         this.type = type;
     }
 
-
     public String getProvince() {
         return province;
     }
@@ -257,12 +255,10 @@ public class Vendor extends ActionSupport implements SessionAware {
         this.vendorsContacts = vendorsContacts;
     }
 
-
     public ArrayList<KeyCombosString> getProvincePostalCodes() {
         return provincePostalCodes;
     }
 
-  
     public void setProvincePostalCodes(ArrayList<KeyCombosString> provincePostalCodes) {
         this.provincePostalCodes = provincePostalCodes;
     }
@@ -274,16 +270,15 @@ public class Vendor extends ActionSupport implements SessionAware {
     public void setIdContact(int idContact) {
         this.idContact = idContact;
     }
-   public ArrayList<KeyCombosString> getCities() {
+
+    public ArrayList<KeyCombosString> getCities() {
         return cities;
     }
-
 
     public void setCities(ArrayList<KeyCombosString> cities) {
         this.cities = cities;
     }
 
-  
     public ArrayList<KeyCombosString> getPostalCodes() {
         return postalCodes;
     }
@@ -291,25 +286,23 @@ public class Vendor extends ActionSupport implements SessionAware {
     public void setPostalCodes(ArrayList<KeyCombosString> postalCodes) {
         this.postalCodes = postalCodes;
     }
+
     public String getCity() {
         return city;
     }
-
 
     public void setCity(String city) {
         this.city = city;
     }
 
-   
     public int getIdPostalCode() {
         return idPostalCode;
     }
 
-
     public void setIdPostalCode(int idPostalCode) {
         this.idPostalCode = idPostalCode;
     }
-    
+
     public String getPostalCode() {
         return postalCode;
     }
@@ -317,27 +310,27 @@ public class Vendor extends ActionSupport implements SessionAware {
     public void setPostalCode(String postalCode) {
         this.postalCode = postalCode;
     }
+
     ////Set and get of the subtable Vendor Address
-       public String getIdAddress() {
+    public String getIdAddress() {
         return idAddress;
     }
-
 
     public void setIdAddress(String idAddress) {
         this.idAddress = idAddress;
     }
+
     public ArrayList<DtoVendorAddress> getVendorsAddress() {
         return vendorsAddress;
     }
 
- 
     public void setVendorsAddress(ArrayList<DtoVendorAddress> vendorsAddress) {
         this.vendorsAddress = vendorsAddress;
     }
+
     public String getDescriptionAddress() {
         return descriptionAddress;
     }
-
 
     public void setDescriptionAddress(String descriptionAddress) {
         this.descriptionAddress = descriptionAddress;
@@ -366,31 +359,37 @@ public class Vendor extends ActionSupport implements SessionAware {
             }
             case 3: {
                 saveContact();
+                accion = 10;
                 break;
             }
             case 4: {
                 deleteContact();
+                accion = 10;
                 break;
             }
             case 5: {
                 activeContact();
+                accion = 10;
                 break;
             }
-             case 6: {
+            case 6: {
                 saveAddress();
+                accion = 11;
                 break;
             }
-              case 7: {
+            case 7: {
                 activeAddress();
+                accion = 11;
                 break;
             }
-                case 8: {
+            case 8: {
                 deleteAddress();
+                accion = 11;
                 break;
             }
         }
         chargeTables();
-existVendor = MaintenanceSQL.getVendor(mdk, id) != null;
+        existVendor = MaintenanceSQL.getVendor(mdk, id) != null;
     }
 
     public void clearFields() {
@@ -407,10 +406,12 @@ existVendor = MaintenanceSQL.getVendor(mdk, id) != null;
         type = "Email";
 
     }
-  public void clearFieldsAddress() {
-        descriptionAddress = "";        
+
+    public void clearFieldsAddress() {
+        descriptionAddress = "";
 
     }
+
     public boolean validateFields() {
         boolean flag = true;
         mensajes = "";
@@ -439,7 +440,7 @@ existVendor = MaintenanceSQL.getVendor(mdk, id) != null;
         }
         if (type.equals("Email")) {
             Pattern pattern = Pattern.compile("^(.+)@(.+)$");
-                                                
+
             Matcher mather = pattern.matcher(descriptionContact);
             if (!mather.find()) {
                 mensajes = mensajes + "danger<>Error<>The Email hasn't a valid text format.|";
@@ -448,10 +449,11 @@ existVendor = MaintenanceSQL.getVendor(mdk, id) != null;
 
             }
         }
-       
+
         return flag;
     }
- public boolean validateFieldsAddress() {
+
+    public boolean validateFieldsAddress() {
         boolean flag = true;
         mensajes = "";
         mensaje = false;
@@ -463,15 +465,15 @@ existVendor = MaintenanceSQL.getVendor(mdk, id) != null;
 
         }
         if (city.equals("NONE")) {
-                   mensajes = mensajes + "danger<>Error<>The postal code must be selected.|";
-                flag = false;
-                mensaje = true;
+            mensajes = mensajes + "danger<>Error<>The postal code must be selected.|";
+            flag = false;
+            mensaje = true;
 
-            
         }
-       
+
         return flag;
     }
+
     public void save() {
         if (getIdEdit().equals("")) {
             insert();
@@ -498,7 +500,8 @@ existVendor = MaintenanceSQL.getVendor(mdk, id) != null;
             }
         }
     }
-  public void deleteAddress() {
+
+    public void deleteAddress() {
         Transaction tn = null;
         try {
             tn = mdk.beginTransaction();
@@ -516,6 +519,7 @@ existVendor = MaintenanceSQL.getVendor(mdk, id) != null;
             }
         }
     }
+
     public void activeContact() {
         Transaction tn = null;
         try {
@@ -532,9 +536,7 @@ existVendor = MaintenanceSQL.getVendor(mdk, id) != null;
 
                 mensajes = mensajes + "info<>Information<>Status of the Contact modified successfully.";
                 mensaje = true;
-            } else {
-                insert();
-            }
+            } 
         } catch (HibernateException x) {
             //AdmConsultas.error(o2c, x.getMessage());
             // mensajes = mensajes + "danger<>Error<>Error al modificar encargados: " + codigo + ": " + ExceptionUtils.getMessage(x) + ".";
@@ -546,12 +548,12 @@ existVendor = MaintenanceSQL.getVendor(mdk, id) != null;
         }
         mensaje = true;
     }
-        public void activeAddress() {
+
+    public void activeAddress() {
         Transaction tn = null;
         try {
             tn = mdk.beginTransaction();
-            System.out.print("vendedor por parametro"+id);
-            DtoVendorAddress m = MaintenanceSQL.getVendorAddress(mdk,id);
+            DtoVendorAddress m = MaintenanceSQL.getVendorAddress(mdk, idAddress);
             if (m != null) {
                 m.setModified(Fechas.ya());
                 m.setModifiedBy(usuario);
@@ -563,9 +565,7 @@ existVendor = MaintenanceSQL.getVendor(mdk, id) != null;
 
                 mensajes = mensajes + "info<>Information<>Status of the Contact modified successfully.";
                 mensaje = true;
-            } else {
-                insert();
-            }
+            } 
         } catch (HibernateException x) {
             //AdmConsultas.error(o2c, x.getMessage());
             // mensajes = mensajes + "danger<>Error<>Error al modificar encargados: " + codigo + ": " + ExceptionUtils.getMessage(x) + ".";
@@ -616,19 +616,20 @@ existVendor = MaintenanceSQL.getVendor(mdk, id) != null;
 
         }
     }
-   public void saveAddress() {
+
+    public void saveAddress() {
         if (validateFieldsAddress()) {
             Transaction tn = null;//Inicializo la transacción de la BD en null
             try {
                 tn = mdk.beginTransaction();//Inicializo la transacción de la DB 
 
                 DtoVendorAddress m = new DtoVendorAddress();//Creo un objeto del tipo style
-           
+
                 //Setting the fields, including id -is not auto incremental                                  
                 m.setIdVendor(id);
-                idPostalCode = MaintenanceSQL.getIdPostalCodes(mdk, postalCode);                  
+                idPostalCode = MaintenanceSQL.getIdPostalCodes(mdk, postalCode);
                 m.setIdPostalCode(idPostalCode);
-                m.setDescription(descriptionAddress);               
+                m.setDescription(descriptionAddress);
                 m.setCreated(Fechas.ya());
                 m.setCreatedBy(usuario);
                 m.setModified(Fechas.ya());
@@ -656,19 +657,21 @@ existVendor = MaintenanceSQL.getVendor(mdk, id) != null;
 
         }
     }
+
     public void chargeTables() {
         vendors = MaintenanceSQL.getVendors(mdk);
         vendorsContacts = MaintenanceSQL.getVendorsContacts(mdk, id);
-        vendorsAddressQuery= MaintenanceSQL.getVendorsAddress(mdk, id);
+        vendorsAddressQuery = MaintenanceSQL.getVendorsAddress(mdk, id);
     }
 
     public void chargeSelect() {
         types = CombosMaintenance.getTypeContact();
         provincePostalCodes = CombosMaintenance.getProvincePostalCodes(mdk);
-        cities = CombosMaintenance.getCitiesPostalCodes(mdk, province); 
-        postalCodes= CombosMaintenance.getPostalCodes(mdk, city); 
-        
+        cities = CombosMaintenance.getCitiesPostalCodes(mdk, province);
+        postalCodes = CombosMaintenance.getPostalCodes(mdk, city);
+
     }
+
     public void insert() {
         if (validateFields()) {//Valido los campos del formulario
             Transaction tn = null;//Inicializo la transacción de la BD en null
@@ -783,16 +786,5 @@ existVendor = MaintenanceSQL.getVendor(mdk, id) != null;
     public void setVendorsAddressQuery(ArrayList<DtoVendorAddressQuery> vendorsAddressQuery) {
         this.vendorsAddressQuery = vendorsAddressQuery;
     }
-
-   
-
-
- 
-
-
-
- 
-
- 
 
 }

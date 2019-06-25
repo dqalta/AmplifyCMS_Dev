@@ -12,9 +12,19 @@ $(document).ready(function () {
     if (permiso === "true") {
         scroll();
         dataTable("table_vendor");
-          $("#province").chosen({width: "100%"});
-          $("#city").chosen({width: "100%"});
-          $("#postalCode").chosen({width: "100%"});
+        $("#province").chosen({width: "100%"});
+        $("#city").chosen({width: "100%"});
+        $("#postalCode").chosen({width: "100%"});
+
+
+        if (accion === 10) {
+            $('a[data-value="tabContact"]').click();
+        }
+
+
+        if (accion === 11) {
+            $('a[data-value="tabAddress"]').click();
+        }
     }
     if (mensaje === "true") {
         mostrarNotificaciones();

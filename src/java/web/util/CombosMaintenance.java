@@ -47,7 +47,8 @@ public class CombosMaintenance {
         }
         return combo;
     }
-        public static ArrayList<KeyCombos> getSubMaterials(Session mdk, int material) {
+
+    public static ArrayList<KeyCombos> getSubMaterials(Session mdk, int material) {
         ArrayList<KeyCombos> combo = new ArrayList<>();
         combo.add(new KeyCombos(0, "SELECT ONE SUBMATERIAL"));
         List<DtoSubMaterial> subMaterials = MaintenanceSQL.getSubMaterials(mdk, material);
@@ -57,28 +58,26 @@ public class CombosMaintenance {
         return combo;
     }
 
-
     public static ArrayList<KeyCombos> getStyles(Session mdk) {
         ArrayList<KeyCombos> combo = new ArrayList<>();
-        combo.add(new KeyCombos(0, "SELECT ONE STYLE"));
         List<DtoStyle> styles = MaintenanceSQL.getStyles(mdk);
         for (DtoStyle c : styles) {
             combo.add(new KeyCombos((c.getId()), c.getDescription()));
         }
         return combo;
     }
-public static ArrayList<KeyCombos> getSizes(Session mdk) {
+
+    public static ArrayList<KeyCombos> getSizes(Session mdk) {
         ArrayList<KeyCombos> combo = new ArrayList<>();
-        combo.add(new KeyCombos(0, "SELECT ONE SIZE"));
         List<DtoSize> styles = MaintenanceSQL.getSizes(mdk);
         for (DtoSize c : styles) {
             combo.add(new KeyCombos((c.getId()), c.getDescription()));
         }
         return combo;
     }
+
     public static ArrayList<KeyCombos> getManufacturers(Session mdk) {
         ArrayList<KeyCombos> combo = new ArrayList<>();
-        combo.add(new KeyCombos(0, "SELECT ONE MANUFACTURER"));
         List<DtoManufacturer> manufacturers = MaintenanceSQL.getManufacturers(mdk);
         for (DtoManufacturer c : manufacturers) {
             combo.add(new KeyCombos((c.getId()), c.getDescription()));
@@ -88,7 +87,6 @@ public static ArrayList<KeyCombos> getSizes(Session mdk) {
 
     public static ArrayList<KeyCombos> getTextures(Session mdk) {
         ArrayList<KeyCombos> combo = new ArrayList<>();
-        combo.add(new KeyCombos(0, "SELECT ONE TEXTURE"));
         List<DtoTexture> textures = MaintenanceSQL.getTextures(mdk);
         for (DtoTexture c : textures) {
             combo.add(new KeyCombos((c.getId()), c.getDescription()));
@@ -98,7 +96,6 @@ public static ArrayList<KeyCombos> getSizes(Session mdk) {
 
     public static ArrayList<KeyCombos> getPackageTypes(Session mdk) {
         ArrayList<KeyCombos> combo = new ArrayList<>();
-        combo.add(new KeyCombos(0, "SELECT ONE PACKAGE TYPE"));
         List<DtoPackageType> packageTypes = MaintenanceSQL.getPackageTypes(mdk);
         for (DtoPackageType c : packageTypes) {
             combo.add(new KeyCombos((c.getId()), c.getDescription()));
@@ -106,10 +103,8 @@ public static ArrayList<KeyCombos> getSizes(Session mdk) {
         return combo;
     }
 
-
     public static ArrayList<KeyCombos> getUnits(Session mdk) {
         ArrayList<KeyCombos> combo = new ArrayList<>();
-        combo.add(new KeyCombos(0, "SELECT ONE METRIC SYSTEM"));
         List<DtoMetricsSystem> units = MaintenanceSQL.getMetricsSystems(mdk);
         for (DtoMetricsSystem c : units) {
             combo.add(new KeyCombos((c.getId()), c.getDescription()));
@@ -134,25 +129,28 @@ public static ArrayList<KeyCombos> getSizes(Session mdk) {
         }
         return combo;
     }
+
     public static ArrayList<KeyCombos> getTypeContact() {
         ArrayList<KeyCombos> combo = new ArrayList<>();
-       combo.add(new KeyCombos(1, "Email"));
-       combo.add(new KeyCombos(2, "Mobile Number"));
-       combo.add(new KeyCombos(3, "Office phone Number"));
-       combo.add(new KeyCombos(4, "Other"));
+        combo.add(new KeyCombos(1, "Email"));
+        combo.add(new KeyCombos(2, "Mobile Number"));
+        combo.add(new KeyCombos(3, "Office phone Number"));
+        combo.add(new KeyCombos(4, "Other"));
         return combo;
     }
+
     public static ArrayList<KeyCombosString> getProvincePostalCodes(Session mdk) {
         ArrayList<KeyCombosString> combo = new ArrayList<>();
         combo.add(new KeyCombosString("NONE"));
         List<DtoString> provincePostalCodes = MaintenanceSQL.getProvincePostalCodes(mdk);
         for (DtoString c : provincePostalCodes) {
-            combo.add(new KeyCombosString (c.getDescription()));
+            combo.add(new KeyCombosString(c.getDescription()));
         }
         return combo;
     }
-      public static ArrayList<KeyCombosString> getCitiesPostalCodes(Session mdk, String province) {
-        ArrayList<KeyCombosString> combo = new ArrayList<>();     
+
+    public static ArrayList<KeyCombosString> getCitiesPostalCodes(Session mdk, String province) {
+        ArrayList<KeyCombosString> combo = new ArrayList<>();
         combo.add(new KeyCombosString("NONE"));
         List<DtoString> cities = MaintenanceSQL.getCitiesPostalCodes(mdk, province);
         for (DtoString c : cities) {
@@ -160,8 +158,9 @@ public static ArrayList<KeyCombos> getSizes(Session mdk) {
         }
         return combo;
     }
-       public static ArrayList<KeyCombosString> getPostalCodes(Session mdk, String city) {
-        ArrayList<KeyCombosString> combo = new ArrayList<>();     
+
+    public static ArrayList<KeyCombosString> getPostalCodes(Session mdk, String city) {
+        ArrayList<KeyCombosString> combo = new ArrayList<>();
         combo.add(new KeyCombosString("NONE"));
         List<DtoString> postalCodes = MaintenanceSQL.getPostalCodes(mdk, city);
         for (DtoString c : postalCodes) {

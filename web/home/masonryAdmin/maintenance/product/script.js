@@ -21,6 +21,19 @@ $(document).ready(function () {
         $("#idSize").chosen({width: "100%"});
         $("#color").chosen({width: "100%"});
         $("#collection").chosen({width: "100%"});
+
+        $("#unitsPallet").number(true, 0, "", "");
+        $("#layersPallet").number(true, 0, "", "");
+        $("#unitsLayer").number(true, 0, "", "");
+        $("#qtyOfUnitsPerPackageType").number(true, 0, "", "");
+
+        $("#palletWeight").number(true, 2);
+        $("#linearFeetCorner").number(true, 2);
+        $("#sqftPerPackageType").number(true, 2);
+
+        if (accion === 5) {
+            $('a[data-value="Final"]').click();
+        }
     }
     if (mensaje === "true") {
         mostrarNotificaciones();
@@ -29,45 +42,19 @@ $(document).ready(function () {
     chargeChecks();
     chargeCheckBoxes();
     chargeTabs();
-    initUploadFile();
 
 });
-function initUploadFile() {
-    $(".imgAdd").click(function () {
-        $(this).closest(".row").find('.imgAdd').before('<div class="col-sm-2 imgUp"><div class="imagePreview"></div><label class="btn btn-warning  btn-upload">Upload<input type="file" class="uploadFile img" value="Upload Photo" style="width:0px;height:0px;overflow:hidden;"></label><i class="fa fa-times del"></i></div>');
-    });
-    $(document).on("click", "i.del", function () {
-        $(this).parent().remove();
-    });
-    $(function () {
-        $(document).on("change", ".uploadFile", function ()
-        {
-            var uploadFile = $(this);
-            var files = !!this.files ? this.files : [];
-            if (!files.length || !window.FileReader)
-                return; // no file selected, or no FileReader support
 
-            if (/^image/.test(files[0].type)) { // only image file
-                var reader = new FileReader(); // instance of the FileReader
-                reader.readAsDataURL(files[0]); // read the local file
-
-                reader.onloadend = function () { // set image data as background of div
-                    //alert(uploadFile.closest(".upimage").find('.imagePreview').length);
-                    uploadFile.closest(".imgUp").find('.imagePreview').css("background-image", "url(" + this.result + ")");
-                }
-            }
-
-        });
-    });
-}
 function nextTab(elem) {
     $(elem).next().find('a[data-toggle="tab"]').click();
 }
+
 function prevTab(elem) {
     $(elem).prev().find('a[data-toggle="tab"]').click();
 }
+
 function validateStep1() {
-   /* mensajes = "";
+    mensajes = "";
     mensaje = false;
     //VALIDAR QUE CAMPOS NO SEAN BLANCOS NI NULOS
     if (($("#sku").val() === null) || ($("#sku").val().replace(" ", "") === "")) {
@@ -92,15 +79,15 @@ function validateStep1() {
     }
     if (mensaje) {
         mostrarNotificaciones();
-    } else {*/
+    } else {
         var $active = $('.wizard .nav-tabs li.active');
         $active.next().removeClass('disabled');
         nextTab($active);
-    //}
+    }
 }
 
 function validateStep2() {
-   /* mensajes = "";
+    mensajes = "";
     mensaje = false;
     //VALIDAR QUE CAMPOS NO SEAN BLANCOS NI NULOS
     if (($("#idStyle").val() === "0")) {
@@ -125,15 +112,15 @@ function validateStep2() {
     }
     if (mensaje) {
         mostrarNotificaciones();
-    } else {*/
+    } else {
         var $active = $('.wizard .nav-tabs li.active');
         $active.next().removeClass('disabled');
         nextTab($active);
-   // }
+    }
 }
 
 function validateStep3() {
-   /* mensajes = "";
+    mensajes = "";
     mensaje = false;
     //VALIDAR QUE CAMPOS NO SEAN BLANCOS NI NULOS
     if (($("#idMaterial").val() === "0")) {
@@ -146,33 +133,30 @@ function validateStep3() {
     }
     if (mensaje) {
         mostrarNotificaciones();
-    } else {*/
+    } else {
         var $active = $('.wizard .nav-tabs li.active');
         $active.next().removeClass('disabled');
         nextTab($active);
-   // }
+    }
 }
 
-
 function validateStep4() {
-    /*  mensajes = "";
-     mensaje = false;
-     //VALIDAR QUE CAMPOS NO SEAN BLANCOS NI NULOS
-     if (($("#idMaterial").val() === "0")) {
-     mensajes = mensajes + "danger<>Error<>Please select one 'Material'.|";
-     mensaje = true;
-     }
-     if (($("#idSubMaterial").val() === "0")) {
-     mensajes = mensajes + "danger<>Error<>Please select one 'Sub Material'.|";
-     mensaje = true;
-     }
-     if (mensaje) {
-     mostrarNotificaciones();
-     } else {*/
-    var $active = $('.wizard .nav-tabs li.active');
-    $active.next().removeClass('disabled');
-    nextTab($active);
-    // }
+    mensajes = "";
+    mensaje = false;
+    //VALIDAR QUE CAMPOS NO SEAN BLANCOS NI NULOS
+    if (($("#idMaterial").val() === "0")) {
+        mensajes = mensajes + "danger<>Error<>Please select one 'Material'.|";
+        mensaje = true;
+    }
+    if (($("#idSubMaterial").val() === "0")) {
+        mensajes = mensajes + "danger<>Error<>Please select one 'Sub Material'.|";
+        mensaje = true;
+    }
+    if (mensaje) {
+        mostrarNotificaciones();
+    } else {
+        save();
+    }
 }
 
 function chargeSubMaterials() {
@@ -225,8 +209,7 @@ function chargeTabs() {
 }
 
 function chargeCheckBoxes() {
-    var arr = ["active"];
-    var arr = ["hasCorner", "canSellLayer"];
+    var arr = ["hasCorner", "canSellLayer", "active"];
 
     for (var i = 0; i < arr.length; i++) {
         if ($("#" + arr[i]).val() === "true") {
@@ -256,7 +239,6 @@ function save() {
     $("#accion").val(1);
     $("#formulario").submit();
 }
-
 
 function edit(id) {
     $("#ModalProcesando").modal({backdrop: 'static', keyboard: false});

@@ -15,9 +15,13 @@ import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import sql.masonryAdmin.maintenance.DtoCollection;
+import sql.masonryAdmin.maintenance.DtoManufacturer;
+import sql.masonryAdmin.maintenance.DtoPostalCode;
 import sql.masonryAdmin.maintenance.DtoProduct;
+import sql.masonryAdmin.maintenance.DtoSize;
 import sql.masonryAdmin.maintenance.MaintenanceSQL;
 import util.Fechas;
+import util.Numeros;
 import web.sesion.ORMUtil;
 import web.util.CombosMaintenance;
 import web.util.KeyCombos;
@@ -456,6 +460,11 @@ public class Product extends ActionSupport implements SessionAware {
     //METODOS ADICIONALES
     public void process() {
         switch (accion) {
+            case 0:
+                palletWeight = "0";
+                linearFeetCorner = "0";
+                sqftPerPackageType = "0";
+                break;
             case 1:
                 save();
                 break;
@@ -480,7 +489,6 @@ public class Product extends ActionSupport implements SessionAware {
         materials = CombosMaintenance.getMaterials(mdk);
         subMaterials = CombosMaintenance.getSubMaterials(mdk, idMaterial);
         manufacturers = CombosMaintenance.getManufacturers(mdk);
-        sizes = CombosMaintenance.getStyles(mdk);
         sizes = CombosMaintenance.getSizes(mdk);
 
         colors = CombosMaintenance.getColors(mdk);
@@ -492,8 +500,32 @@ public class Product extends ActionSupport implements SessionAware {
         mensajes = "";
         mensaje = false;
         //VALIDAR QUE CAMPOS NO SEAN BLANCOS NI NULOS
+        if ((sku == null) || (sku.isEmpty())) {
+            mensajes = mensajes + "danger<>Error<>Please complete field 'SKU'.|";
+            flag = false;
+        }
+        if ((collection.length == 0) || (collection == null)) {
+            mensajes = mensajes + "danger<>Error<>Select at least one 'Collection'.|";
+            flag = false;
+        }
         if ((pname == null) || (pname.isEmpty())) {
+            mensajes = mensajes + "danger<>Error<>Please complete field 'Name'.|";
+            flag = false;
+        }
+        if ((description == null) || (description.isEmpty())) {
             mensajes = mensajes + "danger<>Error<>Please complete field 'Description'.|";
+            flag = false;
+        }
+        if ((color.length == 0) || (color == null)) {
+            mensajes = mensajes + "danger<>Error<>Select at least one 'Color'.|";
+            flag = false;
+        }
+        if (idMaterial == 0) {
+            mensajes = mensajes + "danger<>Error<>Select one 'Material'.|";
+            flag = false;
+        }
+        if (idSubMaterial == 0) {
+            mensajes = mensajes + "danger<>Error<>Select one 'Sub Material'.|";
             flag = false;
         }
         if (!flag) {
@@ -520,25 +552,63 @@ public class Product extends ActionSupport implements SessionAware {
             try {
                 tn = mdk.beginTransaction();//Inicializo la transacción de la DB 
 
-                DtoCollection m = new DtoCollection();//Creo un objeto del tipo Manufacturer
+                if (MaintenanceSQL.getProductBySKU(mdk, sku) == null) {
 
-                //Seteo los datos del objeto excepto el id por que es Auto Incremental
-                m.setDescription(pname);
+                    DtoProduct m = new DtoProduct();//Creo un objeto del tipo Manufacturer
 
-                m.setCreated(Fechas.ya());
-                m.setCreatedBy(usuario);
-                m.setModified(Fechas.ya());
-                m.setModifiedBy(usuario);
-                m.setActive(active);//Lo puse en true porque se me olvidó crear el check en el formulario, en la noche hacemos eso jajaja
+                    //Seteo los datos del objeto excepto el id por que es Auto Incremental
+                    DtoManufacturer ma = MaintenanceSQL.getManufacturer(mdk, idManufacturer);
+                    DtoCollection co = MaintenanceSQL.getCollection(mdk, collection[0]);
+                    DtoSize si = MaintenanceSQL.getSize(mdk, idSize);
 
-                MaintenanceSQL.saveCollection(mdk, m);
-                //AdmConsultas.bitacora(o2c, usuario, "Encargado guardado Tipo: " + tipo + ", Codigo: " + codigo);
+                    slug = ((ma != null ? ma.getDescription() : " ") + (co != null ? co.getDescription() : " ") + (si != null ? si.getDescription() : " "));
 
-                tn.commit();// Hago Commit a la transacción para guardar el registro
-                clearFields();
-                mensajes = mensajes + "info<>Information<>Collection saved successfully.";
-                mensaje = true;
+                    m.setSku(sku);
 
+                    m.setIdManufacturer(idManufacturer);
+                    m.setPname(pname);
+                    m.setDescription(description);
+                    m.setIdStyle(idStyle);
+                    m.setIdTexture(idTexture);
+                    m.setIdPackageType(idPackageType);
+                    m.setIdSize(idSize);
+                    m.setHasCorner(hasCorner);
+                    m.setCanSellLayer(canSellLayer);
+                    m.setIdMaterial(idMaterial);
+                    m.setIdSubMaterial(idSubMaterial);
+                    m.setPalletWeight(Numeros.numero(palletWeight));
+                    m.setUnitsPallet(unitsPallet);
+                    m.setLayersPallet(layersPallet);
+                    m.setUnitsLayer(unitsLayer);
+                    m.setLinearFeetCorner(Numeros.numero(linearFeetCorner));
+                    m.setSqftPerPackageType(Numeros.numero(sqftPerPackageType));
+                    m.setQtyOfUnitsPerPackageType(qtyOfUnitsPerPackageType);
+                    m.setSlug(slug);
+                    m.setCreated(Fechas.ya());
+                    m.setCreatedBy(usuario);
+                    m.setModified(Fechas.ya());
+                    m.setModifiedBy(usuario);
+                    m.setActive(active);//Lo puse en true porque se me olvidó crear el check en el formulario, en la noche hacemos eso jajaja
+
+                    MaintenanceSQL.saveProduct(mdk, m);
+
+                    idEdit = MaintenanceSQL.lastIdProduct(mdk, usuario);
+
+                    //Guardar Collections
+                    //Guardar Color
+                    //AdmConsultas.bitacora(o2c, usuario, "Encargado guardado Tipo: " + tipo + ", Codigo: " + codigo);
+                    tn.commit();// Hago Commit a la transacción para guardar el registro
+
+                    saveProductCollections();
+                    saveProductColors();
+
+                    mensajes = mensajes + "info<>Information<>Product saved successfully.";
+                    mensaje = true;
+                    accion = 5;
+                } else {
+                    mensajes = mensajes + "danger<>Error<>SKU already exists.";
+                    mensaje = true;
+                }
             } catch (HibernateException x) {
                 //AdmConsultas.error(o2c, x.getMessage());
                 // mensajes = mensajes + "danger<>Error<>Error al guardar encargados: " + codigo + ": " + ExceptionUtils.getMessage(x) + ".";
@@ -550,6 +620,54 @@ public class Product extends ActionSupport implements SessionAware {
             }
             mensaje = true;
         }
+    }
+
+    public void saveProductCollections() {
+        Transaction tn = null;//Inicializo la transacción de la BD en null
+        try {
+            tn = mdk.beginTransaction();//Inicializo la transacción de la DB 
+
+            for (int i = 0; i < collection.length; i++) {
+                MaintenanceSQL.saveProductCollection(mdk, idEdit, collection[i]);
+            }
+
+            //AdmConsultas.bitacora(o2c, usuario, "Encargado guardado Tipo: " + tipo + ", Codigo: " + codigo);
+            tn.commit();// Hago Commit a la transacción para guardar el registro
+
+        } catch (HibernateException x) {
+            //AdmConsultas.error(o2c, x.getMessage());
+            // mensajes = mensajes + "danger<>Error<>Error al guardar encargados: " + codigo + ": " + ExceptionUtils.getMessage(x) + ".";
+            mensajes = mensajes + "danger<>Error<>Error.|";
+            mensaje = true;
+            if (tn != null) {//Si hay error y el transacción es distinto de null, es porque la transacción existe, entoncs hago rollback
+                tn.rollback();
+            }
+        }
+        mensaje = true;
+    }
+
+    public void saveProductColors() {
+        Transaction tn = null;//Inicializo la transacción de la BD en null
+        try {
+            tn = mdk.beginTransaction();//Inicializo la transacción de la DB 
+
+            for (int i = 0; i < color.length; i++) {
+                MaintenanceSQL.saveProductColor(mdk, idEdit, color[i]);
+            }
+
+            //AdmConsultas.bitacora(o2c, usuario, "Encargado guardado Tipo: " + tipo + ", Codigo: " + codigo);
+            tn.commit();// Hago Commit a la transacción para guardar el registro
+
+        } catch (HibernateException x) {
+            //AdmConsultas.error(o2c, x.getMessage());
+            // mensajes = mensajes + "danger<>Error<>Error al guardar encargados: " + codigo + ": " + ExceptionUtils.getMessage(x) + ".";
+            mensajes = mensajes + "danger<>Error<>Error.|";
+            mensaje = true;
+            if (tn != null) {//Si hay error y el transacción es distinto de null, es porque la transacción existe, entoncs hago rollback
+                tn.rollback();
+            }
+        }
+        mensaje = true;
     }
 
     public void update() {
@@ -589,13 +707,37 @@ public class Product extends ActionSupport implements SessionAware {
     }
 
     public void readForUpdate() {
-        DtoCollection m = MaintenanceSQL.getCollection(mdk, idEdit);
+        DtoProduct m = MaintenanceSQL.getProduct(mdk, idEdit);
         if (m != null) {
             idEdit = m.getId();
             pname = m.getDescription();
+            idStyle = m.getIdSize();
+            idTexture = m.getIdTexture();
+            idPackageType = m.getIdPackageType();
+            idMaterial = m.getIdMaterial();
+            chargeSelect();
+            idSubMaterial = m.getIdSubMaterial();
+            slug = m.getSlug();
+            description = m.getDescription();
+            idManufacturer = m.getIdManufacturer();
+            idSize = m.getIdSize();
+            sku = m.getSku();
+            palletWeight = String.valueOf(m.getPalletWeight());
+            canSellLayer = m.isCanSellLayer();
+            unitsPallet = m.getUnitsPallet();
+            layersPallet = m.getLayersPallet();
+            unitsLayer = m.getUnitsLayer();
+            hasCorner = m.isHasCorner();
+            linearFeetCorner = String.valueOf(m.getLinearFeetCorner());
+            sqftPerPackageType = String.valueOf(m.getSqftPerPackageType());
+            qtyOfUnitsPerPackageType = m.getQtyOfUnitsPerPackageType();
             active = m.getActive();
+            
+            //color = MaintenanceSQL.getColors(mdk, idEdit);
+            
+            
         } else {
-            mensajes = mensajes + "danger<>Error<>Collection does not exist.";
+            mensajes = mensajes + "danger<>Error<>Product does not exist.";
             mensaje = true;
         }
     }

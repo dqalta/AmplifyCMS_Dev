@@ -15,12 +15,37 @@ import java.io.IOException;
  */
 public class Generales {
 
-    public static String cortarString(String cadena, int inicia, int termina){
+    public static String generateCode(String name) {
+        String[] fName = name.split(" ");
+        String code_ = "";
+        int tam = fName.length > 3 ? 3 : fName.length;
+
+        for (int i = 0; i < tam; i++) {
+            switch (tam) {
+                case 1:
+                    code_ = code_ + fName[i].substring(0, 3);
+                    break;
+                case 2:
+                    if (i == 0) {
+                        code_ = code_ + fName[i].substring(0, 1);
+                    } else {
+                        code_ = code_ + fName[i].substring(0, 2);
+                    }
+                    break;
+                case 3:
+                    code_ = code_ + fName[i].substring(0, 1);
+                    break;
+            }
+        }
+        return code_.toUpperCase();
+    }
+
+    public static String cortarString(String cadena, int inicia, int termina) {
         String resultado = "";
-        resultado = cadena.substring(inicia,termina);
+        resultado = cadena.substring(inicia, termina);
         return resultado;
     }
-    
+
     public static String encabezadoXML() {
         return "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
     }

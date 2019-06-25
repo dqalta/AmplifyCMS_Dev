@@ -27,14 +27,14 @@ public class DtoProduct implements Serializable {
     private String slug;
     private String description;
     private String sku;
-    private String palletWeight;
+    private double palletWeight;
     private boolean canSellLayer;
     private int unitsLayer;
     private int layersPallet;
     private int unitsPallet;
     private boolean hasCorner;
-    private String linearFeetCorner;
-    private String sqftPerPackageType;
+    private double linearFeetCorner;
+    private double sqftPerPackageType;
     private int qtyOfUnitsPerPackageType;
     private Date created;
     private String createdBy;
@@ -141,11 +141,11 @@ public class DtoProduct implements Serializable {
         this.sku = sku;
     }
 
-    public String getPalletWeight() {
+    public double getPalletWeight() {
         return palletWeight;
     }
 
-    public void setPalletWeight(String palletWeight) {
+    public void setPalletWeight(double palletWeight) {
         this.palletWeight = palletWeight;
     }
 
@@ -189,19 +189,19 @@ public class DtoProduct implements Serializable {
         this.hasCorner = hasCorner;
     }
 
-    public String getLinearFeetCorner() {
+    public double getLinearFeetCorner() {
         return linearFeetCorner;
     }
 
-    public void setLinearFeetCorner(String linearFeetCorner) {
+    public void setLinearFeetCorner(double linearFeetCorner) {
         this.linearFeetCorner = linearFeetCorner;
     }
 
-    public String getSqftPerPackageType() {
+    public double getSqftPerPackageType() {
         return sqftPerPackageType;
     }
 
-    public void setSqftPerPackageType(String sqftPerPackageType) {
+    public void setSqftPerPackageType(double sqftPerPackageType) {
         this.sqftPerPackageType = sqftPerPackageType;
     }
 
@@ -252,5 +252,4 @@ public class DtoProduct implements Serializable {
     public void setActive(Boolean active) {
         this.active = active;
     }
-
 }

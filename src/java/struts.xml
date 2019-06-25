@@ -14,6 +14,5 @@ and open the template in the editor.
     <!--<constant name="struts.locale" value="es_NI" />-->
     <include file="struts-sesion.xml" />
     <include file="struts-web.xml" />    
-    <include file="struts-bricks.xml"/>
         <include file="log4configuration.xml"/>
 </struts>

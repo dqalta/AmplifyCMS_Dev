@@ -13,6 +13,7 @@ public class DtoVendorAddressQuery implements Serializable {
     private String postalCode;
     private String city;
     private String province;
+    private boolean active;
 
 
     public int getId() {
@@ -61,6 +62,14 @@ public class DtoVendorAddressQuery implements Serializable {
    
     public void setProvince(String province) {
         this.province = province;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
     }
     
    

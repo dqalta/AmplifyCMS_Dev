@@ -58,9 +58,13 @@ and open the template in the editor.
             <result name="input">/home/masonryAdmin/maintenance/product/intro.jsp</result>
             <result name="success">/home/masonryAdmin/maintenance/product/intro.jsp</result>
         </action>      
-          <action name="vendor" class="web.masonryAdmin.maintenance.Vendor">
+        <action name="vendor" class="web.masonryAdmin.maintenance.Vendor">
             <result name="input">/home/masonryAdmin/maintenance/vendor/intro.jsp</result>
             <result name="success">/home/masonryAdmin/maintenance/vendor/intro.jsp</result>
+        </action>     
+        <action name="gallery" class="web.masonryAdmin.maintenance.Gallery">
+            <result name="input">/home/masonryAdmin/maintenance/gallery/intro.jsp</result>
+            <result name="success">/home/masonryAdmin/maintenance/gallery/intro.jsp</result>
         </action>    
     </package>
     
@@ -74,9 +78,13 @@ and open the template in the editor.
         <action name="rol" class="web.masonryAdmin.admin.Rol">
             <result name="input">/home/masonryAdmin/admin/rol/intro.jsp</result>
             <result name="success">/home/masonryAdmin/admin/rol/intro.jsp</result>
+        </action>    
+        <action name="user" class="web.masonryAdmin.admin.User">
+            <result name="input">/home/masonryAdmin/admin/user/intro.jsp</result>
+            <result name="success">/home/masonryAdmin/admin/user/intro.jsp</result>
         </action>           
     </package>
-     <package name="masonryAjax" namespace="/masonryAdmin/queries/ajax" extends="struts-default">
+    <package name="masonryAjax" namespace="/masonryAdmin/queries/ajax" extends="struts-default">
         <global-results>
             <result name="error">/error.jsp</result>
         </global-results>
@@ -89,13 +97,13 @@ and open the template in the editor.
                 <param name="inputName">inputStream</param>
             </result>
         </action> 
-         <action name="select-cities" class="web.masonryAdmin.queries.ajax.SelectCities">
+        <action name="select-cities" class="web.masonryAdmin.queries.ajax.SelectCities">
             <result type="stream">
                 <param name="contentType">text/html</param>
                 <param name="inputName">inputStream</param>
             </result>
         </action>  
-         <action name="select-postal-codes" class="web.masonryAdmin.queries.ajax.SelectPostalCodes">
+        <action name="select-postal-codes" class="web.masonryAdmin.queries.ajax.SelectPostalCodes">
             <result type="stream">
                 <param name="contentType">text/html</param>
                 <param name="inputName">inputStream</param>

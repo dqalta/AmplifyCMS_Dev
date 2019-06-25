@@ -137,23 +137,23 @@
 <st:set var="title">${param.title}</st:set>
 
 
-<div class="modal" id="ModalLogOut">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h4 class="modal-title"><i class="fa fa-question-circle-o"></i>&nbsp;&nbsp;Masonry CMS</h4>
-            </div>
-            <div class="modal-body">
-                <h4>You really want to close the session?</h4>
-            </div>
-            <div class="modal-footer">
-                <button type="button" style="background-color: #FF6600 !important; " class="btn btn-warning" onclick="LogOut();"><i class="glyphicon glyphicon-log-out"></i>&nbsp;Yes</button>
-                <button type="button" class="btn btn-default" data-dismiss="modal"><i class="glyphicon glyphicon-remove"></i>&nbsp;No</button>
+    <div class="modal" id="ModalLogOut">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title"><i class="fa fa-question-circle-o"></i>&nbsp;&nbsp;Masonry CMS</h4>
+                </div>
+                <div class="modal-body">
+                    <h4>You really want to close the session?</h4>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" style="background-color: #FF6600 !important; " class="btn btn-warning" onclick="LogOut();"><i class="glyphicon glyphicon-log-out"></i>&nbsp;Yes</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal"><i class="glyphicon glyphicon-remove"></i>&nbsp;No</button>
+                </div>
             </div>
         </div>
     </div>
-</div>
 
     <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
         <div class="container-fluid">
@@ -227,24 +227,19 @@
                 </li>                                 
                 <hr style="color:#FF6600 !important;">            
                 <li>
-                    <font color="#337AB7"> Product Components</font>
+                    <font color="#337AB7"> Product Administration</font>
                 </li>
                 <li>
                     <a href="/MasonryCMS/masonryAdmin/maintenance/product.mdk"><span style="color:#FF6600 !important;" class="fa fa-archive" aria-hidden="true"></span> Product Main</a>
                 </li>
                 <li>
+
+                    <hr style="color:#FF6600 !important;">
                 <li>
-                    <a href="/MasonryCMS/masonryAdmin/maintenance/collection.mdk"><span style="color:#FF6600 !important;" class="fa fa-tags" aria-hidden="true"></span> Collections</a>
+                    <font color="#337AB7"> Product Components</font>
                 </li>
                 <li>
-                    <a href="/MasonryCMS/masonryAdmin/maintenance/material.mdk"><span style="color:#FF6600 !important;" class="fa fa-bookmark" aria-hidden="true"></span> Materials</a>
-                </li>
-                <li>
-                    <a href="/MasonryCMS/masonryAdmin/maintenance/subMaterial.mdk"><span style="color:#FF6600 !important;" class="fa fa-bookmark-o" aria-hidden="true"></span> SubMaterials</a>
-                </li>
-                <hr style="color:#FF6600 !important;">
-                <li>
-                    <font color="#337AB7"> Product Administration</font>
+                    <a href="/MasonryCMS/masonryAdmin/maintenance/gallery.mdk"><span style="color:#FF6600 !important;" class="glyphicon glyphicon-picture" aria-hidden="true"></span> Gallery</a>
                 </li>
                 <li>
                     <a href="/MasonryCMS/masonryAdmin/maintenance/manufacturer.mdk"><span style="color:#FF6600 !important;" class="fa fa-industry" aria-hidden="true"></span> Manufacturers</a>
@@ -267,6 +262,15 @@
                 </li>
                 <li>
                     <a href="/MasonryCMS/masonryAdmin/maintenance/metricsSystem.mdk"><span style="color:#FF6600 !important;" class="fa fa-balance-scale" aria-hidden="true"></span> Metrics Systems</a>                                      
+                </li>
+                <li>
+                    <a href="/MasonryCMS/masonryAdmin/maintenance/collection.mdk"><span style="color:#FF6600 !important;" class="fa fa-tags" aria-hidden="true"></span> Collections</a>
+                </li>
+                <li>
+                    <a href="/MasonryCMS/masonryAdmin/maintenance/material.mdk"><span style="color:#FF6600 !important;" class="fa fa-bookmark" aria-hidden="true"></span> Materials</a>
+                </li>
+                <li>
+                    <a href="/MasonryCMS/masonryAdmin/maintenance/subMaterial.mdk"><span style="color:#FF6600 !important;" class="fa fa-bookmark-o" aria-hidden="true"></span> SubMaterials</a>
                 </li>
             </ul>
         </div>
