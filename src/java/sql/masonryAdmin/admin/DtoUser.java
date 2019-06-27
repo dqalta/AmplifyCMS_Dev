@@ -14,11 +14,11 @@ import java.util.Date;
 public class DtoUser {
 
     private int id;
-    private String code;
+    private String codeUser;
     private String nickName;
     private String fullName;
     private String email;
-    private String password;
+    private String passwordUser;
     private boolean menuAdmin;
     private boolean menuProdAdmin;
     private boolean menuProdComp;
@@ -27,7 +27,7 @@ public class DtoUser {
     private Date modified;
     private String modifiedBy;
     private boolean active;
-    private String status;
+    private String statusUser;
 
     public DtoUser() {
     }
@@ -40,12 +40,12 @@ public class DtoUser {
         this.id = id;
     }
 
-    public String getCode() {
-        return code;
+    public String getCodeUser() {
+        return codeUser;
     }
 
-    public void setCode(String code) {
-        this.code = code;
+    public void setCodeUser(String codeUser) {
+        this.codeUser = codeUser;
     }
 
     public String getNickName() {
@@ -72,12 +72,12 @@ public class DtoUser {
         this.email = email;
     }
 
-    public String getPassword() {
-        return password;
+    public String getPasswordUser() {
+        return passwordUser;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
+    public void setPasswordUser(String passwordUser) {
+        this.passwordUser = passwordUser;
     }
 
     public boolean isMenuAdmin() {
@@ -144,11 +144,11 @@ public class DtoUser {
         this.active = active;
     }
 
-    public String getStatus() {
-        return status;
+    public String getStatusUser() {
+        return statusUser;
     }
 
-    public void setStatus(String status) {
-        this.status = status;
+    public void setStatusUser(String statusUser) {
+        this.statusUser = statusUser;
     }
 }

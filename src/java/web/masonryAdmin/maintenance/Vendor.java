@@ -18,12 +18,14 @@ import org.apache.struts2.interceptor.SessionAware;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import sql.masonryAdmin.admin.AdminSQL;
 import sql.masonryAdmin.maintenance.DtoVendor;
 import sql.masonryAdmin.maintenance.DtoVendorAddress;
 import sql.masonryAdmin.maintenance.DtoVendorAddressQuery;
 import sql.masonryAdmin.maintenance.DtoVendorContact; //handles de second tab data
 import sql.masonryAdmin.maintenance.MaintenanceSQL;
 import util.Fechas;
+import util.Generales;
 import web.sesion.ORMUtil;
 import web.util.CombosMaintenance;
 import web.util.KeyCombos;
@@ -404,7 +406,6 @@ public class Vendor extends ActionSupport implements SessionAware {
     public void clearFieldsContact() {
         descriptionContact = "";
         type = "Email";
-
     }
 
     public void clearFieldsAddress() {
@@ -475,7 +476,7 @@ public class Vendor extends ActionSupport implements SessionAware {
     }
 
     public void save() {
-        if (getIdEdit().equals("")) {
+        if (idEdit.equals("")) {
             insert();
         } else {
             update();
@@ -536,7 +537,7 @@ public class Vendor extends ActionSupport implements SessionAware {
 
                 mensajes = mensajes + "info<>Information<>Status of the Contact modified successfully.";
                 mensaje = true;
-            } 
+            }
         } catch (HibernateException x) {
             //AdmConsultas.error(o2c, x.getMessage());
             // mensajes = mensajes + "danger<>Error<>Error al modificar encargados: " + codigo + ": " + ExceptionUtils.getMessage(x) + ".";
@@ -565,7 +566,7 @@ public class Vendor extends ActionSupport implements SessionAware {
 
                 mensajes = mensajes + "info<>Information<>Status of the Contact modified successfully.";
                 mensaje = true;
-            } 
+            }
         } catch (HibernateException x) {
             //AdmConsultas.error(o2c, x.getMessage());
             // mensajes = mensajes + "danger<>Error<>Error al modificar encargados: " + codigo + ": " + ExceptionUtils.getMessage(x) + ".";
@@ -680,14 +681,9 @@ public class Vendor extends ActionSupport implements SessionAware {
 
                 DtoVendor m = new DtoVendor();//Creo un objeto del tipo style
 
-                //Setting the fields, including id -is not auto incremental
-                String guid = RandomStringUtils.randomAlphanumeric(15);
-                boolean flag = (MaintenanceSQL.getVendor(mdk, guid) != null);
-
-                while (flag) {
-                    guid = RandomStringUtils.randomAlphanumeric(15);
-                    flag = (MaintenanceSQL.getVendor(mdk, guid) != null);
-                }
+                String guid = Generales.generateCode(vname);
+                guid = guid + "-" + String.format("%03d", AdminSQL.getConsecutive(mdk, "codeVendor"));
+                
                 m.setId(guid);
                 id = guid;
                 m.setVname(vname);
@@ -698,6 +694,8 @@ public class Vendor extends ActionSupport implements SessionAware {
                 m.setActive(isActive());//Lo puse en true porque se me olvidó crear el check en el formulario, en la noche hacemos eso jajaja
 
                 MaintenanceSQL.saveVendor(mdk, m);
+                
+                AdminSQL.incrementConsecutive(mdk,"codeVendor");
                 //AdmConsultas.bitacora(o2c, usuario, "Encargado guardado Tipo: " + tipo + ", Codigo: " + codigo);
 
                 tn.commit();// Hago Commit a la transacción para guardar el registro

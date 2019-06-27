@@ -8,25 +8,20 @@ package web.masonryAdmin.admin;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionSupport;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.servlet.http.HttpServletRequest;
-import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.struts2.interceptor.SessionAware;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import sql.masonryAdmin.admin.AdminSQL;
-import sql.masonryAdmin.admin.DtoRol;
 import sql.masonryAdmin.admin.DtoUser;
-import sql.masonryAdmin.maintenance.DtoCollection;
-import sql.masonryAdmin.maintenance.MaintenanceSQL;
 import util.Fechas;
 import util.Generales;
-import util.Numeros;
+import util.UtilSecurity;
 import web.sesion.ORMUtil;
 import web.util.CombosAdmin;
 import web.util.KeyCombos;
@@ -307,7 +302,7 @@ public class User extends ActionSupport implements SessionAware {
         if (idEdit == 0) {
             insert();
         } else {
-           // update();
+            //update();
         }
     }
 
@@ -324,14 +319,14 @@ public class User extends ActionSupport implements SessionAware {
                 DtoUser m = new DtoUser();//Creo un objeto del tipo Manufacturer
 
                 String code_ = Generales.generateCode(fullName);
-                code_ = code_ + String.format("%03d", AdminSQL.getConsecutive(mdk, "codeUser"));
+                code_ = code_ + "-" + String.format("%03d", AdminSQL.getConsecutive(mdk, "codeUser"));
                 code = code_;
 
-                m.setCode(code);
+                m.setCodeUser(code);
                 m.setNickName("");
                 m.setFullName(fullName);
                 m.setEmail(email);
-                m.setPassword("");
+                m.setPasswordUser(UtilSecurity.encript(UtilSecurity.randomPassword(3, 2, 1, 2)));
                 m.setMenuAdmin(menuAdmin);
                 m.setMenuProdAdmin(menuProdAdmin);
                 m.setMenuProdComp(menuProdComp);
@@ -340,26 +335,51 @@ public class User extends ActionSupport implements SessionAware {
                 m.setModified(Fechas.ya());
                 m.setModifiedBy(usuario);
                 m.setActive(active);
-                m.setStatus("PENDING");
+                m.setStatusUser("PENDING");
 
-                //AdminSQL.saveUser(mdk, m);
-                //AdmConsultas.bitacora(o2c, usuario, "Encargado guardado Tipo: " + tipo + ", Codigo: " + codigo);
-
-                tn.commit();// Hago Commit a la transacción para guardar el registro
-                clearFields();
+                AdminSQL.saveUser(mdk, m);
+                //CORREO
+                tn.commit();
+                
+                saveRols(code);
+                
+                //clearFields();
                 mensajes = mensajes + "info<>Information<>User saved successfully.";
                 mensaje = true;
 
-            } catch (HibernateException x) {
+            } catch (Exception x) {
                 //AdmConsultas.error(o2c, x.getMessage());
                 // mensajes = mensajes + "danger<>Error<>Error al guardar encargados: " + codigo + ": " + ExceptionUtils.getMessage(x) + ".";
                 mensajes = mensajes + "danger<>Error<>Error.|";
                 mensaje = true;
+            System.out.println(x.getMessage());
                 if (tn != null) {//Si hay error y el transacción es distinto de null, es porque la transacción existe, entoncs hago rollback
                     tn.rollback();
                 }
             }
             mensaje = true;
+        }
+    }
+    
+    public void saveRols(String code) {
+        Transaction tn = null;
+        try {
+            tn = mdk.beginTransaction();
+            DtoUser p = AdminSQL.getUser(mdk, code);
+            if (p != null) {
+                AdminSQL.deleteUserRol(mdk, code);
+                for (int i = 0; i < rol.length; i++) {
+                    AdminSQL.saveUserRol(mdk, code, rol[i]);
+                }
+                tn.commit();
+            } 
+        } catch (HibernateException x) {
+            mensajes = mensajes + "danger<>Error<>Error.";
+            mensaje = true;
+            System.out.println(x.getMessage());
+            if (tn != null) {
+                tn.rollback();
+            }
         }
     }
 

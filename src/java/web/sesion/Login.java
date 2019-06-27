@@ -15,19 +15,21 @@ import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.interceptor.SessionAware;
 import org.hibernate.Session;
 import org.hibernate.transform.Transformers;
+import util.UtilSecurity;
 
 /**
  *
  * @author CR104978
  */
 public class Login extends ActionSupport implements SessionAware {
+
     //variables propias de la sesion
     HttpServletRequest request;
     Map session;
     Session cms;
     //CAMPOS - html
     boolean parametros = true;//PARAMETROS VALIDOS
-    String usuario, contrasena; 
+    String usuario, contrasena;
     //VARIABLES - uso en clase
     String nombre;
     String mensajes = "";
@@ -93,6 +95,10 @@ public class Login extends ActionSupport implements SessionAware {
             parametros = false;
         }
         if (parametros == true) {*/
+
+        for (int i = 0; i < 10; i++) {
+            System.out.println(UtilSecurity.randomPassword(3, 2, 1, 2));
+        }
         try {
 
             session = ActionContext.getContext().getSession();
@@ -102,7 +108,7 @@ public class Login extends ActionSupport implements SessionAware {
             usuario = getResultado(cms);
 
             System.out.println("Resultado de BD: " + usuario);
-            
+
             session = ActionContext.getContext().getSession();
             session.put("en-sesion", "true");
             session.put("user", "Daniel");

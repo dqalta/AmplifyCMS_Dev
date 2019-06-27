@@ -5,6 +5,7 @@ import java.util.Iterator;
 import java.util.Map;
 import org.hibernate.Session;
 import org.hibernate.transform.Transformers;
+import sql.masonryAdmin.maintenance.DtoManufacturer;
 import sql.masonryAdmin.maintenance.DtoVendor;
 import util.Numeros;
 
@@ -14,12 +15,59 @@ import util.Numeros;
  */
 public class AdminSQL {
 
+    public static void saveUserRol(Session mdk, String codeUser, int idMasonryRol) {
+        mdk.createNativeQuery("INSERT INTO masonryUserRol"
+                + " (codeUser, idMasonryRol)"
+                + " VALUES"
+                + " (:codeUser, :idMasonryRol)")
+                .setParameter("codeUser", codeUser)
+                .setParameter("idMasonryRol", idMasonryRol)
+                .executeUpdate();
+    }
+
+    public static void deleteUserRol(Session mdk, String codeUser) {
+        mdk.createNativeQuery("DELETE FROM masonryUserRol"
+                + " WHERE codeUser = :codeUser")
+                .setParameter("codeUser", codeUser)
+                .executeUpdate();
+    }
+
+    public static void saveUser(Session vdk, DtoUser m) {
+        vdk.createNativeQuery("INSERT INTO masonryUser"
+                + " (codeUser, nickName, fullName, email, passwordUser, menuAdmin, menuProdAdmin, menuProdComp, created, createdBy, modified, modifiedBy, active, statusUser)"
+                + " VALUES"
+                + " (:codeUser, :nickName, :fullName, :email, :passwordUser, :menuAdmin, :menuProdAdmin, :menuProdComp, :created, :createdBy, :modified, :modifiedBy, :active, :statusUser)")
+                .setParameter("codeUser", m.getCodeUser())
+                .setParameter("nickName", m.getNickName())
+                .setParameter("fullName", m.getFullName())
+                .setParameter("email", m.getEmail())
+                .setParameter("passwordUser", m.getPasswordUser())
+                .setParameter("menuAdmin", m.isMenuAdmin())
+                .setParameter("menuProdAdmin", m.isMenuProdAdmin())
+                .setParameter("menuProdComp", m.isMenuProdComp())
+                .setParameter("created", m.getCreated())
+                .setParameter("createdBy", m.getCreatedBy())
+                .setParameter("modified", m.getModified())
+                .setParameter("modifiedBy", m.getModifiedBy())
+                .setParameter("active", m.isActive())
+                .setParameter("statusUser", m.getStatusUser())
+                .executeUpdate();
+    }
+
+    public static void incrementConsecutive(Session mdk, String type) {
+        mdk.createNativeQuery("UPDATE consecutive SET"
+                + " consecutive = consecutive + increment"
+                + " WHERE type = :type")
+                .setParameter("type", type)
+                .executeUpdate();
+    }
+
     public static void saveRol(Session mdk, DtoRol m) {
         mdk.createNativeQuery("INSERT INTO masonryUser"
-                + " (code, nickName, fullName, email, password, menuAdmin, menuProdAdmin, menuProdComp, created, createdBy, modified, modifiedBy, active, status)"
+                + " (codeUser, nickName, fullName, email, passwordUser, menuAdmin, menuProdAdmin, menuProdComp, created, createdBy, modified, modifiedBy, active, statusUser)"
                 + " VALUES"
-                + " (:code, :nickName, :fullName, :email, :password, :menuAdmin, :menuProdAdmin, :menuProdComp, :created, :createdBy, :modified, :modifiedBy, :active, :status)")
-                .setParameter("code", m.getDescription())
+                + " (:codeUser, :nickName, :fullName, :email, :passwordUser, :menuAdmin, :menuProdAdmin, :menuProdComp, :created, :createdBy, :modified, :modifiedBy, :active, :statusUser)")
+                .setParameter("codeUser", m.getDescription())
                 .setParameter("nickName", m.getCreated())
                 .setParameter("createdBy", m.getCreatedBy())
                 .setParameter("modified", m.getModified())
@@ -41,14 +89,14 @@ public class AdminSQL {
         return consecutive;
     }
 
-    public static DtoUser getUser(Session mdk, String code) {
+    public static DtoUser getUser(Session mdk, String codeUser) {
         Iterator itr = mdk.createNativeQuery("SELECT"
                 + " id,"
-                + " code,"
+                + " codeUser,"
                 + " nickName,"
                 + " fullName,"
                 + " email,"
-                + " password,"
+                + " passwordUser,"
                 + " menuAdmin,"
                 + " menuProdAdmin,"
                 + " menuProdComp,"
@@ -57,10 +105,10 @@ public class AdminSQL {
                 + " modified,"
                 + " modifiedBy,"
                 + " active,"
-                + " status"
+                + " statusUser"
                 + " FROM masonryUser"
-                + " WHERE code = :code")
-                .setParameter("code", code)
+                + " WHERE codeUser = :codeUser")
+                .setParameter("codeUser", codeUser)
                 .setResultTransformer(Transformers.aliasToBean(DtoUser.class))
                 .list().iterator();
         DtoUser m = null;
@@ -74,11 +122,11 @@ public class AdminSQL {
         ArrayList<DtoUser> a = new ArrayList<>();
         Iterator itr = mdk.createNativeQuery("SELECT"
                 + " id,"
-                + " code,"
+                + " codeUser,"
                 + " nickName,"
                 + " fullName,"
                 + " email,"
-                + " password,"
+                + " passwordUser,"
                 + " menuAdmin,"
                 + " menuProdAdmin,"
                 + " menuProdComp,"
@@ -87,7 +135,7 @@ public class AdminSQL {
                 + " modified,"
                 + " modifiedBy,"
                 + " active,"
-                + " status"
+                + " statusUser"
                 + " FROM masonryUser")
                 .setResultTransformer(Transformers.aliasToBean(DtoUser.class))
                 .list().iterator();
