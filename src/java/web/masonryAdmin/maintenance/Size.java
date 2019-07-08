@@ -1,4 +1,4 @@
-    /*
+/*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
@@ -43,6 +43,7 @@ public class Size extends ActionSupport implements SessionAware {
     String menu;//String de los permisos del menu 
     String mensajes = "";//Variable para cargar el texto del resultado de las validaciones o acciones
     boolean mensaje;//Variable bandera para saber si se muestra o no el mensaje
+    int vendorsPending;
 
     //Variables de la pantalla
     private ArrayList<DtoSize> sizes = new ArrayList<>();//Variable con la lista de datos
@@ -69,6 +70,7 @@ public class Size extends ActionSupport implements SessionAware {
             permiso = true; //AdmConsultas.getPermiso(o2c, "ADMINISTRACIÓN", "Encargados", usuario);            
             menu = "";//AdmConsultas.menuUsuario(o2c, usuario);
             chargeSelect(); // fill the select with the categories
+            vendorsPending = MaintenanceSQL.getPendingVendors(mdk);
         } else {
             sesionActiva = false;
         }
@@ -141,42 +143,34 @@ public class Size extends ActionSupport implements SessionAware {
     }
 
     //SET GET CUSToMIZED
-
     public ArrayList<DtoSize> getSizes() {
         return sizes;
     }
 
-   
     public void setSizes(ArrayList<DtoSize> sizes) {
         this.sizes = sizes;
     }
 
-  
     public ArrayList<KeyCombos> getUnits() {
         return units;
     }
 
-   
     public void setMetricsSystem(ArrayList<KeyCombos> units) {
         this.units = units;
     }
 
-   
     public int getId() {
         return id;
     }
 
- 
     public void setId(int id) {
         this.id = id;
     }
 
- 
     public int getIdMetricsSystem() {
         return idMetricsSystem;
     }
 
-  
     public void setIdMetricsSystem(int idMetricsSystem) {
         this.idMetricsSystem = idMetricsSystem;
     }
@@ -185,7 +179,6 @@ public class Size extends ActionSupport implements SessionAware {
         return description;
     }
 
-  
     public void setDescription(String description) {
         this.description = description;
     }
@@ -194,69 +187,66 @@ public class Size extends ActionSupport implements SessionAware {
         return length;
     }
 
-    
     public void setLength(String length) {
         this.length = length;
     }
 
-  
     public String getDepth() {
         return depth;
     }
 
-   
     public void setDepth(String depth) {
         this.depth = depth;
     }
 
-   
     public String getWidth() {
         return width;
     }
-        public void setWidth(String width) {
+
+    public void setWidth(String width) {
         this.width = width;
     }
- 
+
     public String getUnitsPerSqm2() {
         return unitsPerSqm2;
     }
 
-  
     public void setUnitsPerSqm2(String unitsPerSqm2) {
         this.unitsPerSqm2 = unitsPerSqm2;
     }
 
-  
     public String getUnitsPerSqf2() {
         return unitsPerSqf2;
     }
 
- 
     public void setUnitsPerSqf2(String unitsPerSqf2) {
         this.unitsPerSqf2 = unitsPerSqf2;
     }
- 
 
+    public int getVendorsPending() {
+        return vendorsPending;
+    }
 
-  
+    public void setVendorsPending(int vendorsPending) {
+        this.vendorsPending = vendorsPending;
+    }
+
     public boolean isActive() {
         return active;
     }
-
 
     public void setActive(boolean active) {
         this.active = active;
     }
 
- 
     public int getIdEdit() {
         return idEdit;
     }
 
-
     public void setIdEdit(int idEdit) {
         this.idEdit = idEdit;
     }
+
     ////////
     @Override
     public String execute() {
@@ -309,23 +299,23 @@ public class Size extends ActionSupport implements SessionAware {
             mensajes = mensajes + "danger<>Error<>Please select one material.|";
             flag = false;
         }
-          if ((getLength () == null) || (getLength().isEmpty())) {
+        if ((getLength() == null) || (getLength().isEmpty())) {
             mensajes = mensajes + "danger<>Error<>Please complete field 'Length'.|";
             flag = false;
         }
-            if ((getDepth() == null) || (getDepth().isEmpty())) {
+        if ((getDepth() == null) || (getDepth().isEmpty())) {
             mensajes = mensajes + "danger<>Error<>Please complete field 'Depth'.|";
             flag = false;
         }
-              if ((getWidth() == null) || (getWidth().isEmpty())) {
+        if ((getWidth() == null) || (getWidth().isEmpty())) {
             mensajes = mensajes + "danger<>Error<>Please complete field 'Width'.|";
             flag = false;
         }
-            if ((getUnitsPerSqm2() == null) || (getUnitsPerSqm2().isEmpty())) {
+        if ((getUnitsPerSqm2() == null) || (getUnitsPerSqm2().isEmpty())) {
             mensajes = mensajes + "danger<>Error<>Please complete field 'Units per Square Meter'.|";
             flag = false;
         }
-            if ((getUnitsPerSqf2() == null) || (getUnitsPerSqf2().isEmpty())) {
+        if ((getUnitsPerSqf2() == null) || (getUnitsPerSqf2().isEmpty())) {
             mensajes = mensajes + "danger<>Error<>Please complete field 'Units per Square Foot'.|";
             flag = false;
         }
@@ -362,7 +352,7 @@ public class Size extends ActionSupport implements SessionAware {
                 //Seteo los datos del objeto excepto el id por que es Auto Incremental
                 m.setIdMetricsSystem(idMetricsSystem);
                 m.setDescription(getDescription());
-                m.setLength(Numeros.numero(length) );
+                m.setLength(Numeros.numero(length));
                 m.setDepth(Numeros.numero(depth));
                 m.setWidth(Numeros.numero(width));
                 m.setUnitsPerSq2(Numeros.entero(unitsPerSqm2));
@@ -373,7 +363,7 @@ public class Size extends ActionSupport implements SessionAware {
                 m.setModifiedBy(usuario);
                 m.setActive(isActive());//Lo puse en true porque se me olvidó crear el check en el formulario, en la noche hacemos eso jajaja
 
-                MaintenanceSQL.saveSize (mdk, m);
+                MaintenanceSQL.saveSize(mdk, m);
                 //AdmConsultas.bitacora(o2c, usuario, "Encargado guardado Tipo: " + tipo + ", Codigo: " + codigo);
 
                 tn.commit();// Hago Commit a la transacción para guardar el registro
@@ -400,12 +390,12 @@ public class Size extends ActionSupport implements SessionAware {
             try {
                 tn = mdk.beginTransaction();
                 DtoSize m = MaintenanceSQL.getSize(mdk, getIdEdit());
-                if (m != null) {         
+                if (m != null) {
                     m.setIdMetricsSystem(idMetricsSystem);
                     m.setDescription(getDescription());
                     m.setLength(Numeros.numero(length));
                     m.setDepth(Numeros.numero(depth));
-                    m.setWidth(Numeros.numero(width));    
+                    m.setWidth(Numeros.numero(width));
                     m.setUnitsPerSq2(Numeros.entero(unitsPerSqm2));
                     m.setUnitsPerSf2(Numeros.entero(unitsPerSqf2));
                     m.setModified(Fechas.ya());
@@ -452,9 +442,5 @@ public class Size extends ActionSupport implements SessionAware {
             mensaje = true;
         }
     }
-
-
-
-  
 
 }

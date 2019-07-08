@@ -53,6 +53,7 @@ public class Vendor extends ActionSupport implements SessionAware {
     String mensajes = "";//Variable para cargar el texto del resultado de las validaciones o acciones
     boolean mensaje;//Variable bandera para saber si se muestra o no el mensaje
     private boolean existVendor;
+    int vendorsPending;
     //Variables de la pantalla
     private ArrayList<DtoVendor> vendors = new ArrayList<>();//Variable con la lista de datos
     private ArrayList<DtoVendorContact> vendorsContacts = new ArrayList<>();//Variable con la lista de datos
@@ -94,6 +95,7 @@ public class Vendor extends ActionSupport implements SessionAware {
             permiso = true; //AdmConsultas.getPermiso(o2c, "ADMINISTRACIÓN", "Encargados", usuario);            
             menu = "";//AdmConsultas.menuUsuario(o2c, usuario);
             chargeSelect();
+            vendorsPending = MaintenanceSQL.getPendingVendors(mdk);
 
         } else {
             sesionActiva = false;
@@ -174,6 +176,14 @@ public class Vendor extends ActionSupport implements SessionAware {
 
     public void setExistVendor(boolean existVendor) {
         this.existVendor = existVendor;
+    }
+
+    public int getVendorsPending() {
+        return vendorsPending;
+    }
+
+    public void setVendorsPending(int vendorsPending) {
+        this.vendorsPending = vendorsPending;
     }
 
     public String getVname() {
@@ -683,7 +693,7 @@ public class Vendor extends ActionSupport implements SessionAware {
 
                 String guid = Generales.generateCode(vname);
                 guid = guid + "-" + String.format("%03d", AdminSQL.getConsecutive(mdk, "codeVendor"));
-                
+
                 m.setId(guid);
                 id = guid;
                 m.setVname(vname);
@@ -694,8 +704,8 @@ public class Vendor extends ActionSupport implements SessionAware {
                 m.setActive(isActive());//Lo puse en true porque se me olvidó crear el check en el formulario, en la noche hacemos eso jajaja
 
                 MaintenanceSQL.saveVendor(mdk, m);
-                
-                AdminSQL.incrementConsecutive(mdk,"codeVendor");
+
+                AdminSQL.incrementConsecutive(mdk, "codeVendor");
                 //AdmConsultas.bitacora(o2c, usuario, "Encargado guardado Tipo: " + tipo + ", Codigo: " + codigo);
 
                 tn.commit();// Hago Commit a la transacción para guardar el registro

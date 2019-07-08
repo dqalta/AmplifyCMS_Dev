@@ -12,6 +12,7 @@
     <head>    
         <st:include value="/generals/css-js-Head.jsp" />
         <st:include value="/generals/css-js-Bootstrap.jsp"/>
+        <st:include value="/generals/css-js-Chosen.jsp"/>
         <st:include value="/generals/css-js-Datatables.jsp"/>
         <st:include value="/generals/css-js-app.jsp"/>
         <st:include value="/generals/css-js-LcSwitch.jsp"/>
@@ -26,8 +27,8 @@
                 <st:hidden id="mensajes" name="mensajes" value="%{mensajes}" />
                 <st:include value="/generals/navBarHead.jsp" >
                     <st:param name="title">COLLECTIONS</st:param>
-                </st:include>
-                <st:if test="%{permiso == true}"> 
+            </st:include>
+            <st:if test="%{permiso == true}"> 
                 <div class="panel-group">
 
                     <div class="panel panel-default">
@@ -49,7 +50,13 @@
                                                 <st:hidden id="idEdit" name="idEdit" value="%{idEdit}"/>
                                                 <br>
                                                 <div class="row">
-                                                    <div class="col-sm-10">
+                                                    <div class="col-sm-3">                                                      
+                                                        <div class="form-group">
+                                                            <label for="idManufacturer">Manufacturer:</label>
+                                                            <st:select class="form-control"  id="idManufacturer" name="idManufacturer" value="%{idManufacturer}" list="manufacturers" listKey="id" listValue="description"/>                                          
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-sm-7">
                                                         <st:textfield label="Description:" name="description" id="description" class="form-control" value="%{description}" placeholder="Description..."/>
                                                     </div>  
                                                     <div class="col-sm-2">
@@ -79,6 +86,7 @@
                         <thead>
                             <tr>
                                 <th>ID</th>
+                                <th>Manufacturer</th>
                                 <th>Description</th>
                                 <th>Created</th>
                                 <th>Created By</th>
@@ -92,7 +100,8 @@
                             <st:if test="%{!getCollections().isEmpty()}">
                                 <st:iterator value="collections" var="collections" status="index">
                                     <tr>
-                                        <td><st:property value="%{#collections.id}" /></td>           
+                                        <td><st:property value="%{#collections.id}" /></td> 
+                                        <td><st:property value="%{#collections.manufacturer}" /></td>           
                                         <td><st:property value="%{#collections.description}" /></td>        
                                         <td><st:date name="%{#collections.created}" format="dd/MM/yyyy"/></td>       
                                         <td><st:property value="%{#collections.createdBy}" /></td>    

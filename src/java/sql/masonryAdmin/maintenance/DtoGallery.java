@@ -19,6 +19,8 @@ public class DtoGallery implements Serializable {
     private String description;
     private String createdBy;
     private Date created;
+    String modifiedBy;
+    Date modified;
 
     public DtoGallery() {
     }
@@ -53,6 +55,22 @@ public class DtoGallery implements Serializable {
 
     public void setCreated(Date created) {
         this.created = created;
+    }
+
+    public String getModifiedBy() {
+        return modifiedBy;
+    }
+
+    public void setModifiedBy(String modifiedBy) {
+        this.modifiedBy = modifiedBy;
+    }
+
+    public Date getModified() {
+        return modified;
+    }
+
+    public void setModified(Date modified) {
+        this.modified = modified;
     }
 
 }

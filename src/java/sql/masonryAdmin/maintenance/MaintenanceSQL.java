@@ -1,9 +1,17 @@
 package sql.masonryAdmin.maintenance;
 
 import java.io.File;
+import java.io.InputStream;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.Date;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import org.hibernate.Session;
 import org.hibernate.transform.Transformers;
@@ -11,6 +19,7 @@ import sql.masonryAdmin.admin.DtoRol;
 import util.Fechas;
 import util.Generales;
 import util.Numeros;
+import web.sesion.ORMUtil;
 
 /**
  *
@@ -18,6 +27,103 @@ import util.Numeros;
  */
 public class MaintenanceSQL {
 //maintenance for manufacturers
+
+    public static int getPendingVendors(Session mdk) {
+        int valor = 0;
+        Iterator itr = mdk.createSQLQuery("SELECT count(idVendorRegister) as quantity"
+                + " FROM vendorRegister")
+                .setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP).list().iterator();
+        while (itr.hasNext()) {
+            valor = Numeros.entero(String.valueOf(((Map) itr.next()).get("quantity")));
+        }
+        return valor;
+    }
+
+    public static ArrayList<DtoVendorsPending> getVendorsPending(Session mdk) {
+        ArrayList<DtoVendorsPending> a = new ArrayList<>();
+        Iterator itr = mdk.createNativeQuery("SELECT"
+                + " idVendorRegister,"
+                + " companyName,"
+                + " vname,"
+                + " phoneNumber,"
+                + " webSite,"
+                + " city,"
+                + " email"
+                + " password"
+                + " FROM vendorRegister")
+                .setResultTransformer(Transformers.aliasToBean(DtoVendorsPending.class))
+                .list().iterator();
+        while (itr.hasNext()) {
+            a.add((DtoVendorsPending) itr.next());
+
+        }
+        return a;
+    }
+
+    public static DtoVendorsPending getVendorPending(Session mdk, int id) {
+        Iterator itr = mdk.createNativeQuery("SELECT"
+                + " idVendorRegister,"
+                + " companyName,"
+                + " vname,"
+                + " phoneNumber,"
+                + " webSite,"
+                + " city,"
+                + " email,"
+                + " password"
+                + " FROM vendorRegister"
+                + " WHERE idVendorRegister = :idVendorRegister")
+                .setParameter("idVendorRegister", id)
+                .setResultTransformer(Transformers.aliasToBean(DtoVendorsPending.class))
+                .list().iterator();
+        DtoVendorsPending m = null;
+        while (itr.hasNext()) {
+            m = (DtoVendorsPending) itr.next();
+        }
+        return m;
+    }
+
+    public static void deleteVendorsPending(Session mdk, int idVendorRegister) {
+        mdk.createNativeQuery("DELETE FROM vendorRegister"
+                + " WHERE idVendorRegister = :idVendorRegister")
+                .setParameter("idVendorRegister", idVendorRegister)
+                .executeUpdate();
+    }
+
+    public static int getIdPostalCodesAV(Session mdk, String city) {
+        int id = 0;
+        Iterator itr = mdk.createSQLQuery("SELECT id"
+                + " FROM postalCode"
+                + " WHERE city = :city")
+                .setParameter("city", city)
+                .setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP).list().iterator();
+        while (itr.hasNext()) {
+            id = Numeros.entero(String.valueOf(((Map) itr.next()).get("id")));
+        }
+
+        return id;
+    }
+
+    public static InputStream getProductPhoto(Session mdk, int id) {
+        Connection c = ORMUtil.getConnection(mdk);
+        InputStream is = null;
+        try {
+            PreparedStatement pst = c.prepareStatement("SELECT photo FROM galleryPhoto"
+                    + " WHERE id = ?");
+            pst.setInt(1, id);
+            ResultSet rs = pst.executeQuery();
+            while (rs.next()) {
+                is = rs.getBinaryStream("photo");
+            }
+            rs.close();
+            pst.close();
+            if (is == null) {
+                is = MaintenanceSQL.class.getResourceAsStream("/img/no_image_available.png");
+            }
+        } catch (SQLException x) {
+            is = MaintenanceSQL.class.getResourceAsStream("/img/no_image_available.png");
+        }
+        return is;
+    }
 
     public static void saveProductCollection(Session cga, int idProduct, int idCollection) {
         cga.createNativeQuery("INSERT INTO collectionProduct"
@@ -170,16 +276,18 @@ public class MaintenanceSQL {
 
     public static void saveGallery(Session cga, DtoGallery m) {
         cga.createNativeQuery("INSERT INTO gallery"
-                + " (description,created,createdBy)"
+                + " (description,created,createdBy, modified, modifiedBy)"
                 + " VALUES"
-                + " (:description,:created,:createdBy)")
+                + " (:description,:created,:createdBy; modified, :modifiedBy)")
                 .setParameter("description", m.getDescription())
                 .setParameter("created", m.getCreated())
                 .setParameter("createdBy", m.getCreatedBy())
+                .setParameter("modified", m.getModified())
+                .setParameter("modifiedBy", m.getModifiedBy())
                 .executeUpdate();
     }
 
-    public static void saveGalleryManufacturer(Session cga, int idGallery, int idManufacturer) {
+    public static void saveGalleryManufacturer(Session cga, int idGallery, String idManufacturer) {
         cga.createNativeQuery("INSERT INTO galleryManufacturer"
                 + " (idGallery, idManufacturer)"
                 + " VALUES"
@@ -254,10 +362,71 @@ public class MaintenanceSQL {
         return a;
     }
 
+    public static ArrayList<DtoGalleryQuery> getGalleries(Session mdk) {
+        ArrayList<DtoGalleryQuery> a = new ArrayList<>();
+        Iterator itr = mdk.createNativeQuery("SELECT"
+                + " G.id,"
+                + " G.description,"
+                + " '' AS photo,"
+                + " (SELECT COUNT(id) FROM galleryPhoto WHERE idGallery = G.id)  AS quantity,"
+                + " G.modified"
+                + " FROM gallery AS G")
+                .setResultTransformer(Transformers.aliasToBean(DtoGalleryQuery.class))
+                .list().iterator();
+
+        while (itr.hasNext()) {
+            a.add((DtoGalleryQuery) itr.next());
+        }
+        return a;
+    }
+
+    public static ArrayList<DtoPhoto> getGalleryPhotos(Session mdk, int idGallery) {
+        ArrayList<DtoPhoto> a = new ArrayList<>();
+        Iterator itr = mdk.createNativeQuery("SELECT"
+                + " id,"
+                + " idGallery,"
+                + " photoFileName,"
+                + " photoContentType"
+                + " FROM galleryPhoto"
+                + " WHERE idGallery = :idGallery")
+                .setParameter("idGallery", idGallery)
+                .setResultTransformer(Transformers.aliasToBean(DtoPhoto.class))
+                .list().iterator();
+
+        while (itr.hasNext()) {
+            a.add((DtoPhoto) itr.next());
+        }
+        return a;
+    }
+
+    public static ArrayList<DtoCollectionQuery> getCollectionsQuery(Session mdk) {
+        ArrayList<DtoCollectionQuery> a = new ArrayList<>();
+        Iterator itr = mdk.createNativeQuery("SELECT"
+                + " c.id,"
+                + " m.description AS manufacturer,"
+                + " c.description,"
+                + " c.created,"
+                + " c.createdBy,"
+                + " c.modified,"
+                + " c.modifiedBy,"
+                + " c.active"
+                + " FROM collection c"
+                + " INNER JOIN manufacturer m"
+                + " ON m.id = c.idManufacturer")
+                .setResultTransformer(Transformers.aliasToBean(DtoCollectionQuery.class))
+                .list().iterator();
+
+        while (itr.hasNext()) {
+            a.add((DtoCollectionQuery) itr.next());
+        }
+        return a;
+    }
+
     public static ArrayList<DtoCollection> getCollections(Session mdk) {
         ArrayList<DtoCollection> a = new ArrayList<>();
         Iterator itr = mdk.createNativeQuery("SELECT"
                 + " id,"
+                + " idManufacturer,"
                 + " description,"
                 + " created,"
                 + " createdBy,"
@@ -265,6 +434,34 @@ public class MaintenanceSQL {
                 + " modifiedBy,"
                 + " active"
                 + " FROM collection")
+                .setResultTransformer(Transformers.aliasToBean(DtoCollection.class))
+                .list().iterator();
+
+        while (itr.hasNext()) {
+            a.add((DtoCollection) itr.next());
+        }
+        return a;
+    }
+
+    public static ArrayList<DtoCollection> getCollectionsByManufacturers(Session mdk, int[] arr) {
+        List<Integer> intList = new ArrayList<>();
+        for (int i : arr) {
+            intList.add(i);
+        }
+
+        ArrayList<DtoCollection> a = new ArrayList<>();
+        Iterator itr = mdk.createNativeQuery("SELECT"
+                + " id,"
+                + " idManufacturer,"
+                + " description,"
+                + " created,"
+                + " createdBy,"
+                + " modified,"
+                + " modifiedBy,"
+                + " active"
+                + " FROM collection"
+                + " WHERE idManufacturer IN(:manufacturers)")
+                .setParameterList("manufacturers", intList)
                 .setResultTransformer(Transformers.aliasToBean(DtoCollection.class))
                 .list().iterator();
 
@@ -428,6 +625,7 @@ public class MaintenanceSQL {
     public static DtoCollection getCollection(Session mdk, int id) {
         Iterator itr = mdk.createNativeQuery("SELECT"
                 + " id,"
+                + " idManufacturer,"
                 + " description,"
                 + " created,"
                 + " createdBy,"
@@ -482,10 +680,11 @@ public class MaintenanceSQL {
 
     public static void saveCollection(Session mdk, DtoCollection m) {
         mdk.createNativeQuery("INSERT INTO collection"
-                + " (description, created, createdBy, modified, modifiedBy, active)"
+                + " (idManufacturer, description, created, createdBy, modified, modifiedBy, active)"
                 + " VALUES"
-                + " (:description, :created, :createdBy, :modified, :modifiedBy, :active)")
+                + " (:idManufacturer, :description, :created, :createdBy, :modified, :modifiedBy, :active)")
                 .setParameter("description", m.getDescription())
+                .setParameter("idManufacturer", m.getIdManufacturer())
                 .setParameter("created", m.getCreated())
                 .setParameter("createdBy", m.getCreatedBy())
                 .setParameter("modified", m.getModified())
@@ -538,11 +737,13 @@ public class MaintenanceSQL {
     public static void updateCollection(Session mdk, DtoCollection m) {
         mdk.createNativeQuery("UPDATE collection SET"
                 + " description = :description,"
+                + " idManufacturer = :idManufacturer,"
                 + " modified = :modified,"
                 + " modifiedBy = :modifiedBy,"
                 + " active = :active"
                 + " WHERE id = :id")
                 .setParameter("id", m.getId())
+                .setParameter("idManufacturer", m.getIdManufacturer())
                 .setParameter("description", m.getDescription())
                 .setParameter("modified", m.getModified())
                 .setParameter("modifiedBy", m.getModifiedBy())

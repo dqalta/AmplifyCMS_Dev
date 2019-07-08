@@ -32,7 +32,7 @@ $(document).ready(function () {
         $("#sqftPerPackageType").number(true, 2);
 
         if (accion === 5) {
-            $('a[data-value="Final"]').click();
+            $('a[data-value="Photos"]').click();
         }
     }
     if (mensaje === "true") {
@@ -42,7 +42,10 @@ $(document).ready(function () {
     chargeChecks();
     chargeCheckBoxes();
     chargeTabs();
-
+    $("#SelectGallery").imagepicker({
+        hide_select: true,
+        show_label: false
+    })
 });
 
 function nextTab(elem) {
@@ -139,6 +142,11 @@ function validateStep3() {
         nextTab($active);
     }
 }
+
+function validateStep5() {
+         $('a[data-value="Final"]').click();
+}
+
 
 function validateStep4() {
     mensajes = "";

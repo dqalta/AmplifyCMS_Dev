@@ -129,12 +129,19 @@
             position: relative;
             margin-right: 0;
         }
+        .badge-notify{
+            background:red;
+            position:relative;
+            top: -20px;
+            left: -35px;
+        }
+
     }
 </style>
 <title>Masonry Admin CMS</title>
-<link rel="shortcut icon" type="image/png" href="/Masonry/home/img/logo.png"/>
 <%@ taglib uri="/struts-tags" prefix="st"%>  
 <st:set var="title">${param.title}</st:set>
+<st:set var="vendorsPending">${param.vendorsPending}</st:set>
 
 
     <div class="modal" id="ModalLogOut">
@@ -177,7 +184,15 @@
                 <li><a href="#"><span style="color:#FF6600 !important;" class="glyphicon glyphicon-question-sign" aria-hidden="true"></span> Messages </a></li>
                 <li><a href="#"><span style="color:#FF6600 !important;" class="glyphicon glyphicon-question-sign" aria-hidden="true"></span> Help</a></li>
                 -->
-                <li><a href="#"><span style="color:#FF6600 !important;" class="fa fa-cog" aria-hidden="true"></span> Profile</a></li>
+                <!--
+                <li class="nav-item">
+                    <a class="nav-link" href="#">
+                        <i style="color:#FF6600 !important;"  class="fa fa-bell">
+                            <span class="badge badge-info">11</span>
+                        </i>
+                    </a>
+                </li>
+                -->
                 <li><a onclick="AskLogOut();"><span style="color:#FF6600 !important;" class="glyphicon glyphicon-off" aria-hidden="true"></span> Log Out</a></li>
             </ul>
             <form class="navbar-form navbar-right" action="#" method="GET">
@@ -208,10 +223,7 @@
                 </li>
                 <li>
                     <a href="/MasonryCMS/home/home.mdk"><span style="color:#FF6600 !important;" class="glyphicon glyphicon-home" aria-hidden="true"></span> Home</a>
-                </li> 
-                <li>
-                    <a href="/MasonryCMS/home/home.mdk"><span style="color:#FF6600 !important;" class="fa fa-cog" aria-hidden="true"></span> Profile</a>
-                </li> 
+                </li>  
                 <hr style="color:#FF6600 !important;">            
                 <li>
                     <font color="#337AB7"> Administration</font>
@@ -224,7 +236,10 @@
                 </li> 
                 <li>
                     <a href="/MasonryCMS/masonryAdmin/maintenance/vendor.mdk"><span style="color:#FF6600 !important;" class="glyphicon glyphicon-briefcase" class="fa fa-id-card-o" aria-hidden="true"></span> Vendor</a>
-                </li>                                 
+                </li>    
+                <li>
+                    <a href="/MasonryCMS/masonryAdmin/maintenance/vendorRequest.mdk"><span style="color:#FF6600 !important;" class="glyphicon glyphicon-briefcase" class="fa fa-id-card-o" aria-hidden="true"></span> Vendor Requests <span class="badge"><st:property value="%{vendorsPending}"/></span></a>
+                </li>                                
                 <hr style="color:#FF6600 !important;">            
                 <li>
                     <font color="#337AB7"> Product Administration</font>

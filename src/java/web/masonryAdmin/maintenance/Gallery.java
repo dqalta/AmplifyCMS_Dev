@@ -7,9 +7,12 @@ package web.masonryAdmin.maintenance;
 
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionSupport;
+import java.awt.Graphics2D;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Map;
+import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.struts2.interceptor.SessionAware;
@@ -17,11 +20,10 @@ import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import sql.masonryAdmin.maintenance.DtoGallery;
-import sql.masonryAdmin.maintenance.DtoMaterial;
+import sql.masonryAdmin.maintenance.DtoGalleryQuery;
 import sql.masonryAdmin.maintenance.DtoPhoto;
 import sql.masonryAdmin.maintenance.MaintenanceSQL;
 import util.Fechas;
-import util.Generales;
 import web.sesion.ORMUtil;
 import web.util.CombosMaintenance;
 import web.util.KeyCombos;
@@ -47,18 +49,19 @@ public class Gallery extends ActionSupport implements SessionAware {
     String menu;//String de los permisos del menu 
     String mensajes = "";//Variable para cargar el texto del resultado de las validaciones o acciones
     boolean mensaje;//Variable bandera para saber si se muestra o no el mensaje
+    int vendorsPending;
 
-    //Variables de la pantalla
+    //Variables de la pantallaprivate 
+    ArrayList<DtoGalleryQuery> galleries = new ArrayList<>();//Variable con la lista de datos
+
     private ArrayList<KeyCombos> manufacturers = new ArrayList<>();
-    private ArrayList<KeyCombos> sizes = new ArrayList<>();
     private ArrayList<KeyCombos> collections = new ArrayList<>();
 
     //Variables del mantenimiento
     private int id;
     String description;
     private int[] collection;
-    private int[] manufacturer;
-    private int[] size_;
+    private String[] manufacturer;
     boolean active;
     int idEdit;
     private boolean existGallery;
@@ -76,6 +79,8 @@ public class Gallery extends ActionSupport implements SessionAware {
             usuario = String.valueOf(session.get("user"));
             permiso = true; //AdmConsultas.getPermiso(o2c, "ADMINISTRACIÓN", "Encargados", usuario);            
             menu = "";//AdmConsultas.menuUsuario(o2c, usuario);
+            vendorsPending = MaintenanceSQL.getPendingVendors(mdk);
+
         } else {
             sesionActiva = false;
         }
@@ -105,6 +110,14 @@ public class Gallery extends ActionSupport implements SessionAware {
 
     public void setAccion(int accion) {
         this.accion = accion;
+    }
+
+    public int getVendorsPending() {
+        return vendorsPending;
+    }
+
+    public void setVendorsPending(int vendorsPending) {
+        this.vendorsPending = vendorsPending;
     }
 
     public boolean getSesionActiva() {
@@ -161,20 +174,12 @@ public class Gallery extends ActionSupport implements SessionAware {
         return manufacturers;
     }
 
-    public ArrayList<KeyCombos> getSizes() {
-        return sizes;
-    }
-
     public ArrayList<KeyCombos> getCollections() {
         return collections;
     }
 
     public void setManufacturers(ArrayList<KeyCombos> manufacturers) {
         this.manufacturers = manufacturers;
-    }
-
-    public void setSizes(ArrayList<KeyCombos> sizes) {
-        this.sizes = sizes;
     }
 
     public void setCollections(ArrayList<KeyCombos> collections) {
@@ -197,20 +202,12 @@ public class Gallery extends ActionSupport implements SessionAware {
         this.collection = collection;
     }
 
-    public int[] getManufacturer() {
+    public String[] getManufacturer() {
         return manufacturer;
     }
 
-    public void setManufacturer(int[] manufacturer) {
+    public void setManufacturer(String[] manufacturer) {
         this.manufacturer = manufacturer;
-    }
-
-    public int[] getSize_() {
-        return size_;
-    }
-
-    public void setSize_(int[] size_) {
-        this.size_ = size_;
     }
 
     public int getId() {
@@ -234,19 +231,31 @@ public class Gallery extends ActionSupport implements SessionAware {
     //METODOS ADICIONALES
     public void process() {
         switch (accion) {
+            case 0:
+                chargeGalleries();
+                break;
             case 1:
                 saveGallery();
                 break;
-            case 2:
-                uploadPhotos();
-                break;
         }
+        chargeGalleries();
         chargeCombos();
         existGallery = MaintenanceSQL.getGallery(mdk, id) != null;
     }
 
+    public void chargeGalleries() {
+        ArrayList<DtoGalleryQuery> galleriesBack = new ArrayList<>();//Variable con la lista de datos
+        galleriesBack = MaintenanceSQL.getGalleries(mdk);
+        ArrayList<DtoPhoto> galleryPhotos = new ArrayList<>();//Variable con la lista de datos
+        for (int i = 0; i < galleriesBack.size(); i++) {
+            galleryPhotos = MaintenanceSQL.getGalleryPhotos(mdk, galleriesBack.get(i).getId());
+            galleriesBack.get(i).setPhoto("http://3.15.28.209:8080/MasonryCMS/masonryAdmin/queries/ajax/see-photo.mdk?token=" + galleryPhotos.get(0).getId());
+        }
+        galleries = galleriesBack;
+    }
+
     public void clearFields() {
-        setId(0);
+        id = 0;
         description = "";
         accion = 0;
         idEdit = 0;
@@ -270,8 +279,8 @@ public class Gallery extends ActionSupport implements SessionAware {
             mensajes = mensajes + "danger<>Error<>Please complete field 'Manufacturer'.|";
             flag = false;
         }
-        if ((size_ == null) || (size_.length == 0)) {
-            mensajes = mensajes + "danger<>Error<>Please complete field 'Size'.|";
+        if ((photo.length == 0) || (photo == null)) {
+            mensajes = mensajes + "danger<>Error<>Please select almost one photo.|";
             flag = false;
         }
         if (!flag) {
@@ -282,7 +291,7 @@ public class Gallery extends ActionSupport implements SessionAware {
 
     public void chargeCombos() {
         manufacturers = CombosMaintenance.getManufacturers(mdk);
-        sizes = CombosMaintenance.getSizes(mdk);
+        //collections = CombosMaintenance.getCollectionsByManufacturers(mdk, manufacturer == null ? new String[1] : manufacturer);
         collections = CombosMaintenance.getCollections(mdk);
     }
 
@@ -293,7 +302,6 @@ public class Gallery extends ActionSupport implements SessionAware {
                 if (photo[i] != null) {
                     tn = mdk.beginTransaction();
                     DtoPhoto p;
-
                     p = new DtoPhoto();
                     p.setIdGallery(id);
                     p.setPhotoFileName(photoFileName[i]);
@@ -301,8 +309,7 @@ public class Gallery extends ActionSupport implements SessionAware {
                     MaintenanceSQL.saveGalleryPhoto(mdk, p, photo[i]);
 
                     tn.commit();
-                    mensajes = mensajes + "info<>Informaci\u00f3n<>Documento " + photoFileName[i] + " adjuntado.|";
-                    mensaje = true;
+                    accion = 0;
 
                 } else {
                     mensajes = mensajes + "danger<>Error<>El archivo " + photoFileName[i] + " no existe.|";
@@ -319,6 +326,9 @@ public class Gallery extends ActionSupport implements SessionAware {
                 mensaje = true;
             }
         }
+        mensajes = mensajes + "info<>Informaci\u00f3n<>Photos uploaded successfully.|";
+        mensaje = true;
+        accion = 3;
     }
 
     public void saveGallery() {
@@ -332,6 +342,8 @@ public class Gallery extends ActionSupport implements SessionAware {
                 m.setDescription(description);
                 m.setCreated(Fechas.ya());
                 m.setCreatedBy(usuario);
+                m.setModified(Fechas.ya());
+                m.setModifiedBy(usuario);
 
                 MaintenanceSQL.saveGallery(mdk, m);
                 //AdmConsultas.bitacora(o2c, usuario, "Encargado guardado Tipo: " + tipo + ", Codigo: " + codigo);
@@ -342,10 +354,7 @@ public class Gallery extends ActionSupport implements SessionAware {
 
                 saveGalleryManufacturer();
                 saveGalleryCollection();
-                saveGallerySize();
-
-                mensajes = mensajes + "info<>Information<>Gallery saved successfully.|";
-                mensaje = true;
+                uploadPhotos();
 
             } catch (HibernateException x) {
                 //AdmConsultas.error(o2c, x.getMessage());
@@ -372,9 +381,6 @@ public class Gallery extends ActionSupport implements SessionAware {
             //AdmConsultas.bitacora(o2c, usuario, "Encargado guardado Tipo: " + tipo + ", Codigo: " + codigo);
             tn.commit();// Hago Commit a la transacción para guardar el registro
 
-            mensajes = mensajes + "info<>Information<>Gallery saved successfully.|";
-            mensaje = true;
-
         } catch (HibernateException x) {
             //AdmConsultas.error(o2c, x.getMessage());
             // mensajes = mensajes + "danger<>Error<>Error al guardar encargados: " + codigo + ": " + ExceptionUtils.getMessage(x) + ".";
@@ -394,33 +400,6 @@ public class Gallery extends ActionSupport implements SessionAware {
 
             for (int i = 0; i < collection.length; i++) {
                 MaintenanceSQL.saveGalleryCollection(mdk, id, collection[i]);
-            }
-
-            //AdmConsultas.bitacora(o2c, usuario, "Encargado guardado Tipo: " + tipo + ", Codigo: " + codigo);
-            tn.commit();// Hago Commit a la transacción para guardar el registro
-
-            mensajes = mensajes + "info<>Information<>Gallery saved successfully.|";
-            mensaje = true;
-
-        } catch (HibernateException x) {
-            //AdmConsultas.error(o2c, x.getMessage());
-            // mensajes = mensajes + "danger<>Error<>Error al guardar encargados: " + codigo + ": " + ExceptionUtils.getMessage(x) + ".";
-            mensajes = mensajes + "danger<>Error<>Error.|";
-            mensaje = true;
-            if (tn != null) {//Si hay error y el transacción es distinto de null, es porque la transacción existe, entoncs hago rollback
-                tn.rollback();
-            }
-        }
-        mensaje = true;
-    }
-
-    public void saveGallerySize() {
-        Transaction tn = null;//Inicializo la transacción de la BD en null
-        try {
-            tn = mdk.beginTransaction();//Inicializo la transacción de la DB 
-
-            for (int i = 0; i < size_.length; i++) {
-                MaintenanceSQL.saveGallerySize(mdk, id, size_[i]);
             }
 
             //AdmConsultas.bitacora(o2c, usuario, "Encargado guardado Tipo: " + tipo + ", Codigo: " + codigo);
@@ -463,6 +442,14 @@ public class Gallery extends ActionSupport implements SessionAware {
 
     public void setPhotoFileName(String[] photoFileName) {
         this.photoFileName = photoFileName;
+    }
+
+    public ArrayList<DtoGalleryQuery> getGalleries() {
+        return galleries;
+    }
+
+    public void setGalleries(ArrayList<DtoGalleryQuery> galleries) {
+        this.galleries = galleries;
     }
 
 }

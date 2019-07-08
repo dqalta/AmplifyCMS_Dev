@@ -7,10 +7,21 @@ package web.sesion;
 
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionSupport;
+import java.io.UnsupportedEncodingException;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.mail.Message;
+import javax.mail.MessagingException;
+import javax.mail.Transport;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.mail.DefaultAuthenticator;
+import org.apache.commons.mail.HtmlEmail;
 import org.apache.struts2.ServletActionContext;
 import org.apache.struts2.interceptor.SessionAware;
 import org.hibernate.Session;
@@ -26,18 +37,40 @@ public class Login extends ActionSupport implements SessionAware {
     //variables propias de la sesion
     HttpServletRequest request;
     Map session;
-    Session cms;
+    Session mdk;
     //CAMPOS - html
     boolean parametros = true;//PARAMETROS VALIDOS
-    String usuario, contrasena;
+    String user, password, guid;
     //VARIABLES - uso en clase
-    String nombre;
     String mensajes = "";
     boolean mensaje;
 
+    public String getUser() {
+        return user;
+    }
+
+    public void setUser(String user) {
+        this.user = user;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getGuid() {
+        return guid;
+    }
+
+    public void setGuid(String guid) {
+        this.guid = guid;
+    }
+
     //SET
     @Override
-
     public void setSession(Map session) {
         this.session = session;
     }
@@ -58,26 +91,14 @@ public class Login extends ActionSupport implements SessionAware {
         this.mensaje = mensaje;
     }
 
-    public void setUsuario(String usuario) {
-        this.usuario = StringUtils.trimToEmpty(usuario).toUpperCase();
-    }
-
-    public void setContrasena(String contrasena) {
-        this.contrasena = StringUtils.trimToEmpty(contrasena);
-    }
-
     //GET
     public Map getSession() {
         return session;
     }
 
-    public String getUsuario() {
-        return this.usuario;
-    }
-
     @Override
     public String execute() {
-        cms.close();
+        mdk.close();
         return SUCCESS;
     }
 
@@ -85,55 +106,25 @@ public class Login extends ActionSupport implements SessionAware {
     public void validate() {
         //REQUEST
         request = ServletActionContext.getRequest();
-        //VALIDAR QUE CAMPOS NO SEAN BLANCOS NI NULOS
-        /* if ((usuario == null) || (usuario.isEmpty() == true)) {
-            addFieldError("usuario", "Complete \"Usuario\".");
-            parametros = false;
-        }
-        if ((contrasena == null) || (contrasena.isEmpty() == true)) {
-            addFieldError("contrasena", "Complete \"Contrase\u00f1a\".");
-            parametros = false;
-        }
-        if (parametros == true) {*/
-
-        for (int i = 0; i < 10; i++) {
-            System.out.println(UtilSecurity.randomPassword(3, 2, 1, 2));
-        }
         try {
-
             session = ActionContext.getContext().getSession();
+            mdk = ORMUtil.getSesionCMS().openSession();
 
-            cms = ORMUtil.getSesionCMS().openSession();
-
-            usuario = getResultado(cms);
-
-            System.out.println("Resultado de BD: " + usuario);
-
+            if (guid != null) {
+                System.out.println("POR URL");
+            } else {
+                System.out.println("POR PANTALLA");
+            }
             session = ActionContext.getContext().getSession();
             session.put("en-sesion", "true");
             session.put("user", "Daniel");
             session.put("userName", "Danielito");
             session.put("ip", request.getRemoteHost());
 
-            //Lógica para pegar Base de Datos
-            /* }*/
-            cms.close();
+            mdk.close();
         } catch (Exception e) {
-            System.out.println(e.getMessage());
             addActionError(e.getMessage());
-
         }
-    }
-
-    public static String getResultado(Session cms) {
-        String valor = "-1";
-        Iterator itr = cms.createSQLQuery("SELECT id as valor"
-                + " FROM member")
-                .setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP).list().iterator();
-        while (itr.hasNext()) {
-            valor = String.valueOf(((Map) itr.next()).get("valor"));
-        }
-        return valor;
     }
 
 }

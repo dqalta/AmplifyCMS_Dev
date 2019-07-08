@@ -30,102 +30,173 @@
                 <st:param name="title">Gallery</st:param>
             </st:include> 
             <st:if test="%{permiso == true}">              
-                <br><br>
+                <br><br><br>
 
-                <div class="panel-group">
-                    <div class="panel panel-default">
-                        <div class="panel-heading clickable">
-                            <h4 class="panel-title">
-                                <a><i class="glyphicon glyphicon-chevron-down"></i></a>
-                            </h4>
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="btn-group pull-left">
+                            <a class="btn btn-warning pull-left" onclick="showDivAdd();"><i class="glyphicon glyphicon-plus"></i>&nbsp;New Gallery</a>
                         </div>
-                        <div id="form-panel" class="panel-collapse collapse">
-                            <div class="panel-body">    
-                                <ul class="nav nav-tabs">
-                                    <li class="active"><a href="#maintenanceTab" data-toggle="tab" aria-expanded="true">Gallery</a></li>                  
-                                </ul>
-                                <div id="tabsContents" class="tab-content">
-                                    <div class="tab-pane fade active in" id="maintenanceTab">    
-                                        <div class="container-fluid">
-                                            <st:form id="formulario" name="formulario" cssClass="form-vertical" action="gallery" method="post" theme="bootstrap"  enctype="multipart/form-data">                                        
-                                                <st:hidden id="accion" name="accion" value="%{accion}"/>
-                                                <st:hidden id="id" name="id" value="%{id}"/>
-                                                <br>
-                                                <div class="row">
-                                                    <div class="col-sm-8">
-                                                        <st:textfield label="Description:" name="description" id="description" class="form-control" value="%{description}" placeholder="Description..."/>
-                                                    </div>
-                                                    <!--starts the loader-->
-                                                    <st:if test="%{existGallery == true}">
-                                                        <div class="col-sm-4">
-                                                            <div class="form-group">
-                                                                <label class="control-label" for="fileDiv">Search Photo:</label>
-                                                                <div class="input-group" id="fileDiv">
-                                                                    <input type="text" class="form-control" id="input-name" disabled="disabled">
-                                                                    <st:file id="photo" name="photo" class="file" accept="image/png,image/jpeg" multiple="true" />
-                                                                    <span class="input-group-btn">
-                                                                        <button type="button" class="btn btn-info" id="btn-clean" style="display:none;" data-toggle="tooltip" data-placement="top" data-original-title="Clear">
-                                                                            <span class="glyphicon glyphicon-remove"></span>&nbsp;
-                                                                        </button>
-                                                                        <div id="btn-search" class="btn btn-default image-preview-input"  data-toggle="tooltip" data-placement="top" data-original-title="Search/Change">
-                                                                            <span class="glyphicon glyphicon-folder-open"></span>&nbsp;
-                                                                        </div>
-                                                                        <button type="button" class="btn btn-danger" id="btn-upload" onclick="uploadPhotos()" style="display:none;"  data-toggle="tooltip" data-placement="top" data-original-title="Upload">
-                                                                            <span class="glyphicon glyphicon-upload"></span>&nbsp;
-                                                                        </button>
-                                                                    </span>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </st:if> 
-                                                    <!--finish loader-->
+                    </div>
+                </div>
+
+                <div id="divAdd" class="panel panel-default">
+                    <div class="container-fluid">
+                        <st:form id="formulario" name="formulario" cssClass="form-vertical" action="gallery" method="post" theme="bootstrap"  enctype="multipart/form-data">                                        
+                            <st:hidden id="accion" name="accion" value="%{accion}"/>
+                            <st:hidden id="id" name="id" value="%{id}"/>
+                            <br>
+                            <div class="row">
+                                <div class="col-sm-8">
+                                    <st:textfield label="Description:" name="description" id="description" class="form-control" value="%{description}" placeholder="Description..."/>
+                                </div>
+                                <!--starts the loader-->
+                                <div class="col-sm-4">
+                                    <div class="form-group">
+                                        <label class="control-label" for="fileDiv">Search Photos:</label>
+                                        <div class="input-group" id="fileDiv">
+                                            <input type="text" class="form-control" id="input-name" disabled="disabled">
+                                            <st:file id="photo" name="photo" class="file" accept="image/png,image/jpeg" multiple="true" />
+                                            <span class="input-group-btn">
+                                                <button type="button" class="btn btn-info" id="btn-clean" style="display:none;" data-toggle="tooltip" data-placement="top" data-original-title="Clear">
+                                                    <span class="glyphicon glyphicon-remove"></span>&nbsp;
+                                                </button>
+                                                <div id="btn-search" class="btn btn-default image-preview-input"  data-toggle="tooltip" data-placement="top" data-original-title="Search/Change">
+                                                    <span class="glyphicon glyphicon-folder-open"></span>&nbsp;
                                                 </div>
-                                                <div class="row">
-                                                    <div class="col-sm-4">
-                                                        <div class="form-group">
-                                                            <label for="manufacturer">Manufacturer:</label>
-                                                            <st:select class="form-control"  id="manufacturer" multiple="true" name="manufacturer" value="%{manufacturer}" list="manufacturers" listKey="id" listValue="description"/>                                          
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-sm-4"> 
-                                                        <div class="form-group">
-                                                            <label for="collection">Collections:</label>
-                                                            <st:select class="form-control"  id="collection" multiple="true" name="collection" value="%{collection}" list="collections" listKey="id" listValue="description"/>                                          
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-sm-4">                                                        
-                                                        <div class="form-group">
-                                                            <label for="size_">Sizes:</label>
-                                                            <st:select class="form-control"  id="size_" multiple="true" name="size_" value="%{size_}" list="sizes" listKey="id" listValue="description"/>                                          
-                                                        </div>
-                                                    </div>
-                                                    <br>
-                                                </st:form>   
-                                                <div class="btn-group pull-right">
-                                                    <a class="btn btn-danger pull-right" onclick="save();"><i class="glyphicon glyphicon-ok"></i>&nbsp;Save</a>
-                                                    <a class="btn btn-default pull-right" onclick="cancel();"><i class="glyphicon glyphicon-remove"></i>&nbsp;Cancel</a>
-                                                </div>  
-                                            </div>
+                                                <button type="button" class="btn btn-danger" id="btn-upload" onclick="save()" style="display:none;"  data-toggle="tooltip" data-placement="top" data-original-title="Upload">
+                                                    <span class="glyphicon glyphicon-upload"></span>&nbsp;
+                                                </button>
+                                            </span>
                                         </div>
                                     </div>
                                 </div>
+                                <!--finish loader-->
                             </div>
+                            <div class="row">
+                                <div class="col-sm-4">
+                                    <div class="form-group">
+                                        <label for="manufacturer">Manufacturer:</label>
+                                        <st:select class="form-control"  id="manufacturer" multiple="true" name="manufacturer" value="%{manufacturer}" list="manufacturers" listKey="id" listValue="description" onChange="chargeCollections();"/>                                          
+                                    </div>
+                                </div>
+                                <div class="col-sm-4"> 
+                                    <div class="form-group">
+                                        <label for="collection">Collections:</label>
+                                        <st:select class="form-control"  id="collection" multiple="true" name="collection" value="%{collection}" list="collections" listKey="id" listValue="description"/>                                          
+                                    </div>
+                                </div>
+                                <br>
+                            </st:form>   
+                            <div class="pull-right">
+                                <a class="btn btn-warning pull-right" onclick="save();"><i class="glyphicon glyphicon-ok"></i>&nbsp;Save</a>
+                                <a class="btn btn-default pull-right" onclick="cancel();"><i class="glyphicon glyphicon-remove"></i>&nbsp;Cancel</a>
+                            </div>  
+                            <br>
+                            <br>
                         </div>
                     </div>
                 </div>
 
                 <div class="container-fluid">
-                    <div class="row" id="galleryDiv">
+                    <div id="galleryDiv" class="row"> </div>
+                </div>
 
+                <div class="container-fluid">
+                    <div id="divGalleryGroups">
+                        <br>
+                        <h4>Gallery List</h4>
+                        <p>Click to gallery group to manage the photos.</p>
+                        <hr>
+                        <div class="container_card">     
+                            <div class="row">
+
+                                <st:if test="%{!getGalleries().isEmpty()}">
+                                    <st:iterator value="Galleries" var="Galleries" status="index">  
+
+                                        <div class="col-sm-3">
+                                            <div class="card">
+                                                <img src="<st:property value="%{#Galleries.photo1}" />" alt="Photo" style="width:100%">
+                                                <div class="container-card">
+                                                    <h4><b><st:property value="%{#Galleries.description}" /></b></h4> 
+                                                    <p><st:property value="%{#Galleries.quantity}" /> photos...</p> 
+                                                    <p style="color:#CCC;">Last updated  <st:date name="%{#Galleries.modified}" format="dd/MM/yyyy" nice="true"/></p>
+                                                    <hr>
+                                                    <div class="pull-right">
+                                                        <a class="btn btn-warning pull-right" onclick="showGallery('<st:property value="%{#Galleries.id}" />');">&nbsp;Show more</a>
+                                                    </div>  
+                                                    <br>
+                                                    <br>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </st:iterator>
+                                </st:if><st:else>
+                                    <p>No available galleries to show.</p>
+                                </st:else>
+
+                                <!--
+                                <div class="cardList" onclick="showGallery(1);">
+                                    <div class="card">
+                                        <div class="card__bg" style="background-image: url('http://localhost:8080/MasonryCMS/home/img/ladrillo2.jpeg')"></div>
+                                    </div>
+                                    <div class="card">
+                                        <div class="card__bg" style="background-image: url('http://localhost:8080/MasonryCMS/home/img/ladrillo1.jpeg')"></div>
+                                    </div>
+                                    <div class="card">
+                                        <div class="card__bg" style="background-image: url('http://localhost:8080/MasonryCMS/home/img/ladrillo3.jpeg')"></div>
+                                    </div>
+                                    <span class="cardList__title">Brampton Brick<b>/</b>Historic Series</span>
+                                </div>
+                                <div class="cardList" onclick="showGallery(2);">
+                                    <div class="card">
+                                        <div class="card__bg" style="background-image: url('http://localhost:8080/MasonryCMS/home/img/ladrillo3.jpeg')"></div>
+                                    </div>
+                                    <div class="card">
+                                        <div class="card__bg" style="background-image: url('http://localhost:8080/MasonryCMS/home/img/ladrillo1.jpeg')"></div>
+                                    </div>
+                                    <div class="card">
+                                        <div class="card__bg" style="background-image: url('http://localhost:8080/MasonryCMS/home/img/ladrillo2.jpeg')"></div>
+                                    </div>
+                                    <span class="cardList__title">Rinox<b>/</b>Mediterranean Series</span>
+                                </div>
+                                <div class="cardList" onclick="showGallery(3);">
+                                    <div class="card">
+                                        <div class="card__bg" style="background-image: url('http://localhost:8080/MasonryCMS/home/img/ladrillo3.jpeg')"></div>
+                                    </div>
+                                    <div class="card">
+                                        <div class="card__bg" style="background-image: url('http://localhost:8080/MasonryCMS/home/img/ladrillo2.jpeg')"></div>
+                                    </div>
+                                    <div class="card">
+                                        <div class="card__bg" style="background-image: url('http://localhost:8080/MasonryCMS/home/img/ladrillo1.jpeg')"></div>
+                                    </div>
+                                    <span class="cardList__title">Quickcrete<b>/</b>Shadow Stone</span>
+                                </div>
+                                <div class="cardList" onclick="showGallery(4);">
+                                    <div class="card">
+                                        <div class="card__bg" style="background-image: url('http://localhost:8080/MasonryCMS/home/img/ladrillo3.jpeg')"></div>
+                                    </div>
+                                    <div class="card">
+                                        <div class="card__bg" style="background-image: url('http://localhost:8080/MasonryCMS/home/img/ladrillo2.jpeg')"></div>
+                                    </div>
+                                    <div class="card">
+                                        <div class="card__bg" style="background-image: url('http://localhost:8080/MasonryCMS/home/img/ladrillo1.jpeg')"></div>
+                                    </div>
+                                    <span class="cardList__title">Quickcrete<b>/</b>Shadow Stone</span>
+                                </div>
+                                -->
+                            </div>
+                        </div>
                     </div>
                 </div>
+
+
                 <br>
                 <br>
                 <br>
-                <br>
-                <br>
-                <br>
-                <br> <div class="modal" id="ModalProcesando">
+                <br> 
+                <div class="modal" id="ModalProcesando">
                     <div class="modal-dialog">
                         <div class="modal-content">
                             <div class="modal-header">

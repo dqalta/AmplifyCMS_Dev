@@ -1,4 +1,4 @@
-    /*
+/*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
@@ -42,6 +42,7 @@ public class SubMaterial extends ActionSupport implements SessionAware {
     String menu;//String de los permisos del menu 
     String mensajes = "";//Variable para cargar el texto del resultado de las validaciones o acciones
     boolean mensaje;//Variable bandera para saber si se muestra o no el mensaje
+    int vendorsPending;
 
     //Variables de la pantalla
     private ArrayList<DtoSubMaterial> subMaterials = new ArrayList<>();//Variable con la lista de datos
@@ -63,6 +64,7 @@ public class SubMaterial extends ActionSupport implements SessionAware {
             permiso = true; //AdmConsultas.getPermiso(o2c, "ADMINISTRACIÓN", "Encargados", usuario);            
             menu = "";//AdmConsultas.menuUsuario(o2c, usuario);
             chargeSelect(); // fill the select with the categories
+            vendorsPending = MaintenanceSQL.getPendingVendors(mdk);
         } else {
             sesionActiva = false;
         }
@@ -80,6 +82,14 @@ public class SubMaterial extends ActionSupport implements SessionAware {
 
     public String getMenu() {
         return menu;
+    }
+
+    public int getVendorsPending() {
+        return vendorsPending;
+    }
+
+    public void setVendorsPending(int vendorsPending) {
+        this.vendorsPending = vendorsPending;
     }
 
     public void setMenu(String menu) {

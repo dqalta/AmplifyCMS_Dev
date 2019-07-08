@@ -11,6 +11,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import org.apache.struts2.interceptor.SessionAware;
 import org.hibernate.Session;
+import sql.masonryAdmin.maintenance.MaintenanceSQL;
 import web.sesion.ORMUtil;
 
 /**
@@ -21,15 +22,19 @@ public class Home extends ActionSupport implements SessionAware {
 
     HttpServletRequest request;
     Map session;
+    Session mdk; //Variable de la conexión a la base de datos
     boolean sesionActiva;
     String usuario;
     String menu;
+    int vendorsPending;
 
     public Home() {
         Map<String, Object> session = ActionContext.getContext().getSession();
         if (session.get("en-sesion") != null) {
             sesionActiva = true;
+            mdk = ORMUtil.getSesionCMS().openSession();
             usuario = String.valueOf(session.get("user"));
+            vendorsPending = MaintenanceSQL.getPendingVendors(mdk);
         } else {
             sesionActiva = false;
         }
@@ -52,6 +57,14 @@ public class Home extends ActionSupport implements SessionAware {
 
     public String getUsuario() {
         return usuario;
+    }
+
+    public int getVendorsPending() {
+        return vendorsPending;
+    }
+
+    public void setVendorsPending(int vendorsPending) {
+        this.vendorsPending = vendorsPending;
     }
 
     public void setUsuario(String usuario) {

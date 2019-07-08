@@ -13,22 +13,22 @@ import java.util.Date;
  */
 public class DtoUser {
 
-    private int id;
-    private String codeUser;
-    private String nickName;
-    private String fullName;
-    private String email;
-    private String passwordUser;
-    private boolean menuAdmin;
-    private boolean menuProdAdmin;
-    private boolean menuProdComp;
-    private Date created;
-    private String createdBy;
-    private Date modified;
-    private String modifiedBy;
-    private boolean active;
-    private String statusUser;
-
+    int id;
+    String codeUser;
+    String guid;
+    String fullName;
+    String email;
+    String passwordUser;
+    boolean menuAdmin;
+    boolean menuProdAdmin;
+    boolean menuProdComp;
+    Date created;
+    String createdBy;
+    Date modified;
+    String modifiedBy;
+    boolean active;
+    Date lastLogin;
+    
     public DtoUser() {
     }
 
@@ -48,12 +48,12 @@ public class DtoUser {
         this.codeUser = codeUser;
     }
 
-    public String getNickName() {
-        return nickName;
+    public String getGuid() {
+        return guid;
     }
 
-    public void setNickName(String nickName) {
-        this.nickName = nickName;
+    public void setGuid(String guid) {
+        this.guid = guid;
     }
 
     public String getFullName() {
@@ -144,11 +144,11 @@ public class DtoUser {
         this.active = active;
     }
 
-    public String getStatusUser() {
-        return statusUser;
+    public Date getLastLogin() {
+        return lastLogin;
     }
 
-    public void setStatusUser(String statusUser) {
-        this.statusUser = statusUser;
+    public void setLastLogin(Date lastLogin) {
+        this.lastLogin = lastLogin;
     }
 }

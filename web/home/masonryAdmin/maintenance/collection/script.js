@@ -12,6 +12,7 @@ $(document).ready(function () {
     if (permiso === "true") {
         scroll();
         dataTable("table_collection");
+        $("#idManufacturer").chosen({width: "100%"});
     }
     if (mensaje === "true") {
         mostrarNotificaciones();
@@ -43,7 +44,7 @@ function chargeChecks() {
 
 function cancel() {
     $("#ModalProcesando").modal({backdrop: 'static', keyboard: false});
-    window.location = "/MasonryCMS/masonryAdmin/maintenance/manufacturer.mdk";
+    window.location = "/MasonryCMS/masonryAdmin/maintenance/collection.mdk";
 }
 
 function save() {

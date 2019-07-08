@@ -115,13 +115,13 @@
                         <thead>
                             <tr>
                                 <th>Code</th>
-                                <th>Email</th>
-                                <th>NickName</th>
+                                <th>FullName</th>
                                 <th>Created</th>
                                 <th>Created By</th>
                                 <th>Modified</th>
                                 <th>Modified By</th>
-                                <th>&nbsp;</th>
+                                <th>Last Login</th>
+                                <th>Active</th>
                                 <th>Edit</th>
                             </tr>
                         </thead>
@@ -129,13 +129,20 @@
                             <st:if test="%{!getUsers().isEmpty()}">
                                 <st:iterator value="users" var="users" status="index">
                                     <tr>
-                                        <td><st:property value="%{#users.code}" /></td>   
-                                        <td><st:property value="%{#users.email}" /></td>           
-                                        <td><st:property value="%{#users.nickname}" /></td>        
+                                        <td><st:property value="%{#users.codeUser}" /></td>       
+                                        <td><st:property value="%{#users.fullName}" /></td>        
                                         <td><st:date name="%{#users.created}" format="dd/MM/yyyy"/></td>       
                                         <td><st:property value="%{#users.createdBy}" /></td>    
                                         <td><st:date name="%{#users.modified}" format="dd/MM/yyyy"/></td>    
                                         <td><st:property value="%{#users.modifiedBy}" /></td>
+                                        <td>
+                                            <st:if test="%{#users.lastLogin == null}">
+                                                Never...
+                                            </st:if>
+                                            <st:else>
+                                                <st:date name="%{#users.lastLogin}" format="dd/MM/yyyy" nice="true"/>
+                                            </st:else>
+                                        </td>
                                         <td>
                                             <st:if test="%{#users.active == true}">
                                                 <i onclick="activeUser('<st:property value="%{#users.id}" />');" class="glyphicon glyphicon-off text-success" data-toggle="tooltip" data-placement="top" title="" data-original-title="Active"</i>                                                                                            

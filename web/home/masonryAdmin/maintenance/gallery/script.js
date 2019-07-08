@@ -9,12 +9,16 @@ $(document).ready(function () {
     permiso = $("#permiso").val();
     mensaje = $("#mensaje").val();
     mensajes = $("#mensajes").val();
+    $("#divAdd").hide();
     if (permiso === "true") {
         scroll();
         files();
         $("#manufacturer").chosen({width: "100%"});
-        $("#size_").chosen({width: "100%"});
         $("#collection").chosen({width: "100%"});
+        $("ul.chosen-choices").css({"overflow": "auto", "max-height": "100px"});
+    }
+    if (accion === 1) {
+        showDivAdd();
     }
     if (mensaje === "true") {
         mostrarNotificaciones();
@@ -22,9 +26,46 @@ $(document).ready(function () {
     $('#form-panel').collapse();
 });
 
+function showGallery(id) {
+    alert(id);
+}
+
+function showDivAdd() {
+    $("#divGalleryGroups").hide();
+    $("#divAdd").show(500);
+    $("#galleryDiv").show(500);
+}
+
+function chargeCollections() {
+    var manufacturer = $("#manufacturer").val();
+    var collection = $("#collection").val();
+    if (manufacturer === null) {
+        manufacturer = [];
+    }
+    $.ajax({
+        tradional: true,
+        type: "post",
+        datatype: "html",
+        data:
+                {
+                    "manufacturer": manufacturer
+                },
+        url: "/MasonryCMS/masonryAdmin/queries/ajax/select-collections.mdk",
+        success: function (html)
+        {
+            $("#collection").html(html).trigger("chosen:updated");
+            $("#collection").val(collection);
+        },
+        error: function (estado)
+        {
+            //   alert(estado);
+        }
+    });
+}
+
 function cancel() {
     $("#ModalProcesando").modal({backdrop: 'static', keyboard: false});
-    window.location = "/MasonryCMS/masonryAdmin/maintenance/materials.mdk";
+    window.location = "/MasonryCMS/masonryAdmin/maintenance/gallery.mdk";
 }
 
 function save() {
@@ -110,8 +151,11 @@ function files() {
                 reader.name = file_.name;
                 reader.idFile = i;
                 reader.onload = function (e) {
-                    html = "<div class=\"col-sm-2 imgUp\" id=\"file" + e.target.idFile + "\"> <div class=\"imagePreview\" style=\"background-image:url(" + e.target.result + ")\"></div>   <label class=\"btn btn-warning  btn-upload\">" + e.target.name + "</label></div>";
+                    html = "<div class=\"col-sm-2 imgUp\" data-toggle=\"tooltip\" data-placement=\"top\" data-original-title=\"" + e.target.name + "\" id=\"file" + e.target.idFile + "\"> <div class=\"imagePreview\" style=\"background-image:url(" + e.target.result + ")\"></div>   <label class=\"btn btn-warning  btn-upload\" >" + e.target.name + "</label></div>";
                     $("#galleryDiv").append(html);
+                    $('[data-toggle="tooltip"]').tooltip({
+                        container: 'body'
+                    });
                 }
                 reader.readAsDataURL(file_);
             }

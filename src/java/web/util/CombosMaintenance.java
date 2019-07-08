@@ -120,6 +120,15 @@ public class CombosMaintenance {
         }
         return combo;
     }
+    
+    public static ArrayList<KeyCombos> getCollectionsByManufacturers(Session mdk, int[] manufacturers) {
+        ArrayList<KeyCombos> combo = new ArrayList<>();
+        List<DtoCollection> collections = MaintenanceSQL.getCollectionsByManufacturers(mdk,manufacturers);
+        for (DtoCollection c : collections) {
+            combo.add(new KeyCombos((c.getId()), c.getDescription()));
+        }
+        return combo;
+    }
 
     public static ArrayList<KeyCombos> getColors(Session mdk) {
         ArrayList<KeyCombos> combo = new ArrayList<>();

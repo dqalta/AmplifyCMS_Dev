@@ -40,6 +40,7 @@ public class MetricsSystem extends ActionSupport implements SessionAware {
     String menu;//String de los permisos del menu 
     String mensajes = "";//Variable para cargar el texto del resultado de las validaciones o acciones
     boolean mensaje;//Variable bandera para saber si se muestra o no el mensaje
+    int vendorsPending;
 
     //Variables de la pantalla
     private ArrayList<DtoMetricsSystem> metricsSystems = new ArrayList<>();//Variable con la lista de datos
@@ -58,6 +59,7 @@ public class MetricsSystem extends ActionSupport implements SessionAware {
             usuario = String.valueOf(session.get("user"));
             permiso = true; //AdmConsultas.getPermiso(o2c, "ADMINISTRACIÓN", "Encargados", usuario);            
             menu = "";//AdmConsultas.menuUsuario(o2c, usuario);
+            vendorsPending = MaintenanceSQL.getPendingVendors(mdk);
         } else {
             sesionActiva = false;
         }
@@ -91,6 +93,14 @@ public class MetricsSystem extends ActionSupport implements SessionAware {
 
     public boolean getSesionActiva() {
         return sesionActiva;
+    }
+
+    public int getVendorsPending() {
+        return vendorsPending;
+    }
+
+    public void setVendorsPending(int vendorsPending) {
+        this.vendorsPending = vendorsPending;
     }
 
     public void setSesionActiva(boolean sesionActiva) {
@@ -129,7 +139,6 @@ public class MetricsSystem extends ActionSupport implements SessionAware {
         this.usuario = usuario;
     }
 
-  
     //SET GET CUSTUMIZED
     public ArrayList<DtoMetricsSystem> getMetricsSystems() {
         return metricsSystems;
@@ -255,7 +264,7 @@ public class MetricsSystem extends ActionSupport implements SessionAware {
             } catch (HibernateException x) {
                 //AdmConsultas.error(o2c, x.getMessage());
                 // mensajes = mensajes + "danger<>Error<>Error al guardar encargados: " + codigo + ": " + ExceptionUtils.getMessage(x) + ".";
-                mensajes = mensajes + "danger<>Error<>Error  "+x.getMessage()+".|";
+                mensajes = mensajes + "danger<>Error<>Error  " + x.getMessage() + ".|";
                 mensaje = true;
                 if (tn != null) {//Si hay error y el transacción es distinto de null, es porque la transacción existe, entoncs hago rollback
                     tn.rollback();
@@ -290,7 +299,7 @@ public class MetricsSystem extends ActionSupport implements SessionAware {
             } catch (HibernateException x) {
                 //AdmConsultas.error(o2c, x.getMessage());
                 // mensajes = mensajes + "danger<>Error<>Error al modificar encargados: " + codigo + ": " + ExceptionUtils.getMessage(x) + ".";
-                mensajes = mensajes + "danger<>Error<>Error  "+x.getMessage()+".|";
+                mensajes = mensajes + "danger<>Error<>Error  " + x.getMessage() + ".|";
                 mensaje = true;
                 if (tn != null) {
                     tn.rollback();
@@ -311,7 +320,5 @@ public class MetricsSystem extends ActionSupport implements SessionAware {
             mensaje = true;
         }
     }
-
-  
 
 }

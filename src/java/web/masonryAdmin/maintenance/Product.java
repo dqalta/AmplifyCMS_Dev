@@ -47,6 +47,7 @@ public class Product extends ActionSupport implements SessionAware {
     String menu;//String de los permisos del menu 
     String mensajes = "";//Variable para cargar el texto del resultado de las validaciones o acciones
     boolean mensaje;//Variable bandera para saber si se muestra o no el mensaje
+    int vendorsPending;
 
     //Variables de la pantalla
     private ArrayList<DtoProduct> products = new ArrayList<>();//Variable con la lista de datos
@@ -96,6 +97,7 @@ public class Product extends ActionSupport implements SessionAware {
             permiso = true; //AdmConsultas.getPermiso(o2c, "ADMINISTRACIÓN", "Encargados", usuario);            
             menu = "";//AdmConsultas.menuUsuario(o2c, usuario);
             chargeSelect(); // fill the select with the categories
+            vendorsPending = MaintenanceSQL.getPendingVendors(mdk);
         } else {
             sesionActiva = false;
         }
@@ -121,6 +123,14 @@ public class Product extends ActionSupport implements SessionAware {
 
     public int getAccion() {
         return accion;
+    }
+
+    public int getVendorsPending() {
+        return vendorsPending;
+    }
+
+    public void setVendorsPending(int vendorsPending) {
+        this.vendorsPending = vendorsPending;
     }
 
     public void setAccion(int accion) {
@@ -732,10 +742,8 @@ public class Product extends ActionSupport implements SessionAware {
             sqftPerPackageType = String.valueOf(m.getSqftPerPackageType());
             qtyOfUnitsPerPackageType = m.getQtyOfUnitsPerPackageType();
             active = m.getActive();
-            
+
             //color = MaintenanceSQL.getColors(mdk, idEdit);
-            
-            
         } else {
             mensajes = mensajes + "danger<>Error<>Product does not exist.";
             mensaje = true;

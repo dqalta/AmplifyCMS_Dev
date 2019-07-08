@@ -40,6 +40,7 @@ public class Color extends ActionSupport implements SessionAware {
     String menu;//String de los permisos del menu 
     String mensajes = "";//Variable para cargar el texto del resultado de las validaciones o acciones
     boolean mensaje;//Variable bandera para saber si se muestra o no el mensaje
+    int vendorsPending;
 
     //Variables de la pantalla
     private ArrayList<DtoColor> colors = new ArrayList<>();//Variable con la lista de datos
@@ -58,6 +59,7 @@ public class Color extends ActionSupport implements SessionAware {
             usuario = String.valueOf(session.get("user"));
             permiso = true; //AdmConsultas.getPermiso(o2c, "ADMINISTRACIÓN", "Encargados", usuario);            
             menu = "";//AdmConsultas.menuUsuario(o2c, usuario);
+            vendorsPending = MaintenanceSQL.getPendingVendors(mdk);
         } else {
             sesionActiva = false;
         }
@@ -79,6 +81,14 @@ public class Color extends ActionSupport implements SessionAware {
 
     public void setMenu(String menu) {
         this.menu = menu;
+    }
+
+    public int getVendorsPending() {
+        return vendorsPending;
+    }
+
+    public void setVendorsPending(int vendorsPending) {
+        this.vendorsPending = vendorsPending;
     }
 
     public int getAccion() {
@@ -235,7 +245,7 @@ public class Color extends ActionSupport implements SessionAware {
                 tn = mdk.beginTransaction();//Inicializo la transacción de la DB 
 
                 DtoColor m = new DtoColor();//Creo un objeto del tipo color
-                
+
                 //Seteo los datos del objeto excepto el id por que es Auto Incremental
                 m.setDescription(description);
                 m.setCreated(Fechas.ya());

@@ -40,6 +40,7 @@ public class PackageType extends ActionSupport implements SessionAware {
     String menu;//String de los permisos del menu 
     String mensajes = "";//Variable para cargar el texto del resultado de las validaciones o acciones
     boolean mensaje;//Variable bandera para saber si se muestra o no el mensaje
+    int vendorsPending;
 
     //Variables de la pantalla
     private ArrayList<DtoPackageType> packageTypes = new ArrayList<>();//Variable con la lista de datos
@@ -58,6 +59,7 @@ public class PackageType extends ActionSupport implements SessionAware {
             usuario = String.valueOf(session.get("user"));
             permiso = true; //AdmConsultas.getPermiso(o2c, "ADMINISTRACIÓN", "Encargados", usuario);            
             menu = "";//AdmConsultas.menuUsuario(o2c, usuario);
+            vendorsPending = MaintenanceSQL.getPendingVendors(mdk);
         } else {
             sesionActiva = false;
         }
@@ -99,6 +101,14 @@ public class PackageType extends ActionSupport implements SessionAware {
 
     public boolean getPermiso() {
         return permiso;
+    }
+
+    public int getVendorsPending() {
+        return vendorsPending;
+    }
+
+    public void setVendorsPending(int vendorsPending) {
+        this.vendorsPending = vendorsPending;
     }
 
     public void setPermiso(boolean permiso) {

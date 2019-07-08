@@ -15,9 +15,12 @@ import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import sql.masonryAdmin.maintenance.DtoCollection;
+import sql.masonryAdmin.maintenance.DtoCollectionQuery;
 import sql.masonryAdmin.maintenance.MaintenanceSQL;
 import util.Fechas;
 import web.sesion.ORMUtil;
+import web.util.CombosMaintenance;
+import web.util.KeyCombos;
 
 /**
  *
@@ -40,15 +43,18 @@ public class Collection extends ActionSupport implements SessionAware {
     String menu;//String de los permisos del menu 
     String mensajes = "";//Variable para cargar el texto del resultado de las validaciones o acciones
     boolean mensaje;//Variable bandera para saber si se muestra o no el mensaje
+    int vendorsPending;
 
     //Variables de la pantalla
-    private ArrayList<DtoCollection> collections = new ArrayList<>();//Variable con la lista de datos
+    private ArrayList<DtoCollectionQuery> collections = new ArrayList<>();//Variable con la lista de datos
 
+    ArrayList<KeyCombos> manufacturers = new ArrayList<>();
     //Variables del mantenimiento
     int id;
     String description;
     boolean active;
     int idEdit;
+    int idManufacturer;
 
     public Collection() {
         Map<String, Object> session = ActionContext.getContext().getSession();
@@ -58,6 +64,8 @@ public class Collection extends ActionSupport implements SessionAware {
             usuario = String.valueOf(session.get("user"));
             permiso = true; //AdmConsultas.getPermiso(o2c, "ADMINISTRACIÓN", "Encargados", usuario);            
             menu = "";//AdmConsultas.menuUsuario(o2c, usuario);
+            chargeSelect();
+            vendorsPending = MaintenanceSQL.getPendingVendors(mdk);
         } else {
             sesionActiva = false;
         }
@@ -79,6 +87,14 @@ public class Collection extends ActionSupport implements SessionAware {
 
     public void setMenu(String menu) {
         this.menu = menu;
+    }
+
+    public int getVendorsPending() {
+        return vendorsPending;
+    }
+
+    public void setVendorsPending(int vendorsPending) {
+        this.vendorsPending = vendorsPending;
     }
 
     public int getAccion() {
@@ -130,11 +146,11 @@ public class Collection extends ActionSupport implements SessionAware {
     }
 
     //SET GET CUSTUMIZED
-    public ArrayList<DtoCollection> getCollections() {
+    public ArrayList<DtoCollectionQuery> getCollections() {
         return collections;
     }
 
-    public void setCollections(ArrayList<DtoCollection> collections) {
+    public void setCollections(ArrayList<DtoCollectionQuery> collections) {
         this.collections = collections;
     }
 
@@ -183,7 +199,6 @@ public class Collection extends ActionSupport implements SessionAware {
     public void process() {
         switch (accion) {
             case 1:
-                System.out.println("Active: "+active);
                 save();
                 break;
             case 2:
@@ -193,9 +208,14 @@ public class Collection extends ActionSupport implements SessionAware {
         chargeCollections();
     }
 
+    public void chargeSelect() {
+        manufacturers = CombosMaintenance.getManufacturers(mdk);
+    }
+
     public void clearFields() {
         id = 0;
         description = "";
+        idManufacturer = 1;
         accion = 0;
         idEdit = 0;
         active = false;
@@ -225,7 +245,7 @@ public class Collection extends ActionSupport implements SessionAware {
     }
 
     public void chargeCollections() {
-        collections = MaintenanceSQL.getCollections(mdk);
+        collections = MaintenanceSQL.getCollectionsQuery(mdk);
     }
 
     public void insert() {
@@ -237,6 +257,7 @@ public class Collection extends ActionSupport implements SessionAware {
                 DtoCollection m = new DtoCollection();//Creo un objeto del tipo Manufacturer
 
                 //Seteo los datos del objeto excepto el id por que es Auto Incremental
+                m.setIdManufacturer(idManufacturer);
                 m.setDescription(description);
 
                 m.setCreated(Fechas.ya());
@@ -275,6 +296,7 @@ public class Collection extends ActionSupport implements SessionAware {
                 if (m != null) {
 
                     m.setDescription(description);
+                    m.setIdManufacturer(idManufacturer);
                     m.setModified(Fechas.ya());
                     m.setModifiedBy(usuario);
                     m.setActive(active);//Lo puse en true porque se me olvidó crear el check en el formulario, en la noche hacemos eso jajaja
@@ -306,12 +328,29 @@ public class Collection extends ActionSupport implements SessionAware {
         DtoCollection m = MaintenanceSQL.getCollection(mdk, idEdit);
         if (m != null) {
             idEdit = m.getId();
+            idManufacturer = m.getIdManufacturer();
             description = m.getDescription();
             active = m.getActive();
         } else {
             mensajes = mensajes + "danger<>Error<>Collection does not exist.";
             mensaje = true;
         }
+    }
+
+    public ArrayList<KeyCombos> getManufacturers() {
+        return manufacturers;
+    }
+
+    public void setManufacturers(ArrayList<KeyCombos> manufacturers) {
+        this.manufacturers = manufacturers;
+    }
+
+    public int getIdManufacturer() {
+        return idManufacturer;
+    }
+
+    public void setIdManufacturer(int idManufacturer) {
+        this.idManufacturer = idManufacturer;
     }
 
 }

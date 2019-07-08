@@ -10,19 +10,16 @@
     display: inline-block;
     box-shadow:0px -3px 6px 2px rgba(0,0,0,0.2);
 }
-.btn-upload
-{
-  display:block;
-  border-radius:0px;
-  box-shadow:0px 4px 6px 2px rgba(0,0,0,0.2);
-  margin-top:-5px;
+.btn-upload {
+    display:block;
+    border-radius:0px;
+    box-shadow:0px 4px 6px 2px rgba(0,0,0,0.2);
+    margin-top:-5px;
 }
-.imgUp
-{
+.imgUp{
     margin-bottom:15px;
 }
-.del
-{
+.del{
     position:absolute;
     top:0px;
     right:15px;
@@ -116,7 +113,7 @@ span.round-tab:hover {
 }
 
 .wizard .nav-tabs > li {
-    width: 20%;
+    width: 16%;
 }
 
 .wizard li:after {

@@ -5,15 +5,32 @@
  */
 package web.cycle;
 
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.util.ArrayList;
 import java.util.Map;
+import java.util.Properties;
+import javax.imageio.ImageIO;
+import javax.mail.Message;
+import javax.mail.Transport;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeBodyPart;
+import javax.mail.internet.MimeMessage;
+import javax.mail.internet.MimeMultipart;
 import org.apache.commons.mail.EmailException;
 import org.apache.commons.mail.HtmlEmail;
 import org.apache.struts2.interceptor.SessionAware;
 import org.hibernate.Session;
+import org.hibernate.Transaction;
 import static org.hibernate.criterion.Expression.sql;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
+import sql.masonryAdmin.admin.AdminSQL;
+import sql.masonryAdmin.admin.DtoEmail;
+import sql.masonryAdmin.admin.DtoEmailConfiguration;
+import util.Imagen;
+import util.UtilSecurity;
 import web.sesion.ORMUtil;
 
 /**
@@ -43,35 +60,24 @@ public class SendMails implements Job, SessionAware {
         Thread t = new Thread(new Runnable() {
             @Override
             public void run() {
-               
-              //  ArrayList<AdmDtoCorreosPendientes> arr = new ArrayList<>();
-               // arr = AdmConsultas.getCorreosPendientes(o2c);
-               // System.out.println("Cantidad "+arr.size());
-               // for (int i = 0; i < arr.size(); i++) {
-               //     AdmDtoCorreosPendientes co = arr.get(i);
-                    String respuestaEnvio = enviarCorreo();
 
-                 /*   Transaction tn = null;
+                ArrayList<DtoEmail> arr = new ArrayList<>();
+                arr = AdminSQL.getPendingEmails(mdk);
+                for (int i = 0; i < arr.size(); i++) {
+                    DtoEmail co = arr.get(i);
+                    String resultSend = sendEmail(co);
+
+                    Transaction tn = null;
                     try {
-                        tn = o2c.beginTransaction();
-                        AdmConsultas.modificarCorreoPendiente(o2c, co.getId(), respuestaEnvio.contains("O2C_Error") ? respuestaEnvio : "ENVIADO", respuestaEnvio.contains("O2C_Error") ? "PENDIENTE" : "ENVIADO");
-
-                        FacDtoFacturaEstados e = new FacDtoFacturaEstados();
-                        e = FacConsultas.getFacturaEstado(o2c, co.getClave());
-                        e.setEnvioCorreo(respuestaEnvio.contains("O2C_Error") ? "PENDIENTE" : "ENVIADO");                        
-                        e.setModificado(Fechas.ya());
-                        e.setModificadoPor("SISTEMA");
-                        FacConsultas.modificarEstadosFactura(o2c, e);
-                        AdmConsultas.bitacora(o2c, "SISTEMA", "Intento de envio de correo estado: " + (respuestaEnvio.contains("O2C_Error") ? "PENDIENTE" : "ENVIADO"));
-
+                        tn = mdk.beginTransaction();
+                        AdminSQL.updateEmail(mdk, co.getId(), resultSend, resultSend.contains("MDK_Error") ? "PENDING" : "SENT");
                         tn.commit();
-                    } catch (HibernateException x) {
+                    } catch (Exception x) {
                         if (tn != null) {
                             tn.rollback();
                         }
                     }
-                    System.out.println("Respuesta Envio: " + respuestaEnvio);
-                }*/
+                }
 
                 mdk.close();
             }
@@ -80,46 +86,59 @@ public class SendMails implements Job, SessionAware {
         t.start();
     }
 
-    public String enviarCorreo() {
-        String mensaje = "Enviado";
+    public String sendEmail(DtoEmail ma) {
+        String message = "SENT";
         try {
-/*
-            Transaction tn = null;
+
+            DtoEmailConfiguration conf = AdminSQL.getEmailConfiguration(mdk);
+
+            Properties props = System.getProperties();
+            props.put("mail.transport.protocol", "smtp");
+            props.put("mail.smtp.port", conf.getHostPort());
+            props.put("mail.smtp.starttls.enable", "true");
+            props.put("mail.smtp.auth", "true");
+
+            // Create a Session object to represent a mail session with the specified properties. 
+            javax.mail.Session session = javax.mail.Session.getDefaultInstance(props);
+
+            // Create a message with the specified information. 
+            MimeMessage msg = new MimeMessage(session);
+
+            msg.setFrom(new InternetAddress(conf.getEmail(), conf.getName()));
+            msg.setRecipient(Message.RecipientType.TO, new InternetAddress(ma.getRecipients()));
+            msg.setSubject(ma.getSubject());
+
+            MimeMultipart multipart = new MimeMultipart("related");
+
+            MimeBodyPart messageBodyPart = new MimeBodyPart();
+            messageBodyPart.setContent(ma.getBody(), "text/html");
+
+            multipart.addBodyPart(messageBodyPart);
+
+            msg.setContent(multipart);
+
+            msg.setHeader("X-SES-CONFIGURATION-SET", conf.getConfigSet());
+
+            Transport transport = session.getTransport();
             try {
-                tn = o2c.beginTransaction();
-                AdmConsultas.modificarIntentoCorreoPendiente(o2c, obj.getId());
-                tn.commit();
-            } catch (HibernateException x) {
-                if (tn != null) {
-                    tn.rollback();
-                }
-            }*/
 
-            HtmlEmail correo = new HtmlEmail();
-            correo.setHostName("constructorameco-com.mail.protection.outlook.com");            
-            correo.addHeader("X-Priority", "1");
+                // Connect to Amazon SES using the SMTP username and password you specified above.
+                transport.connect(conf.getHost(), conf.getUser(), conf.getPassword());
 
-           // String correos[] = new String[obj.getDestinatarios().split(";").length];
-         //   correos = obj.getDestinatarios().split(";");
-          //  for (int i = 0; i < correos.length; i++) {
-          //      correo.addTo(correos[i]);
-          //  }
-          correo.addTo("dqalta@gmail.com");
+                // Send the email.
+                transport.sendMessage(msg, msg.getAllRecipients());
+                message = "SENT";
+            } catch (Exception ex) {
+                message = "MDK_Error: " + ex.getMessage();
+            } finally {
+                transport.close();
+            }
 
-            correo.setFrom("no-reply@masonrysupply.com", "Masonry");
-           // correo.setSubject(obj.getAsunto());
-            correo.setSubject("Prueba");
-            correo.setCharset("UTF-8");
-
-            //correo.setHtmlMsg(obj.getCuerpo());
-            correo.setHtmlMsg("");
-
-            mensaje = correo.send();
-        } catch (EmailException ex) {
-            mensaje = "O2C_Error: " + ex.getMessage();
+        } catch (Exception ex) {
+            message = "MDK_Error: " + ex.getMessage();
             //Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, "Error de correo", x);
         } finally {
-            return mensaje;
+            return message;
         }
     }
 }

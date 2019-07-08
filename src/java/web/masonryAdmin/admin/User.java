@@ -12,13 +12,19 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.servlet.http.HttpServletRequest;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.struts2.interceptor.SessionAware;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import sql.masonryAdmin.admin.AdminSQL;
+import sql.masonryAdmin.admin.DtoEmail;
 import sql.masonryAdmin.admin.DtoUser;
+import sql.masonryAdmin.maintenance.DtoColor;
+import sql.masonryAdmin.maintenance.DtoVendorContact;
+import sql.masonryAdmin.maintenance.MaintenanceSQL;
+import util.Emails;
 import util.Fechas;
 import util.Generales;
 import util.UtilSecurity;
@@ -48,8 +54,9 @@ public class User extends ActionSupport implements SessionAware {
     String mensajes = "";//Variable para cargar el texto del resultado de las validaciones o acciones
     boolean mensaje;//Variable bandera para saber si se muestra o no el mensaje
 
+    int vendorsPending;
     //Variables de la pantalla
-    private ArrayList<DtoUser> users = new ArrayList<>();//Variable con la lista de datos
+    ArrayList<DtoUser> users = new ArrayList<>();//Variable con la lista de datos
     ArrayList<KeyCombos> roles = new ArrayList<>();
 
     //Variables del mantenimiento
@@ -58,7 +65,7 @@ public class User extends ActionSupport implements SessionAware {
     String email;
     boolean active;
     int idEdit;
-    int[] rol;
+    String[] rol;
     boolean menuAdmin;
     boolean menuProdAdmin;
     boolean menuProdComp;
@@ -72,6 +79,7 @@ public class User extends ActionSupport implements SessionAware {
             permiso = true; //AdmConsultas.getPermiso(o2c, "ADMINISTRACIÓN", "Encargados", usuario);            
             menu = "";//AdmConsultas.menuUsuario(o2c, usuario);
             chargeSelect();
+            vendorsPending = MaintenanceSQL.getPendingVendors(mdk);
         } else {
             sesionActiva = false;
         }
@@ -188,11 +196,11 @@ public class User extends ActionSupport implements SessionAware {
         this.idEdit = idEdit;
     }
 
-    public int[] getRol() {
+    public String[] getRol() {
         return rol;
     }
 
-    public void setRol(int[] rol) {
+    public void setRol(String[] rol) {
         this.rol = rol;
     }
 
@@ -216,8 +224,24 @@ public class User extends ActionSupport implements SessionAware {
         return menuProdComp;
     }
 
+    public int getVendorsPending() {
+        return vendorsPending;
+    }
+
+    public void setVendorsPending(int vendorsPending) {
+        this.vendorsPending = vendorsPending;
+    }
+
     public void setMenuProdComp(boolean menuProdComp) {
         this.menuProdComp = menuProdComp;
+    }
+
+    public ArrayList<DtoUser> getUsers() {
+        return users;
+    }
+
+    public void setUsers(ArrayList<DtoUser> users) {
+        this.users = users;
     }
 
     @Override
@@ -236,10 +260,60 @@ public class User extends ActionSupport implements SessionAware {
                 save();
                 break;
             case 2:
-//                readForUpdate();
+                readForUpdate();
+                break;
+            case 3:
+                activeUser();
                 break;
         }
         chargeUsers();
+    }
+
+    public void activeUser() {
+        Transaction tn = null;
+        try {
+            tn = mdk.beginTransaction();
+            DtoUser m = AdminSQL.getUser(mdk, idEdit);
+            if (m != null) {
+                m.setModified(Fechas.ya());
+                m.setModifiedBy(usuario);
+                m.setActive(!m.isActive());
+                AdminSQL.updateUser(mdk, m);
+                // AdmConsultas.bitacora(o2c, usuario, "Encargado modificado Tipo: " + tipo + ", Codigo: " + codigo);
+
+                tn.commit();
+
+                mensajes = mensajes + "info<>Information<>Status of the User modified successfully.";
+                mensaje = true;
+            }
+        } catch (HibernateException x) {
+            //AdmConsultas.error(o2c, x.getMessage());
+            // mensajes = mensajes + "danger<>Error<>Error al modificar encargados: " + codigo + ": " + ExceptionUtils.getMessage(x) + ".";
+            mensajes = mensajes + "danger<>Error<>Error.|";
+            mensaje = true;
+            if (tn != null) {
+                tn.rollback();
+            }
+        }
+        mensaje = true;
+    }
+
+    public void readForUpdate() {
+        DtoUser m = AdminSQL.getUser(mdk, idEdit);
+        if (m != null) {
+            idEdit = m.getId();
+            code = m.getCodeUser();
+            fullName = m.getFullName();
+            email = m.getEmail();
+            active = m.isActive();
+            menuAdmin = m.isMenuAdmin();
+            menuProdAdmin = m.isMenuProdAdmin();
+            menuProdComp = m.isMenuProdComp();
+            rol = AdminSQL.getUserRols(mdk, m.getCodeUser()).split(",");
+        } else {
+            mensajes = mensajes + "danger<>Error<>User does not exist.";
+            mensaje = true;
+        }
     }
 
     public void chargeSelect() {
@@ -256,6 +330,7 @@ public class User extends ActionSupport implements SessionAware {
         menuAdmin = false;
         menuProdAdmin = false;
         menuProdComp = false;
+        rol = null;
         chargeSelect();
     }
 
@@ -302,12 +377,51 @@ public class User extends ActionSupport implements SessionAware {
         if (idEdit == 0) {
             insert();
         } else {
-            //update();
+            update();
         }
     }
 
     public void chargeUsers() {
         users = AdminSQL.getUsers(mdk);
+    }
+
+    public void update() {
+        if (validateFields()) {
+            Transaction tn = null;
+            try {
+                tn = mdk.beginTransaction();
+                DtoUser p = AdminSQL.getUser(mdk, idEdit);
+                if (p != null) {
+
+                    p.setFullName(fullName);
+                    p.setEmail(email);
+                    p.setMenuAdmin(menuAdmin);
+                    p.setMenuProdAdmin(menuProdAdmin);
+                    p.setMenuProdComp(menuProdComp);
+                    p.setModified(Fechas.ya());
+                    p.setModifiedBy(usuario);
+                    p.setActive(active);
+
+                    AdminSQL.updateUser(mdk, p);
+
+                    tn.commit();
+
+                    saveRols(p.getCodeUser());
+                    clearFields();
+                    mensajes = mensajes + "info<>Informaci\u00f3n<>User " + code + " modified successfully .";
+                    mensaje = true;
+                } else {
+                    save();
+                }
+            } catch (Exception e) {
+                mensajes = mensajes + "danger<>Error<>Error ." + e.getMessage() + "|";
+                mensaje = true;
+                if (tn != null) {
+                    tn.rollback();
+                }
+            }
+            mensaje = true;
+        }
     }
 
     public void insert() {
@@ -322,8 +436,16 @@ public class User extends ActionSupport implements SessionAware {
                 code_ = code_ + "-" + String.format("%03d", AdminSQL.getConsecutive(mdk, "codeUser"));
                 code = code_;
 
+                String guid = RandomStringUtils.randomAlphanumeric(40);
+                boolean flag = (AdminSQL.getUserByGuid(mdk, guid) != null);
+
+                while (flag) {
+                    guid = RandomStringUtils.randomAlphanumeric(40);
+                    flag = (AdminSQL.getUserByGuid(mdk, guid) != null);
+                }
+
                 m.setCodeUser(code);
-                m.setNickName("");
+                m.setGuid(guid);
                 m.setFullName(fullName);
                 m.setEmail(email);
                 m.setPasswordUser(UtilSecurity.encript(UtilSecurity.randomPassword(3, 2, 1, 2)));
@@ -335,24 +457,43 @@ public class User extends ActionSupport implements SessionAware {
                 m.setModified(Fechas.ya());
                 m.setModifiedBy(usuario);
                 m.setActive(active);
-                m.setStatusUser("PENDING");
 
                 AdminSQL.saveUser(mdk, m);
+
+                AdminSQL.incrementConsecutive(mdk, "codeUser");
+
                 //CORREO
+                DtoEmail mail = new DtoEmail();
+                mail.setRecipients(email);
+                mail.setSubject("Masonry CMS invitation");
+                String htmlEmail = "";
+                htmlEmail = htmlEmail.concat(Emails.head());
+                htmlEmail = htmlEmail.concat(Emails.body("", "", "", "", "", ""));
+                htmlEmail = htmlEmail.concat(Emails.footer(""));
+                mail.setBody(htmlEmail);
+                mail.setStatus("PENDING");
+                mail.setCreated(Fechas.ya());
+                mail.setAttempts(0);
+                mail.setObservations("");
+                mail.setType("UserInvitation");
+
+                AdminSQL.saveEmail(mdk, mail);
+
                 tn.commit();
-                
+
                 saveRols(code);
-                
+                clearFields();
+
                 //clearFields();
                 mensajes = mensajes + "info<>Information<>User saved successfully.";
                 mensaje = true;
 
-            } catch (Exception x) {
+            } catch (Exception e) {
                 //AdmConsultas.error(o2c, x.getMessage());
                 // mensajes = mensajes + "danger<>Error<>Error al guardar encargados: " + codigo + ": " + ExceptionUtils.getMessage(x) + ".";
-                mensajes = mensajes + "danger<>Error<>Error.|";
+                mensajes = mensajes + "danger<>Error<>Error." + e.getMessage() + "|";
                 mensaje = true;
-            System.out.println(x.getMessage());
+                System.out.println(e.getMessage());
                 if (tn != null) {//Si hay error y el transacción es distinto de null, es porque la transacción existe, entoncs hago rollback
                     tn.rollback();
                 }
@@ -360,30 +501,31 @@ public class User extends ActionSupport implements SessionAware {
             mensaje = true;
         }
     }
-    
+
     public void saveRols(String code) {
         Transaction tn = null;
         try {
             tn = mdk.beginTransaction();
             DtoUser p = AdminSQL.getUser(mdk, code);
             if (p != null) {
+
                 AdminSQL.deleteUserRol(mdk, code);
+
                 for (int i = 0; i < rol.length; i++) {
                     AdminSQL.saveUserRol(mdk, code, rol[i]);
                 }
                 tn.commit();
-            } 
-        } catch (HibernateException x) {
-            mensajes = mensajes + "danger<>Error<>Error.";
+            } else {
+                save();
+            }
+        } catch (Exception e) {
+            //AdmConsultas.error(o2c, e.getMessage())
+            mensajes = mensajes + "danger<>Error<>Error." + e.getMessage() + "|";
             mensaje = true;
-            System.out.println(x.getMessage());
             if (tn != null) {
                 tn.rollback();
             }
         }
     }
-
-
-   
 
 }

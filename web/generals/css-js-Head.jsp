@@ -10,3 +10,5 @@
 <!--<link rel="shortcut icon" type="image/png" href="/MasonryCMS/home/img/icon.png"/>-->
 
 <st:head includeScripts="true" includeStyles="false" includeStylesResponsive="true"/>
+
+<link rel="icon" type="image/png" href="/MasonryCMS/home/img/favicon.ico" />

@@ -55,8 +55,8 @@ function save() {
 
 function activeUser(id) {
     $("#ModalProcesando").modal({backdrop: 'static', keyboard: false});
-    $("#accion").val(5);
-    $("#idUser").val(id);
+    $("#accion").val(3);
+    $("#idEdit").val(id);
     $("#formulario").submit();
 }
 

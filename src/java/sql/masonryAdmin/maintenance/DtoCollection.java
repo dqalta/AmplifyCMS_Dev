@@ -15,13 +15,14 @@ import java.util.Date;
 /*This java file defines every constructor to be used as a DTO from an object*/
 public class DtoCollection implements Serializable {
 
-    private int id;
-    private String description;
-    private Date created;
-    private String createdBy;
-    private Date modified;
-    private String modifiedBy;
-    private Boolean active;
+    int id;
+    int idManufacturer;
+    String description;
+    Date created;
+    String createdBy;
+    Date modified;
+    String modifiedBy;
+    Boolean active;
 
     public DtoCollection() {
     }
@@ -82,5 +83,12 @@ public class DtoCollection implements Serializable {
         this.active = active;
     }
 
+    public int getIdManufacturer() {
+        return idManufacturer;
+    }
+
+    public void setIdManufacturer(int idManufacturer) {
+        this.idManufacturer = idManufacturer;
+    }
 
 }

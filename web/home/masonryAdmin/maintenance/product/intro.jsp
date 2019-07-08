@@ -15,6 +15,7 @@
         <st:include value="/generals/css-js-Datatables.jsp"/>
         <st:include value="/generals/css-js-app.jsp"/>
         <st:include value="/generals/css-js-LcSwitch.jsp"/>
+        <st:include value="/generals/css-js-ImagePicker.jsp"/>
         <st:include value="/generals/css-js-JqueryNumber.jsp"/>
         <st:include value="/generals/css-js-Chosen.jsp"/>
         <link rel="stylesheet" type="text/css" href="/MasonryCMS/home/masonryAdmin/maintenance/product/style.css" media="screen" />
@@ -50,14 +51,14 @@
                                         </li>
 
                                         <li role="presentation" class="disabled">
-                                            <a href="#step2" data-toggle="tab" data-value="Mes" aria-controls="step2" role="tab" title="Features.">
+                                            <a href="#step2" data-toggle="tab" data-value="Features" aria-controls="step2" role="tab" title="Features.">
                                                 <span class="round-tab">
                                                     <i class="fa fa-cogs"></i>
                                                 </span>
                                             </a>
                                         </li>
                                         <li role="presentation" class="disabled">
-                                            <a href="#step3" data-toggle="tab" data-value="Fecha" aria-controls="step3" role="tab" title="Categories.">
+                                            <a href="#step3" data-toggle="tab" data-value="Categories" aria-controls="step3" role="tab" title="Categories.">
                                                 <span class="round-tab">
                                                     <i class="fa fa-sitemap"></i>
                                                 </span>
@@ -67,6 +68,13 @@
                                             <a href="#step4" data-toggle="tab" data-value="Dimensions" aria-controls="step4" role="tab" title="Dimensions.">
                                                 <span class="round-tab">
                                                     <i class="fa fa-arrows"></i>
+                                                </span>
+                                            </a>
+                                        </li>
+                                        <li role="presentation" class="">
+                                            <a href="#step5" data-toggle="tab" data-value="Photos" aria-controls="step5" role="tab" title="Photos.">
+                                                <span class="round-tab">
+                                                    <i class="fa fa-photo"></i>
                                                 </span>
                                             </a>
                                         </li>
@@ -182,7 +190,7 @@
                                             <div class="col-sm-3">                                                      
                                                 <div class="form-group">
                                                     <label for="idMaterial">Material:</label>
-                                                    <st:select class="form-control"  id="idMaterial" name="idMaterial" value="%{idMaterial}" list="materials" listKey="id" listValue="description" onchange="chargeSubMaterials();"/>                                          
+                                                    <st:select class="form-control"  id="idMaterial" name="idMaterial" value="%{idMaterial}" list="materials" listKey="id" listValue="description" onChange="chargeSubMaterials();"/>                                          
                                                 </div>
                                             </div>
                                             <div class="col-sm-3">                                                      
@@ -230,6 +238,22 @@
                                             <li><button onclick="validateStep4();" type="button" class="btn btn-warning"><i class="glyphicon glyphicon-ok"></i> Save</button></li>
                                         </ul>
                                     </div>
+                                    <div class="tab-pane" role="tabpanel" id="step5">
+                                        <h3>Avalaible Photos</h3>
+                                        <p>Pick the photos of the list.</p>
+                                        <div class="row">
+                                            <select id="SelectGallery" multiple="multiple" class="image-picker show-html">
+                                                <option data-img-src="http://3.15.28.209:8080/MasonryCMS/home/img/ladrillo1.jpeg" data-img-class="first" data-img-alt="Page 1" value="1">  Page 1  </option>
+                                                <option data-img-src="http://3.15.28.209:8080/MasonryCMS/home/img/ladrillo2.jpeg" data-img-alt="Page 2" value="2">  Page 2  </option>
+                                                <option data-img-src="http://3.15.28.209:8080/MasonryCMS/home/img/ladrillo3.jpeg" data-img-alt="Page 3" value="3">  Page 3  </option>
+                                                <option data-img-src="http://3.15.28.209:8080/MasonryCMS/home/img/ladrillo4.jpeg" data-img-alt="Page 12" data-img-class="last" value="12"> Page 12 </option>
+                                            </select>
+                                        </div>
+                                        <ul class="list-inline pull-right">
+                                            <li><button type="button" class="btn btn-default prev-step"><i class="glyphicon glyphicon-arrow-left"></i> Previous</button></li>
+                                            <li><button onclick="validateStep5();" type="button" class="btn btn-warning"><i class="glyphicon glyphicon-ok"></i> Save</button></li>
+                                        </ul>
+                                    </div>
                                     <div class="tab-pane" role="tabpanel" id="complete">
                                         <h3>Process complete</h3>
                                         <p>Product created successfully</p>
@@ -249,9 +273,9 @@
 
                 <br>
             </st:form>  
-                <hr>
-                <br>
-                <br>
+            <hr>
+            <br>
+            <br>
             <div style="padding: 20px;" class="table-responsive">
                 <table id="table_product" class="table table-striped" style="width:100%; margin: 0px auto;">
                     <thead>
@@ -267,31 +291,31 @@
                         </tr>
                     </thead>
                     <tbody>
-                           <st:if test="%{!getProducts().isEmpty()}">
-                               <st:iterator value="products" var="products" status="index">
-                                   <tr>
-                                       <td><st:property value="%{#products.id}" /></td>           
-                                       <td><st:property value="%{#products.pname}" /></td>        
-                                       <td><st:date name="%{#products.created}" format="dd/MM/yyyy"/></td>       
-                                       <td><st:property value="%{#products.createdBy}" /></td>    
-                                       <td><st:date name="%{#products.modified}" format="dd/MM/yyyy"/></td>    
-                                       <td><st:property value="%{#products.modifiedBy}" /></td>       
-                                       <td>
-                                           <st:if test="%{#products.active == true}">
-                                               <i class="glyphicon glyphicon-off text-success" data-toggle="tooltip" data-placement="top" title="" data-original-title="Active"</i>
-                                           </st:if>
-                                           <st:else>
-                                               <i class="glyphicon glyphicon-off text-danger"  data-toggle="tooltip" data-placement="top" title="" data-original-title="Inactive"></i>
-                                           </st:else>
-                                       </td>       
-                                       <td onclick="edit('<st:property value="%{#products.id}" />');"><i class="glyphicon glyphicon-pencil" data-toggle="tooltip" data-placement="left" title="" data-original-title="Edit Row"></i></td>
-                                   </tr>
-                               </st:iterator>
-                           </st:if>
+                        <st:if test="%{!getProducts().isEmpty()}">
+                            <st:iterator value="products" var="products" status="index">
+                                <tr>
+                                    <td><st:property value="%{#products.id}" /></td>           
+                                    <td><st:property value="%{#products.pname}" /></td>        
+                                    <td><st:date name="%{#products.created}" format="dd/MM/yyyy"/></td>       
+                                    <td><st:property value="%{#products.createdBy}" /></td>    
+                                    <td><st:date name="%{#products.modified}" format="dd/MM/yyyy"/></td>    
+                                    <td><st:property value="%{#products.modifiedBy}" /></td>       
+                                    <td>
+                                        <st:if test="%{#products.active == true}">
+                                            <i class="glyphicon glyphicon-off text-success" data-toggle="tooltip" data-placement="top" title="" data-original-title="Active"</i>
+                                        </st:if>
+                                        <st:else>
+                                            <i class="glyphicon glyphicon-off text-danger"  data-toggle="tooltip" data-placement="top" title="" data-original-title="Inactive"></i>
+                                        </st:else>
+                                    </td>       
+                                    <td onclick="edit('<st:property value="%{#products.id}" />');"><i class="glyphicon glyphicon-pencil" data-toggle="tooltip" data-placement="left" title="" data-original-title="Edit Row"></i></td>
+                                </tr>
+                            </st:iterator>
+                        </st:if>
                     </tbody>
                 </table>
             </div>
-            
+
 
             <div class="modal" id="ModalProcesando">
                 <div class="modal-dialog">

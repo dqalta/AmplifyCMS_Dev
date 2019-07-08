@@ -18,7 +18,7 @@ public class Numeros {
         int numero;
         try {
             numero = Integer.parseInt(valor.replaceAll(",", ""));
-        } catch (NumberFormatException x) {
+        } catch (Exception x) {
             numero = -1;
         }
         return numero;
