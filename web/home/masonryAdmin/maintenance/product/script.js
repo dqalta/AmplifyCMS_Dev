@@ -56,6 +56,36 @@ function prevTab(elem) {
     $(elem).prev().find('a[data-toggle="tab"]').click();
 }
 
+function chargeCollections() {
+    var arr = [];
+    var manufacturer = $("#manufacturer").val();
+    var collection = $("#collection").val();
+    if (manufacturer !== null) {
+        arr = [];
+    }else{
+        arr.push(manufacturer);
+    }
+    $.ajax({
+        tradional: true,
+        type: "post",
+        datatype: "html",
+        data:
+                {
+                    "manufacturer": manufacturer
+                },
+        url: "/MasonryCMS/masonryAdmin/queries/ajax/select-collections.mdk",
+        success: function (html)
+        {
+            $("#collection").html(html).trigger("chosen:updated");
+            $("#collection").val(collection);
+        },
+        error: function (estado)
+        {
+            //   alert(estado);
+        }
+    });
+}
+
 function validateStep1() {
     mensajes = "";
     mensaje = false;
@@ -144,7 +174,7 @@ function validateStep3() {
 }
 
 function validateStep5() {
-         $('a[data-value="Final"]').click();
+    $('a[data-value="Final"]').click();
 }
 
 

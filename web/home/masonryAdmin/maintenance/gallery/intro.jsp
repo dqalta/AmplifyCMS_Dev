@@ -45,6 +45,7 @@
                         <st:form id="formulario" name="formulario" cssClass="form-vertical" action="gallery" method="post" theme="bootstrap"  enctype="multipart/form-data">                                        
                             <st:hidden id="accion" name="accion" value="%{accion}"/>
                             <st:hidden id="id" name="id" value="%{id}"/>
+                            <st:hidden id="idEdit" name="idEdit" value="%{idEdit}"/>
                             <br>
                             <div class="row">
                                 <div class="col-sm-8">
@@ -99,7 +100,26 @@
                 </div>
 
                 <div class="container-fluid">
+                    <h4 id="titleAdd" style="display:none;">Photos for add</h4>
                     <div id="galleryDiv" class="row"> </div>
+                </div>
+
+                <div class="container-fluid"> 
+                    <st:if test="%{!getGalleriesPhotos().isEmpty()}">
+                        <hr>
+                        <h4>Saved Photos</h4>
+                    </st:if>  
+                    <div id="galleryDivSee" class="row">
+                        <st:if test="%{!getGalleriesPhotos().isEmpty()}">
+                            <st:iterator value="GalleriesPhotos" var="GalleriesPhotos" status="index">
+                                <div class="col-sm-2 imgUp" data-toggle="tooltip" data-placement="top" data-original-title="<st:property value="%{#GalleriesPhotos.photoFileName}" />" id="file_<st:property value="%{#GalleriesPhotos.id}" />">
+                                    <div class="imagePreview" style="background-image:url(<st:property value="%{#GalleriesPhotos.photo}" />)"></div>
+                                    <label class="btn btn-warning  btn-upload"><st:property value="%{#GalleriesPhotos.photoFileName}" /></label>
+                                    <i class="fa fa-times del" onclick="deletePhoto('<st:property value="%{#GalleriesPhotos.id}" />');"></i>
+                                </div>
+                            </st:iterator>
+                        </st:if>
+                    </div>
                 </div>
 
                 <div class="container-fluid">
@@ -108,15 +128,14 @@
                         <h4>Gallery List</h4>
                         <p>Click to gallery group to manage the photos.</p>
                         <hr>
-                        <div class="container_card">     
+                        <div class="container_card">  
                             <div class="row">
 
                                 <st:if test="%{!getGalleries().isEmpty()}">
-                                    <st:iterator value="Galleries" var="Galleries" status="index">  
-
+                                    <st:iterator value="Galleries" var="Galleries" status="index"> 
                                         <div class="col-sm-3">
                                             <div class="card">
-                                                <img src="<st:property value="%{#Galleries.photo1}" />" alt="Photo" style="width:100%">
+                                                <img src="<st:property value="%{#Galleries.photo}"/>" alt="Photo" style="width:100%">
                                                 <div class="container-card">
                                                     <h4><b><st:property value="%{#Galleries.description}" /></b></h4> 
                                                     <p><st:property value="%{#Galleries.quantity}" /> photos...</p> 

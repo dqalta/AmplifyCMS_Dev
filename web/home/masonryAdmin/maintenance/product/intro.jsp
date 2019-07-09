@@ -99,7 +99,7 @@
                                             <div class="col-sm-4">                                                      
                                                 <div class="form-group"  style="overflow: visible !important;">
                                                     <label for="idManufacturer">Manufacturer:</label>
-                                                    <st:select class="form-control"  id="idManufacturer" name="idManufacturer" value="%{idManufacturer}" list="manufacturers" listKey="id" listValue="description"/>                                          
+                                                    <st:select class="form-control"  id="idManufacturer" name="idManufacturer" value="%{idManufacturer}" list="manufacturers" listKey="id" listValue="description" onChange="chargeCollections();"/>                                          
                                                 </div>
                                             </div>
                                             <div class="col-sm-4">                                                      

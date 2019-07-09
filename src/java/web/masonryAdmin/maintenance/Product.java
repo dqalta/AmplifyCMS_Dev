@@ -16,7 +16,6 @@ import org.hibernate.Session;
 import org.hibernate.Transaction;
 import sql.masonryAdmin.maintenance.DtoCollection;
 import sql.masonryAdmin.maintenance.DtoManufacturer;
-import sql.masonryAdmin.maintenance.DtoPostalCode;
 import sql.masonryAdmin.maintenance.DtoProduct;
 import sql.masonryAdmin.maintenance.DtoSize;
 import sql.masonryAdmin.maintenance.MaintenanceSQL;
@@ -502,7 +501,10 @@ public class Product extends ActionSupport implements SessionAware {
         sizes = CombosMaintenance.getSizes(mdk);
 
         colors = CombosMaintenance.getColors(mdk);
-        collections = CombosMaintenance.getCollections(mdk);
+        int[] arr = new int[1];
+        arr[0] = idManufacturer;
+        collections = CombosMaintenance.getCollectionsByManufacturers(mdk, arr);
+        //collections = CombosMaintenance.getCollections(mdk);
     }
 
     public boolean validateFields() {

@@ -19,9 +19,11 @@ import org.apache.struts2.interceptor.SessionAware;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import sql.masonryAdmin.maintenance.DtoColor;
 import sql.masonryAdmin.maintenance.DtoGallery;
 import sql.masonryAdmin.maintenance.DtoGalleryQuery;
 import sql.masonryAdmin.maintenance.DtoPhoto;
+import sql.masonryAdmin.maintenance.DtoPhotoQuery;
 import sql.masonryAdmin.maintenance.MaintenanceSQL;
 import util.Fechas;
 import web.sesion.ORMUtil;
@@ -53,6 +55,7 @@ public class Gallery extends ActionSupport implements SessionAware {
 
     //Variables de la pantallaprivate 
     ArrayList<DtoGalleryQuery> galleries = new ArrayList<>();//Variable con la lista de datos
+    ArrayList<DtoPhotoQuery> galleriesPhotos = new ArrayList<>();//Variable con la lista de datos
 
     private ArrayList<KeyCombos> manufacturers = new ArrayList<>();
     private ArrayList<KeyCombos> collections = new ArrayList<>();
@@ -61,12 +64,13 @@ public class Gallery extends ActionSupport implements SessionAware {
     private int id;
     String description;
     private int[] collection;
-    private String[] manufacturer;
+    private int[] manufacturer;
     boolean active;
     int idEdit;
     private boolean existGallery;
 
-    //Archivo    
+    //Archivo  
+    int idPhoto;
     private File[] photo;
     private String[] photoContentType;
     private String[] photoFileName;
@@ -202,11 +206,11 @@ public class Gallery extends ActionSupport implements SessionAware {
         this.collection = collection;
     }
 
-    public String[] getManufacturer() {
+    public int[] getManufacturer() {
         return manufacturer;
     }
 
-    public void setManufacturer(String[] manufacturer) {
+    public void setManufacturer(int[] manufacturer) {
         this.manufacturer = manufacturer;
     }
 
@@ -237,10 +241,28 @@ public class Gallery extends ActionSupport implements SessionAware {
             case 1:
                 saveGallery();
                 break;
+            case 2:
+                readForUpdate();
+                break;
         }
         chargeGalleries();
         chargeCombos();
         existGallery = MaintenanceSQL.getGallery(mdk, id) != null;
+    }
+
+    public void readForUpdate() {
+        DtoGallery m = MaintenanceSQL.getGallery(mdk, idEdit);
+        if (m != null) {
+            idEdit = m.getId();
+            description = m.getDescription();
+            manufacturer = MaintenanceSQL.getGalleryManufacturer(mdk, idEdit);
+            collection = MaintenanceSQL.getGalleryCollection(mdk, idEdit);
+            chargeCombos();
+            chargeGalleryPhotos();
+        } else {
+            mensajes = mensajes + "danger<>Error<>Gallery does not exist.";
+            mensaje = true;
+        }
     }
 
     public void chargeGalleries() {
@@ -249,9 +271,19 @@ public class Gallery extends ActionSupport implements SessionAware {
         ArrayList<DtoPhoto> galleryPhotos = new ArrayList<>();//Variable con la lista de datos
         for (int i = 0; i < galleriesBack.size(); i++) {
             galleryPhotos = MaintenanceSQL.getGalleryPhotos(mdk, galleriesBack.get(i).getId());
+            galleriesBack.get(i).setQuantity(galleryPhotos.size());
             galleriesBack.get(i).setPhoto("http://3.15.28.209:8080/MasonryCMS/masonryAdmin/queries/ajax/see-photo.mdk?token=" + galleryPhotos.get(0).getId());
         }
         galleries = galleriesBack;
+    }
+
+    public void chargeGalleryPhotos() {
+        ArrayList<DtoPhotoQuery> galleriesBack = new ArrayList<>();//Variable con la lista de datos
+        galleriesBack = MaintenanceSQL.getGalleryPhotosQuery(mdk,idEdit);
+        for (int i = 0; i < galleriesBack.size(); i++) {
+            galleriesBack.get(i).setPhoto("http://3.15.28.209:8080/MasonryCMS/masonryAdmin/queries/ajax/see-photo.mdk?token=" + galleriesBack.get(i).getId());
+        }
+        galleriesPhotos = galleriesBack;
     }
 
     public void clearFields() {
@@ -279,20 +311,22 @@ public class Gallery extends ActionSupport implements SessionAware {
             mensajes = mensajes + "danger<>Error<>Please complete field 'Manufacturer'.|";
             flag = false;
         }
-        if ((photo.length == 0) || (photo == null)) {
+        if ((photo == null) || (photo.length == 0)) {
             mensajes = mensajes + "danger<>Error<>Please select almost one photo.|";
             flag = false;
         }
         if (!flag) {
-            mensaje = flag;
+            mensaje = true;
         }
         return flag;
     }
 
     public void chargeCombos() {
         manufacturers = CombosMaintenance.getManufacturers(mdk);
-        //collections = CombosMaintenance.getCollectionsByManufacturers(mdk, manufacturer == null ? new String[1] : manufacturer);
-        collections = CombosMaintenance.getCollections(mdk);
+        if (manufacturer != null) {
+            collections = CombosMaintenance.getCollectionsByManufacturers(mdk, manufacturer);
+        }
+        //collections = CombosMaintenance.getCollections(mdk);
     }
 
     public void uploadPhotos() {
@@ -450,6 +484,30 @@ public class Gallery extends ActionSupport implements SessionAware {
 
     public void setGalleries(ArrayList<DtoGalleryQuery> galleries) {
         this.galleries = galleries;
+    }
+
+    public int getIdPhoto() {
+        return idPhoto;
+    }
+
+    public void setIdPhoto(int idPhoto) {
+        this.idPhoto = idPhoto;
+    }
+
+    public ArrayList<DtoPhotoQuery> getGalleriesPhotos() {
+        return galleriesPhotos;
+    }
+
+    public void setGalleriesPhotos(ArrayList<DtoPhotoQuery> galleriesPhotos) {
+        this.galleriesPhotos = galleriesPhotos;
+    }
+
+    public int getIdEdit() {
+        return idEdit;
+    }
+
+    public void setIdEdit(int idEdit) {
+        this.idEdit = idEdit;
     }
 
 }

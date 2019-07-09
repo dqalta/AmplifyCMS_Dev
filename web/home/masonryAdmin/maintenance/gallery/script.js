@@ -17,7 +17,7 @@ $(document).ready(function () {
         $("#collection").chosen({width: "100%"});
         $("ul.chosen-choices").css({"overflow": "auto", "max-height": "100px"});
     }
-    if (accion === 1) {
+    if (accion === 1 || accion === 2) {
         showDivAdd();
     }
     if (mensaje === "true") {
@@ -27,7 +27,14 @@ $(document).ready(function () {
 });
 
 function showGallery(id) {
-    alert(id);
+    $("#ModalProcesando").modal({backdrop: 'static', keyboard: false});
+    $("#accion").val(2);
+    $("#idEdit").val(id);
+    $("#formulario").submit();
+}
+
+function deletePhoto(id) {
+    //alert(id);
 }
 
 function showDivAdd() {
@@ -37,7 +44,7 @@ function showDivAdd() {
 }
 
 function chargeCollections() {
-    var manufacturer = $("#manufacturer").val();
+    var manufacturer = $("#idManufacturer").val();
     var collection = $("#collection").val();
     if (manufacturer === null) {
         manufacturer = [];
@@ -151,6 +158,7 @@ function files() {
                 reader.name = file_.name;
                 reader.idFile = i;
                 reader.onload = function (e) {
+                    $("#titleAdd").show();
                     html = "<div class=\"col-sm-2 imgUp\" data-toggle=\"tooltip\" data-placement=\"top\" data-original-title=\"" + e.target.name + "\" id=\"file" + e.target.idFile + "\"> <div class=\"imagePreview\" style=\"background-image:url(" + e.target.result + ")\"></div>   <label class=\"btn btn-warning  btn-upload\" >" + e.target.name + "</label></div>";
                     $("#galleryDiv").append(html);
                     $('[data-toggle="tooltip"]').tooltip({

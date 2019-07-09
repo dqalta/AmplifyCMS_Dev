@@ -278,7 +278,7 @@ public class MaintenanceSQL {
         cga.createNativeQuery("INSERT INTO gallery"
                 + " (description,created,createdBy, modified, modifiedBy)"
                 + " VALUES"
-                + " (:description,:created,:createdBy; modified, :modifiedBy)")
+                + " (:description,:created,:createdBy, :modified, :modifiedBy)")
                 .setParameter("description", m.getDescription())
                 .setParameter("created", m.getCreated())
                 .setParameter("createdBy", m.getCreatedBy())
@@ -287,7 +287,7 @@ public class MaintenanceSQL {
                 .executeUpdate();
     }
 
-    public static void saveGalleryManufacturer(Session cga, int idGallery, String idManufacturer) {
+    public static void saveGalleryManufacturer(Session cga, int idGallery, int idManufacturer) {
         cga.createNativeQuery("INSERT INTO galleryManufacturer"
                 + " (idGallery, idManufacturer)"
                 + " VALUES"
@@ -364,13 +364,15 @@ public class MaintenanceSQL {
 
     public static ArrayList<DtoGalleryQuery> getGalleries(Session mdk) {
         ArrayList<DtoGalleryQuery> a = new ArrayList<>();
-        Iterator itr = mdk.createNativeQuery("SELECT"
+        Iterator itr = mdk.createNativeQuery("SELECT DISTINCT"
                 + " G.id,"
                 + " G.description,"
                 + " '' AS photo,"
-                + " (SELECT COUNT(id) FROM galleryPhoto WHERE idGallery = G.id)  AS quantity,"
+                + " G.id AS quantity,"
                 + " G.modified"
-                + " FROM gallery AS G")
+                + " FROM gallery AS G"
+                + " INNER JOIN galleryPhoto P"
+                + " ON P.idGallery = G.id")
                 .setResultTransformer(Transformers.aliasToBean(DtoGalleryQuery.class))
                 .list().iterator();
 
@@ -395,6 +397,25 @@ public class MaintenanceSQL {
 
         while (itr.hasNext()) {
             a.add((DtoPhoto) itr.next());
+        }
+        return a;
+    }
+
+    public static ArrayList<DtoPhotoQuery> getGalleryPhotosQuery(Session mdk, int idGallery) {
+        ArrayList<DtoPhotoQuery> a = new ArrayList<>();
+        Iterator itr = mdk.createNativeQuery("SELECT"
+                + " id,"
+                + " idGallery,"
+                + " photoFileName,"
+                + " '' AS photo"
+                + " FROM galleryPhoto"
+                + " WHERE idGallery = :idGallery")
+                .setParameter("idGallery", idGallery)
+                .setResultTransformer(Transformers.aliasToBean(DtoPhotoQuery.class))
+                .list().iterator();
+
+        while (itr.hasNext()) {
+            a.add((DtoPhotoQuery) itr.next());
         }
         return a;
     }
@@ -460,7 +481,7 @@ public class MaintenanceSQL {
                 + " modifiedBy,"
                 + " active"
                 + " FROM collection"
-                + " WHERE idManufacturer IN(:manufacturers)")
+                + " WHERE idManufacturer IN( :manufacturers )")
                 .setParameterList("manufacturers", intList)
                 .setResultTransformer(Transformers.aliasToBean(DtoCollection.class))
                 .list().iterator();
@@ -1048,6 +1069,46 @@ public class MaintenanceSQL {
         }
 
         return arrayColor;
+    }
+
+    public static int[] getGalleryManufacturer(Session o2c, int idGallery) {
+        String result = "";
+        Iterator itr = o2c.createSQLQuery("SELECT idManufacturer"
+                + " FROM galleryManufacturer"
+                + " WHERE idGallery = :idGallery")
+                .setParameter("idGallery", idGallery)
+                .list().iterator();
+
+        while (itr.hasNext()) {
+            result = result + (int) itr.next() + ",";
+        }
+
+        String[] arrString = result.split(",");
+        int[] arrInt = new int[arrString.length];
+        for (int i = 0; i < arrInt.length; i++) {
+            System.out.println("Array: " + arrString[i]);
+            arrInt[i] = Integer.parseInt(arrString[i]);
+        }
+        return arrInt;
+    }
+
+    public static int[] getGalleryCollection(Session o2c, int idGallery) {
+        String result = "";
+        Iterator itr = o2c.createSQLQuery("SELECT idCollection"
+                + " FROM galleryCollection"
+                + " WHERE idGallery = :idGallery")
+                .setParameter("idGallery", idGallery)
+                .list().iterator();
+
+        while (itr.hasNext()) {
+            result = result + (int) itr.next() + ",";
+        }
+        String[] arrString = result.split(",");
+        int[] arrInt = new int[arrString.length];
+        for (int i = 0; i < arrInt.length; i++) {
+            arrInt[i] = Integer.parseInt(arrString[i]);
+        }
+        return arrInt;
     }
 
     public static void saveColors(Session mdk, DtoColor m) {
